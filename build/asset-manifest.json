@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/kaushikdas0621.github.io/static/css/main.e46a1283.css",
+    "main.js": "/kaushikdas0621.github.io/static/js/main.3161b274.js",
+    "index.html": "/kaushikdas0621.github.io/index.html",
+    "main.e46a1283.css.map": "/kaushikdas0621.github.io/static/css/main.e46a1283.css.map",
+    "main.3161b274.js.map": "/kaushikdas0621.github.io/static/js/main.3161b274.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e46a1283.css",
+    "static/js/main.3161b274.js"
+  ]
+}
