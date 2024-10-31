@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Sidebar.css';
-import profileImage from '../assets/profile.jpg';
+import profileImage from '../assets/profile.png';
 
 function Sidebar() {
     return (
