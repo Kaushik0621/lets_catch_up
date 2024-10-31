@@ -1,12 +1,12 @@
-// Example for Home.js
+// src/components/Home.js
 import React from 'react';
 import './Home.css';
 
 function Home() {
     return (
         <div className="home">
-            <h1>Home Page</h1>
-            <p>Welcome to my portfolio!</p>
+            <h1>Kaushik Das</h1>
+            <p>Experienced AI Developer with expertise in Machine Learning, Deep Learning, and Generative AI.</p>
         </div>
     );
 }
