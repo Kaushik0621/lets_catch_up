@@ -15,6 +15,8 @@ function App() {
                 <Route path="/experience" element={<Experience />} />
                 <Route path="/skills" element={<Skills />} />
                 <Route path="/contact" element={<Contact />} />
+                {/* Fallback route */}
+                <Route path="*" element={<Home />} />
             </Routes>
         </Router>
     );
