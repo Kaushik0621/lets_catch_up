@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/kaushikdas0621.github.io/static/css/main.16172a17.css",
+    "main.js": "/kaushikdas0621.github.io/static/js/main.c02af576.js",
+    "static/media/profile.jpg": "/kaushikdas0621.github.io/static/media/profile.bcbc7976a631812b243d.jpg",
+    "static/media/image.jpg": "/kaushikdas0621.github.io/static/media/image.18db4e6780ca930a3774.jpg",
+    "index.html": "/kaushikdas0621.github.io/index.html",
+    "main.16172a17.css.map": "/kaushikdas0621.github.io/static/css/main.16172a17.css.map",
+    "main.c02af576.js.map": "/kaushikdas0621.github.io/static/js/main.c02af576.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.16172a17.css",
+    "static/js/main.c02af576.js"
+  ]
+}

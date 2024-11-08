@@ -1,0 +1,107 @@
+/* src/components/AppContent.css */
+
+/* src/components/AppContent.css */
+
+.content {
+    margin-left: 280px;
+    padding: 20px;
+    padding-top: 110px; /* Offset for fixed header */
+    background-color: #ffffff; /* White background */
+    background-image: url('https://www.transparenttextures.com/patterns/asfalt-light.png'); /* Subtle texture */
+    color: #1a237e; /* Dark blue text */
+    min-height: 100vh;
+}
+
+.fixed-header {
+    position: fixed;
+    top: 0;
+    left: 280px;
+    width: calc(100% - 310px);
+    height: 60px;
+    z-index: 999;
+    background-color: #bbdefb;
+    padding: 15px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+}
+
+
+
+.content-header h1 {
+    margin: 0;
+    color: #1565c0; /* Slightly darker blue for name */
+    font-size: 1.8em;
+    text-align: right; /* Right-align the name */
+    font-weight: bold;
+}
+
+.contact-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-items: center;
+    justify-content: flex-end; /* Right-align the contact info */
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: #1565c0;
+}
+
+.contact-info p {
+    margin: 0;
+}
+
+.contact-info a {
+    color: #1976d2;
+    text-decoration: none;
+    margin: 0 2px;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.contact-info a:hover {
+    color: #0d47a1;
+    text-decoration: underline; /* Adds underline for emphasis on hover */
+}
+
+.contact-info a .fa-icon {
+    margin-right: 5px; /* Space between icon and text */
+}
+
+/* Styling for content sections */
+section {
+    padding: 15px 20px;
+    margin-bottom: 30px;
+    background-color: #ffffff; /* White background for sections */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Soft shadow for sections */
+}
+
+.section-image {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin-top: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #1a237e;
+    border-bottom: 2px solid #90caf9;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+h3 {
+    color: #1a237e;
+    margin-top: 20px;
+    font-weight: 500;
+}
+
+p, li {
+    color: #424242;
+    line-height: 1.6;
+}
