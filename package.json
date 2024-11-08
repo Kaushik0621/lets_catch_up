@@ -4,6 +4,9 @@
     "private": true,
     "homepage": "https://kaushik0621.github.io/kaushikdas0621.github.io",
     "dependencies": {
+        "@fortawesome/free-brands-svg-icons": "^6.6.0",
+        "@fortawesome/free-solid-svg-icons": "^6.6.0",
+        "@fortawesome/react-fontawesome": "^0.2.2",
         "react": "^18.0.0",
         "react-dom": "^18.0.0",
         "react-router-dom": "^6.0.0",

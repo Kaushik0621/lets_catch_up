@@ -3,13 +3,42 @@ import React from 'react';
 import './AppContent.css';
 
 // Import images from the assets folder
-import profileImage from '../assets/profile.png';
-import educationImage from '../assets/image.jpg'; // Replace with actual image name
-import hackathonImage from '../assets/image.jpg'; // Replace with actual image name
+import profileImage from '../assets/profile.jpg';
+import educationImage from '../assets/image.jpg'; 
+import hackathonImage from '../assets/image.jpg'; 
+// Import Font Awesome icons
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
+import { faLinkedin, faGithub, faDev, faTwitter } from '@fortawesome/free-brands-svg-icons';
+
 
 function AppContent() {
     return (
         <div className="content">
+             <header className="content-header fixed-header">
+                
+                <div className="contact-info">
+                    <p><a href="mailto:Kaushikdas.career@gmail.com"> 
+                        <FontAwesomeIcon icon={faEnvelope} /> &nbsp; 
+                        Kaushikdas.career@gmail.com</a>
+                    </p>
+                    <p>
+                        <FontAwesomeIcon icon={faPhone} /> &nbsp;  +44 07388449042
+                    </p>
+                    <a href="https://www.linkedin.com/in/kaushikdas-connections" target="_blank" rel="noopener noreferrer">
+                        <FontAwesomeIcon icon={faLinkedin} /> &nbsp; LinkedIn
+                    </a>|
+                    <a href="https://github.com/Kaushik0621" target="_blank" rel="noopener noreferrer">
+                        <FontAwesomeIcon icon={faGithub} /> &nbsp; GitHub
+                    </a> |
+                    <a href="https://devpost.com/kaushik0621" target="_blank" rel="noopener noreferrer">
+                        <FontAwesomeIcon icon={faDev} /> &nbsp;  Devpost
+                    </a> |
+                    <a href="https://x.com/Kaushik_AI_X" target="_blank" rel="noopener noreferrer">
+                        <FontAwesomeIcon icon={faTwitter} /> &nbsp; Twitter
+                    </a>
+                </div>
+            </header>
             <section id="about">
                 <h2>About Me</h2>
                 <p>Experienced AI Developer with over 4 years of work experience, holding a postgraduate degree in Artificial Intelligence. Specialized in Machine Learning, Deep Learning, Generative AI, and Natural Language Generation. Proficient in developing and deploying Object Detection Models.</p>
