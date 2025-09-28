@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kaushik Das — AI/ML Engineer</title>
+  <meta name="description" content="Kaushik Das — AI/ML engineer. Selected projects, research, experience, publications, and contact."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --primary-light: #60a5fa;
+      --primary-dark: #1d4ed8;
+      --accent: #10b981;
+      --accent-light: #34d399;
+      --background: #0f172a;
+      --surface: #1e293b;
+      --surface-light: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #64748b;
+      --border: #334155;
+      --border-light: #475569;
+      --glow: rgba(59, 130, 246, 0.3);
+      --glow-accent: rgba(16, 185, 129, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--background);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Animated background */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+    }
+
+    .bg-animation::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+      animation: pulse 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+      }
+    }
+
+    /* Floating particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: var(--primary);
+      border-radius: 50%;
+      animation: float 6s ease-in-out infinite;
+      opacity: 0.4;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+      }
+      50% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-100vh) translateX(100px);
+        opacity: 0;
+      }
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      gap: 15px;
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 10px 15px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-item {
+      padding: 8px 16px;
+      border-radius: 25px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px var(--glow);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-content {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 60px;
+      align-items: center;
+      width: 100%;
+    }
+
+    .hero-text h1 {
+      font-size: clamp(3rem, 8vw, 5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, var(--text-primary), var(--primary-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-text .subtitle {
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+      margin-bottom: 30px;
+      font-weight: 300;
+    }
+
+    .hero-text .description {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+      line-height: 1.8;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 30px;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      box-shadow: 0 4px 20px var(--glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px var(--glow);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-primary);
+      border: 2px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    /* Hero Avatar */
+    .hero-avatar {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .avatar-container {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      padding: 5px;
+      animation: rotate 10s linear infinite;
+    }
+
+
+    .avatar-container::before {
+      content: '';
+      position: absolute;
+      inset: -20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent), var(--primary));
+      z-index: -1;
+      filter: blur(20px);
+      opacity: 0.7;
+    }
+
+    .avatar {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Tech Stack */
+    .tech-stack {
+      position: absolute;
+      top: 50%;
+      right: -50px;
+      transform: translateY(-50%);
+    }
+
+    .tech-item {
+      background: rgba(30, 41, 59, 0.9);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 15px;
+      margin: 15px 0;
+      font-weight: 600;
+      color: var(--primary-light);
+      animation: float-tech 3s ease-in-out infinite;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .tech-item:nth-child(2) { animation-delay: -1s; }
+    .tech-item:nth-child(3) { animation-delay: -2s; }
+
+    @keyframes float-tech {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Sections */
+    section {
+      padding: 100px 0;
+      position: relative;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-title h2 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, var(--text-primary), var(--primary-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-title p {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+    }
+
+    /* Cards */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .card {
+      background: rgba(30, 41, 59, 0.5);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 30px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      border-color: var(--primary);
+      box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
+    }
+
+    .card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .card h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: var(--text-primary);
+    }
+
+    .card p {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .card-meta {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 20px 0;
+    }
+
+    .tag {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    /* Card action buttons */
+    .card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+    }
+
+    .link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    background: rgba(30,41,59,0.5);
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+    }
+
+    .link-btn:hover {
+    border-color: var(--primary);
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px var(--glow);
+    }
+
+    /* subtle external-arrow */
+    .link-btn[data-ext="true"]::after {
+    content: "↗";
+    font-size: 0.85em;
+    opacity: 0.9;
+    }
+
+    /* secondary/ghost variant */
+    .link-btn.ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    }
+    .link-btn.ghost:hover {
+    background: rgba(59,130,246,0.12);
+    border-color: var(--primary);
+    color: var(--primary-light);
+    }
+
+    /* compact badges (optional) */
+    .card .tag {
+    opacity: 0.95;
+    }
+
+
+    /* Stats Section */
+    .stats {
+      background: rgba(30, 41, 59, 0.3);
+      border-radius: 50px;
+      padding: 60px 40px;
+      margin: 60px 0;
+      text-align: center;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    .stat-item {
+      padding: 20px;
+    }
+
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding: 0 0 0 40px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 0;
+      height: 100%;
+      width: 2px;
+      background: linear-gradient(180deg, var(--primary), var(--accent));
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 40px;
+      background: rgba(30, 41, 59, 0.5);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 25px;
+      margin-left: 20px;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -35px;
+      top: 25px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 20px var(--glow);
+    }
+
+    /* Contact Section */
+    .contact {
+      text-align: center;
+      background: linear-gradient(135deg, var(--surface), var(--surface-light));
+      border-radius: 30px;
+      padding: 60px;
+      margin: 60px 0;
+    }
+
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 25px;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid var(--primary);
+      border-radius: 50px;
+      color: var(--primary-light);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .contact-link:hover {
+      background: var(--primary);
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px var(--glow);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 0;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      margin-top: 60px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 40px;
+      }
+
+      .tech-stack {
+        position: static;
+        transform: none;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 30px;
+      }
+
+      .tech-item {
+        margin: 0;
+      }
+
+      .nav {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        justify-content: center;
+      }
+
+      .hero-text h1 {
+        font-size: 2.5rem;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-links {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+
+    /* Animation on scroll */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Modal Styles */
+    .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: rgba(0, 0, 0, 0.9);
+    }
+
+    .modal.show { display: flex; }
+
+    .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(8px);
+    }
+
+    .modal-dialog {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: var(--background);
+    display: flex;
+    flex-direction: column;
+    }
+
+    .modal-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: rgba(15, 23, 42, 0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    z-index: 10;
+    }
+
+    .modal-close {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 8px 12px;
+    line-height: 1;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    }
+
+    .modal-body {
+    flex: 1;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 80px 20px 20px 20px;
+    }
+
+    .modal-body img {
+    max-width: calc(100vw - 40px);
+    max-height: calc(100vh - 120px);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    }
+
+    /* Expandable Experience Styles */
+    .timeline-item {
+    cursor: pointer;
+    }
+
+    .timeline-content {
+    transition: all 0.3s ease;
+    }
+
+    .timeline-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    margin-top: 15px;
+    }
+
+    .timeline-details.expanded {
+    max-height: 500px;
+    }
+
+    .timeline-details ul {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+    }
+
+    .timeline-details li {
+    padding: 8px 0;
+    padding-left: 20px;
+    position: relative;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    }
+
+    .timeline-details li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-weight: bold;
+    }
+
+    .expand-icon {
+    float: right;
+    transition: transform 0.3s ease;
+    color: var(--primary);
+    font-size: 18px;
+    }
+
+    .expand-icon.rotated {
+    transform: rotate(180deg);
+    }
+
+    /* Ensure modal scales properly on mobile */
+    @media (max-width: 768px) {
+    .modal-header {
+        padding: 15px;
+    }
+    
+    .modal-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .modal-body {
+        padding: 70px 10px 10px 10px;
+    }
+    
+    .modal-body img {
+        max-width: calc(100vw - 20px);
+        max-height: calc(100vh - 100px);
+    }
+    
+    .modal-close {
+        font-size: 20px;
+        padding: 6px 10px;
+    }
+    }
+
+    /* For very tall certificates */
+    @media (orientation: landscape) and (max-height: 600px) {
+    .modal-body {
+        padding: 60px 10px 10px 10px;
+    }
+    
+    .modal-body img {
+        max-height: calc(100vh - 80px);
+    }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Animation -->
+  <div class="bg-animation"></div>
+  
+  <!-- Floating Particles -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="#home" class="nav-item active">Home</a>
+    <a href="#about" class="nav-item">About</a>
+    <a href="#education" class="nav-item">Education</a>
+    <a href="#experience" class="nav-item">Experience</a>
+    <a href="#projects" class="nav-item">Projects</a>
+    <a href="#hackathons" class="nav-item">Hackathons</a>
+    <a href="#contact" class="nav-item">Contact</a>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1>Kaushik Das</h1>
+          <p class="subtitle">AI/ML Engineer & Researcher</p>
+          <p class="description">
+            I design and ship end‑to‑end intelligence: RAG over clinical docs, voice agents on LiveKit, MCP toolchains, and sustainability‑aware ML experiments. I care about reliability, latency budgets, and human‑centered UX.
+            I turn LLMs into useful systems—multi-provider orchestration, RAG over clinical/brand corpora, and low-latency voice agents. Recent work spans EEG-based Alzheimer’s signal analysis and computation-aware ML with sustainability metrics. I’m open to volunteering on research papers that align with applied LLMs, retrieval, or healthcare decision support—especially projects that value evals, transparency, and real-world impact.
+          </p>
+          <div class="hero-buttons">
+            <a href="#projects" class="btn btn-primary">View My Work</a>
+            <a href="resume/Kaushik_Das_Resume.pdf" target="_blank" class="btn btn-secondary">Download CV</a>
+          </div>
+        </div>
+        <div class="hero-avatar">
+          <div class="avatar-container">
+            <img src="assets/img/avatar.png" alt="Kaushik Das" class="avatar">
+          </div>
+          <div class="tech-stack">
+            <div class="tech-item">Python</div>
+            <div class="tech-item">LLMs</div>
+            <div class="tech-item">FastAPI</div>
+            <div class="tech-item">Azure</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="fade-in">
+    <div class="container">
+      <div class="stats">
+        <h2>Impact & Expertise</h2>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-number">10+</div>
+            <div class="stat-label">E2E ML Projects</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">4+</div>
+            <div class="stat-label">Years Experience</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">Healthcare</div>
+            <div class="stat-label">Domain Focus</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">Full‑Stack</div>
+            <div class="stat-label">Development</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="fade-in">
+    <div class="container">
+      <div class="section-title">
+        <h2>About Me</h2>
+        <p>Passionate about building AI systems that make a real-world impact</p>
+      </div>
+      <div class="cards-grid">
+        <div class="card">
+          <h3> Current Focus</h3>
+          <p>Working on AI Search & Insight platforms with multi-LLM orchestration and advanced RAG systems. Currently at Precision Forward Ltd. in London.</p>
+          <div class="tags">
+            <span class="tag">LLM Orchestration</span>
+            <span class="tag">RAG Systems</span>
+            <span class="tag">Enterprise AI</span>
+          </div>
+        </div>
+        <div class="card">
+          <h3> Research Interests</h3>
+          <p>  My research sits at the intersection of <strong>LLM systems, retrieval quality, computer vision, NL and healthcare AI</strong>. 
+            I am especially interested in <strong>retrieval-augmented generation (RAG)</strong> over clinical and scientific 
+            corpora, <strong>agent workflows with human-in-the-loop decision making</strong>, and 
+            <strong>evaluation frameworks</strong> that balance accuracy, transparency, and efficiency. 
+            Ongoing explorations include 
+            <a href="https://alzheimer-detection-1.vercel.app" target="_blank" style="color: var(--primary); font-weight: 600;">
+              an EEG-based Alzheimer’s detection prototype</a></p>
+          <div class="tags">
+            <span class="tag">Healthcare AI</span>
+            <span class="tag">Sustainable ML</span>
+            <span class="tag">Neuroscience</span>
+          </div>
+        </div>
+        <div class="card">
+          <h3> Recognition</h3>
+          <p>Scottish Government Postgraduate Scholarship recipient, Mistral AI Hackathon Finalist, and DST-SERB collaboration researcher.</p>
+          <div class="tags">
+            <span class="tag">Awards</span>
+            <span class="tag">Hackathons</span>
+            <span class="tag">Research Grants</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Certificate Modal -->
+<div id="cert-modal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="cert-title">Certificate</h3>
+        <button class="modal-close" id="cert-close">×</button>
+      </div>
+      <div class="modal-body">
+        <img id="cert-image" src="" alt="Certificate" />
+      </div>
+    </div>
+  </div>
+
+<!-- Education Section -->
+<section id="education" class="fade-in">
+    <div class="container">
+      <div class="section-title">
+        <h2>Education</h2>
+        <p>Academic foundation in AI and engineering</p>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item clickable-cert" data-cert="assets/certificates/masters_certificate.jpg" data-title="Master of Science in Artificial Intelligence">
+          <h3>Master of Science in Artificial Intelligence <span style="color: var(--primary); font-size: 14px;">(Click to view certificate)</span></h3>
+          <p class="card-meta">Jan 2023 – Jun 2024 • University of Aberdeen • UK</p>
+          <p>GPA: 15.6/22 • Scottish Government Postgraduate Scholarship recipient</p>
+          <div class="tags">
+            <span class="tag">Machine Learning</span>
+            <span class="tag">Deep Learning</span>
+            <span class="tag">NLP</span>
+            <span class="tag">Computer Vision</span>
+          </div>
+        </div>
+        <div class="timeline-item clickable-cert" data-cert="assets/certificates/bachelors_certificate.jpg" data-title="Bachelor of Technology in Electronics & Communication">
+          <h3>Bachelor of Technology in Electronics & Communication <span style="color: var(--primary); font-size: 14px;">(Click to view certificate)</span></h3>
+          <p class="card-meta">Jun 2015 – Jun 2019 • IEM, Kolkata (MAKAUT) • India</p>
+          <p>CGPA: 7.34/10 • Focus on signal processing and embedded systems</p>
+          <div class="tags">
+            <span class="tag">Signal Processing</span>
+            <span class="tag">Embedded Systems</span>
+            <span class="tag">Telecommunications</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience Section -->
+<section id="experience" class="fade-in">
+    <div class="container">
+      <div class="section-title">
+        <h2>Experience</h2>
+        <p>My professional journey in AI and software engineering</p>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item expandable" data-target="exp1">
+          <div class="timeline-content">
+            <h3>AI Application Engineer <span class="expand-icon">▼</span></h3>
+            <p class="card-meta">Jun 2025 – Present • Precision Forward Ltd. • London</p>
+            <p>Leading development of AI Search & Insight platform with multi‑LLM orchestration and RAG over brand/competitor data via Elasticsearch embeddings.</p>
+            <div class="tags">
+              <span class="tag">Team Leadership</span>
+              <span class="tag">LLM Systems</span>
+              <span class="tag">Cloud Architecture</span>
+            </div>
+          </div>
+          <div class="timeline-details" id="exp1">
+            <ul>
+              <li>Building a full-stack AI Search & Insight Platform with LLM orchestration (GPT-4o, Gemini, Claude, Grok) for brand intelligence and competitor analysis.</li>
+              <li>Integrated RAG pipelines with semantic embeddings (Elasticsearch) to deliver context-aware, search-grounded insights.</li>
+            </ul>
+          </div>
+        </div>
+  
+        <div class="timeline-item expandable" data-target="exp2">
+          <div class="timeline-content">
+            <h3>AI Developer <span class="expand-icon">▼</span></h3>
+            <p class="card-meta">Aug 2024 – May 2025 • Digital Technology Partner • Edinburgh</p>
+            <p>Developed hospital discharge assistant combining structured ML (XGBoost) with LLMs for 30‑day readmission prediction and discharge readiness assessment.</p>
+            <div class="tags">
+              <span class="tag">Human In The Loop</span>
+              <span class="tag">ML/LLM Integration</span>
+              <span class="tag">Clinical Systems</span>
+            </div>
+          </div>
+          <div class="timeline-details" id="exp2">
+            <ul>
+              <li>Developed a hospital discharge assistant integrating structured ML (XGBoost) with LLMs (GPT-4o) for 30-day readmission prediction and discharge readiness scoring.</li>
+              <li>Designed semantic retrieval pipelines using Elasticsearch + sentence-transformer embeddings with RAG for metadata-aware document understanding.</li>
+              <li>Built conversational AI systems for query classification, context-aware reasoning, and adaptive information filtering with LLMs.</li>
+              <li>Applied synthetic data generation and ETL pipelines to augment low-resource datasets, streamline ingestion, and enable scalable experimentation.</li>
+            </ul>
+          </div>
+        </div>
+  
+        <div class="timeline-item expandable" data-target="exp3">
+          <div class="timeline-content">
+            <h3>Software Engineer <span class="expand-icon">▼</span></h3>
+            <p class="card-meta">Jul 2019 – Dec 2022 • Kairos Consulting • Kolkata</p>
+            <p>Computer vision R&D using OpenCV and Keras/TensorFlow, with focus on optimization and Dockerized deployments for production environments.</p>
+            <div class="tags">
+              <span class="tag">Computer Vision</span>
+              <span class="tag">Backend Development</span>
+              <span class="tag">DevOps</span>
+            </div>
+          </div>
+          <div class="timeline-details" id="exp3">
+            <ul>
+              <li>Contributed to an R&D project for a healthcare client focused on real-time image processing. Utilised OpenCV and Scikit-Image for noise reduction, contrast enhancement, and feature extraction.</li>
+              <li>Performed feature engineering and selection techniques to optimise ML model accuracy and reduce dimensionality.</li>
+              <li>Achieved a 15% improvement in anomaly detection accuracy by developing and integrating CNNs with TensorFlow and Keras. Optimised processing algorithms (FFT, PCA) using NumPy and SciPy.</li>
+              <li>Increased sales by 23% by analysing sales data and implementing a Random Forest model to enhance customer demand forecasting.</li>
+              <li>Utilised AWS EC2 for scalable hosting, deployed applications with Docker for consistent environments, managed AWS RDS for secure database operations, rendered S3 and CloudFront for efficient asset storage, and integrated CI/CD pipelines.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Projects Section -->
+  <section id="projects" class="fade-in">
+    <div class="container">
+      <div class="section-title">
+        <h2>Featured Projects</h2>
+        <p>Curated selection of my most impactful work</p>
+      </div>
+  
+      <div class="cards-grid">
+        <!-- AI Search & Insight Platform -->
+        <div class="card">
+          <h3>AI Search & Insight Platform</h3>
+          <p class="card-meta">2025 </p>
+          <p>
+            Brand/competitor intelligence with multi-LLM orchestration and RAG over market data using Elasticsearch embeddings.
+            Backend on FastAPI (Azure) with low-latency, evals, and observability.
+          </p>
+          <div class="tags">
+            <span class="tag">LLM Orchestration</span>
+            <span class="tag">RAG</span>
+            <span class="tag">Elasticsearch</span>
+            <span class="tag">FastAPI</span>
+          </div>
+          <div class="card-actions">
+           
+            <a class="link-btn ghost" href="mailto:kaushikdas.career@gmail.com?subject=AI%20Search%20%26%20Insight%20Demo%20Request&body=Hi%20Kaushik%2C%20" >Request Demo</a>
+          </div>
+        </div>
+  
+        <!-- Hospital Agent Platform -->
+        <div class="card">
+          <h3>Hospital Agent Platform</h3>
+          <p class="card-meta">2025 • Portia-Based</p>
+          <p>
+            Human-in-the-loop agent: transcript intake → triage → approvals → actions. Uses ChromaDB, encrypted IPFS transcripts,
+            and Azure OpenAI for safe, auditable decisions.
+          </p>
+          <div class="tags">
+            <span class="tag">Agentic AI</span>
+            <span class="tag">ChromaDB</span>
+            <span class="tag">Azure OpenAI</span>
+            <span class="tag">IPFS</span>
+          </div>
+          <div class="card-actions">
+            <a class="link-btn ghost" href="https://github.com/Kaushik0621/Portia_care" target="_blank" rel="noopener" data-ext="true">GitHub</a>
+          </div>
+        </div>
+  
+        <!-- EEG Alzheimer’s Detection -->
+        <div class="card">
+          <h3>EEG Alzheimer’s Detection Project</h3>
+          <p class="card-meta">2024 • Research Prototype — Indian Govt funded</p>
+          <p>
+            Early detection via EEG feature pipelines and ML classification; signal processing + evaluation dashboard.
+          </p>
+          <div class="tags">
+            <span class="tag">EEG</span>
+            <span class="tag">Signal Processing</span>
+            <span class="tag">ML</span>
+            <span class="tag">Healthcare</span>
+          </div>
+          <div class="card-actions">
+            <a class="link-btn" href="https://alzheimer-detection-1.vercel.app" target="_blank" rel="noopener" data-ext="true">Related Website</a>
+          </div>
+        </div>
+  
+        <!-- Sustainability-Aware ML -->
+        <div class="card">
+          <h3>Sustainability-Aware ML Experiments</h3>
+          <p class="card-meta">2024 • Independent Research</p>
+          <p>
+            Computation-aware pipeline tracking CO₂, runtime, and instability across models (XGBoost, LightGBM, etc.).
+            Introduced <em>Green ROI</em> and <em>TOPSIS</em> scoring to balance performance vs. cost/emissions.
+          </p>
+          <div class="tags">
+            <span class="tag">Sustainable ML</span>
+            <span class="tag">CodeCarbon</span>
+            <span class="tag">XGBoost</span>
+            <span class="tag">LightGBM</span>
+          </div>
+          <div class="card-actions">
+            <a class="link-btn" href="#" target="_blank" rel="noopener" data-ext="true">Upcoming paper related work</a>
+          </div>
+        </div>
+  
+        <!-- Medical Chatbot (PIXTRAL) -->
+        <div class="card">
+          <h3>Medical Chatbot (PIXTRAL)</h3>
+          <p class="card-meta">Finalist • Sep 2024 • Mistral AI Hack UK</p>
+          <p>
+            PIXTRAL-12B + RAG on NHS datasets with session context, prompt chaining, and safety fallback rules.
+          </p>
+          <div class="tags">
+            <span class="tag">RAG</span>
+            <span class="tag">LLM</span>
+            <span class="tag">Healthcare</span>
+            <span class="tag">Safety</span>
+          </div>
+          <div class="card-actions">
+            <a class="link-btn" href="https://devpost.com/software/pixtralogist" target="_blank" rel="noopener" data-ext="true">Hack Report</a>
+          </div>
+        </div>
+  
+        <!-- Privacy-Centric Skin Classifier -->
+        <div class="card">
+          <h3>Privacy-Centric Skin Disease Classifier</h3>
+          <p class="card-meta">Oct 2024 • META Hackathon</p>
+          <p>
+            Encrypted inference via ZKP/MPC; IPFS for tamper-proof storage. Certifiable outputs without exposing raw patient data.
+          </p>
+          <div class="tags">
+            <span class="tag">Privacy-Preserving ML</span>
+            <span class="tag">ZKP</span>
+            <span class="tag">MPC</span>
+            <span class="tag">IPFS</span>
+          </div>
+          <div class="card-actions">
+            <a class="link-btn ghost" href="#" target="_blank" rel="noopener" data-ext="true">GitHub</a>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </section>
+  
+
+  <!-- Hackathons Section -->
+<section id="hackathons" class="fade-in">
+    <div class="container">
+      <div class="section-title">
+        <h2>Hackathons</h2>
+        <p>Highlights from competitive AI hackathons</p>
+      </div>
+      <div class="cards-grid">
+  
+        <div class="card">
+          <h3>Mistral AI Hack UK — Finalist</h3>
+          <p class="card-meta">Sep 2024 • London</p>
+          <p>
+            Built a medical chatbot with PIXTRAL-12B and RAG grounding on NHS datasets. 
+            Integrated session memory, safety fallback rules, and automated prompt chaining. 
+            Finalist among 200+ teams.
+          </p>
+          <div class="tags">
+            <span class="tag">Mistral AI</span>
+            <span class="tag">Healthcare</span>
+            <span class="tag">RAG</span>
+          </div>
+        </div>
+  
+        <div class="card">
+          <h3>META Hackathon — Privacy-Centric Skin Classifier</h3>
+          <p class="card-meta">Oct 2024 • Online</p>
+          <p>
+            Encrypted inference using ZKP/MPC with IPFS for tamper-proof storage. 
+            Enabled privacy-preserving skin disease classification without exposing raw data.
+          </p>
+          <div class="tags">
+            <span class="tag">ZKP</span>
+            <span class="tag">MPC</span>
+            <span class="tag">IPFS</span>
+          </div>
+        </div>
+  
+        <div class="card">
+          <h3>Brave × Nebius × Cerebral Valley Hackathon</h3>
+          <p class="card-meta">2022 • London</p>
+          <p>
+            Early exploration of RAG-based chat systems using Brave search and open-source LLMs. 
+            Built a working demo of multi-step prompt chaining with retrieval grounding.
+          </p>
+          <div class="tags">
+            <span class="tag">Hackathon</span>
+            <span class="tag">RAG</span>
+            <span class="tag">LLM</span>
+          </div>
+        </div>
+  
+      </div>
+    </div>
+  </section>
+  
+
+
+
+  <!-- Contact Section -->
+  <section id="contact" class="fade-in">
+    <div class="container">
+      <div class="contact">
+        <h2>Let's Connect</h2>
+        <p>Interested in AI research collaboration or discussing innovative projects? I'd love to hear from you.</p>
+        <div class="contact-links">
+          <a href="mailto:kaushikdas.career@gmail.com" class="contact-link">
+            📧 Email
+          </a>
+          <a href="https://github.com/Kaushik0621" target="_blank" class="contact-link">
+            💻 GitHub
+          </a>
+          <a href="https://www.linkedin.com/in/kaushikdas-connections" target="_blank" class="contact-link">
+            💼 LinkedIn
+          </a>
+          <a href="resume/Kaushik_Das_Resume.pdf" target="_blank" class="contact-link">
+            📄 Resume
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>© 2025 Kaushik Das • Built with passion for AI and innovation</p>
+    </div>
+  </footer>
+
+  <script>
+    // Create floating particles
+    function createParticles() {
+      const particles = document.getElementById('particles');
+      const particleCount = 50;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 6 + 's';
+        particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+        particles.appendChild(particle);
+      }
+    }
+
+    // Smooth scrolling for navigation
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.querySelector(item.getAttribute('href'));
+        target.scrollIntoView({ behavior: 'smooth' });
+        
+        // Update active nav item
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        item.classList.add('active');
+      });
+    });
+
+    // Intersection Observer for fade-in animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    // Observe all fade-in elements
+    document.querySelectorAll('.fade-in').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Update active nav item on scroll
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('section[id]');
+      const scrollPos = window.scrollY + 100;
+      
+      sections.forEach(section => {
+        const top = section.offsetTop;
+        const height = section.offsetHeight;
+        const id = section.getAttribute('id');
+        
+        if (scrollPos >= top && scrollPos < top + height) {
+          document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+          document.querySelector(`.nav-item[href="#${id}"]`)?.classList.add('active');
+        }
+      });
+    });
+
+    // Add hover effects to cards
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        card.style.transform = 'translateY(-10px) scale(1.02)';
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'translateY(0) scale(1)';
+      });
+    });
+
+    // Initialize particles
+    createParticles();
+
+    // Add typing effect to hero title
+    function typeWriter(element, text, speed = 100) {
+      let i = 0;
+      element.innerHTML = '';
+      
+      function type() {
+        if (i < text.length) {
+          element.innerHTML += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        }
+      }
+      type();
+    }
+
+    // Start typing animation when page loads
+    window.addEventListener('load', () => {
+      const heroTitle = document.querySelector('.hero-text h1');
+      const originalText = heroTitle.textContent;
+      typeWriter(heroTitle, originalText, 150);
+    });
+
+    // Add parallax effect to background
+    window.addEventListener('scroll', () => {
+      const scrolled = window.pageYOffset;
+      const background = document.querySelector('.bg-animation');
+      background.style.transform = `translateY(${scrolled * 0.5}px)`;
+    });
+
+
+    // Certificate Modal Functionality
+    const modal = document.getElementById('cert-modal');
+    const certImage = document.getElementById('cert-image');
+    const certTitle = document.getElementById('cert-title');
+    const certClose = document.getElementById('cert-close');
+
+    document.querySelectorAll('.clickable-cert').forEach(item => {
+    item.addEventListener('click', () => {
+        const certPath = item.getAttribute('data-cert');
+        const title = item.getAttribute('data-title');
+        
+        certImage.src = certPath;
+        certTitle.textContent = title;
+        modal.classList.add('show');
+        modal.setAttribute('aria-hidden', 'false');
+    });
+    });
+
+    function closeCertModal() {
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden', 'true');
+    certImage.src = '';
+    }
+
+    certClose.addEventListener('click', closeCertModal);
+    modal.addEventListener('click', (e) => {
+    if (e.target === modal || e.target.classList.contains('modal-backdrop')) {
+        closeCertModal();
+    }
+    });
+
+    document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('show')) {
+        closeCertModal();
+    }
+    });
+
+    // Expandable Experience Functionality
+    document.querySelectorAll('.expandable').forEach(item => {
+    item.addEventListener('click', () => {
+        const targetId = item.getAttribute('data-target');
+        const targetDetails = document.getElementById(targetId);
+        const icon = item.querySelector('.expand-icon');
+        
+        // Close all other expanded items
+        document.querySelectorAll('.timeline-details.expanded').forEach(detail => {
+        if (detail.id !== targetId) {
+            detail.classList.remove('expanded');
+            const otherIcon = detail.parentElement.querySelector('.expand-icon');
+            if (otherIcon) otherIcon.classList.remove('rotated');
+        }
+        });
+        
+        // Toggle current item
+        targetDetails.classList.toggle('expanded');
+        icon.classList.toggle('rotated');
+    });
+    });
+
+    // Add click ripple effect to buttons
+    document.querySelectorAll('.btn, .contact-link').forEach(button => {
+      button.addEventListener('click', function(e) {
+        const ripple = document.createElement('span');
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+        
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        ripple.classList.add('ripple');
+        
+        this.appendChild(ripple);
+        
+        setTimeout(() => {
+          ripple.remove();
+        }, 600);
+      });
+    });
+  </script>
+
+  <style>
+    /* Ripple effect */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+      pointer-events: none;
+    }
+
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    /* Additional hover effects */
+    .btn {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-link {
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Enhanced card animations */
+    .card {
+      transform-style: preserve-3d;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .card:hover {
+      transform: translateY(-15px) rotateX(5deg) rotateY(5deg);
+      box-shadow: 
+        0 25px 50px rgba(59, 130, 246, 0.3),
+        0 0 0 1px rgba(59, 130, 246, 0.1);
+    }
+
+    /* Glowing text effect for hero */
+    .hero-text h1 {
+      text-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+      }
+      to {
+        text-shadow: 0 0 40px rgba(59, 130, 246, 0.8), 0 0 60px rgba(16, 185, 129, 0.3);
+      }
+    }
+
+    /* Loading animation */
+    .loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--background);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+
+    .loading.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(59, 130, 246, 0.3);
+      border-top: 3px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--surface);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(var(--primary), var(--accent));
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(var(--primary-light), var(--accent-light));
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 480px) {
+      .hero-text h1 {
+        font-size: 2rem;
+      }
+      
+      .hero-text .subtitle {
+        font-size: 1.2rem;
+      }
+      
+      .btn {
+        padding: 12px 20px;
+        font-size: 14px;
+      }
+      
+      .card {
+        padding: 20px;
+      }
+      
+      .contact {
+        padding: 40px 20px;
+      }
+      
+      .stats {
+        padding: 40px 20px;
+      }
+      
+      .section-title h2 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</body>
+</html>
