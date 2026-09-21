@@ -1,0 +1,353 @@
+/* ============================================================
+   "Ask about Kaushik" widget.
+
+   Borrows the page's own vocabulary — the 135deg accent gradient,
+   999px pills, mono micro-labels, card shadows — so it reads as
+   part of the site rather than a plugin dropped on top.
+   ============================================================ */
+
+/* ---------- Launcher ---------- */
+.chat-fab {
+  position: fixed;
+  right: 26px;
+  bottom: 26px;
+  z-index: 90;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px 8px 11px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  /* Frosted rather than solid: the launcher spends most of its life parked on
+     top of the atlas, and an opaque white pill there reads as a sticker. */
+  background: color-mix(in srgb, var(--surface) 84%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+          backdrop-filter: blur(14px) saturate(140%);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 550;
+  letter-spacing: -0.012em;
+  cursor: pointer;
+  box-shadow: var(--shadow-2);
+  transition: transform .22s cubic-bezier(.2,.8,.3,1), box-shadow .22s ease, border-color .22s ease;
+}
+.chat-fab:hover { transform: translateY(-2px); box-shadow: var(--shadow-3); border-color: var(--accent-line); background: var(--surface); }
+.chat-fab:active { transform: translateY(0); }
+.chat-fab:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.chat-fab[hidden] { display: none; }
+
+/* No tile and no shadow — it is drawn in the accent colour on whatever it
+   happens to be sitting on, like every other line drawing on this page. The
+   green "online" pip went with the tile: nothing here goes offline, so it was
+   decoration borrowed from messaging apps. */
+.chat-mark { display: block; flex: none; color: var(--accent); }
+.chat-fab-wrap, .chat-id-av-wrap { position: relative; display: grid; place-items: center; flex: none; }
+
+/* ---------- Panel ---------- */
+.chat-panel {
+  position: fixed;
+  right: 26px;
+  bottom: 26px;
+  z-index: 95;
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  max-width: calc(100vw - 32px);
+  height: 548px;
+  max-height: calc(100vh - 52px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: var(--shadow-3);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(14px) scale(.975);
+  transform-origin: 100% 100%;
+  transition: opacity .24s ease, transform .28s cubic-bezier(.2,.8,.3,1);
+}
+.chat-panel[hidden] { display: none; }
+.chat-panel.is-open { opacity: 1; transform: none; }
+
+/* A 2px brand bar across the top, an accent wash behind the header and a
+   saturated tile in it were three statements competing in 60px of height. The
+   mark alone carries the colour now. */
+
+/* ---------- Header ---------- */
+.chat-head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 14px 12px 13px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.chat-head h2 {
+  font-size: 13.5px;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  color: var(--text);
+  line-height: 1.25;
+}
+.chat-head .sub {
+  margin-top: 4px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.chat-head .spacer { margin-left: auto; }
+
+.chat-close {
+  display: grid; place-items: center;
+  width: 30px; height: 30px;
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--text-3);
+  cursor: pointer;
+  transition: background .16s ease, color .16s ease;
+}
+.chat-close:hover { background: color-mix(in srgb, var(--text-3) 12%, transparent); color: var(--text); }
+.chat-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.chat-close svg { width: 15px; height: 15px; }
+
+/* ---------- Log ---------- */
+.chat-log {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 20px 17px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  /* The header is opaque, so scrolled text was being chopped clean in half at
+     its edge. Dissolve it instead. */
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 16px);
+          mask-image: linear-gradient(180deg, transparent 0, #000 16px);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-2) transparent;
+}
+.chat-log::-webkit-scrollbar { width: 9px; }
+.chat-log::-webkit-scrollbar-thumb {
+  background: var(--border-2);
+  border-radius: 999px;
+  border: 3px solid var(--surface);
+}
+.chat-log::-webkit-scrollbar-track { background: transparent; }
+
+/* ---------- Opening state ---------- */
+/* With one block and nothing to scroll, the log centres it. Top-aligned, it
+   left roughly 250px of nothing between the greeting and the chips. */
+.chat-panel.is-empty .chat-log { justify-content: center; padding-bottom: 20px; }
+.chat-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 4px 10px;
+}
+.chat-id-av-wrap { position: relative; display: inline-grid; place-items: center; }
+.chat-mark-lg { stroke-width: 1.3; }
+/* Soft aura so the mark reads as the subject of the panel, not an icon. */
+.chat-id-av-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 13%, transparent), transparent 70%);
+  z-index: -1;
+}
+.chat-intro h3 {
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+.chat-intro p {
+  margin-top: 7px;
+  max-width: 30ch;
+  font-size: 12.8px;
+  line-height: 1.6;
+  color: var(--text-2);
+}
+/* ---------- Messages ---------- */
+.chat-msg {
+  position: relative;
+  max-width: 87%;
+  font-size: 13.4px;
+  line-height: 1.62;
+  letter-spacing: -0.008em;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  animation: chat-rise .26s cubic-bezier(.2,.8,.3,1) both;
+}
+@keyframes chat-rise {
+  from { opacity: 0; transform: translateY(7px); }
+  to   { opacity: 1; transform: none; }
+}
+/* The answer is the content of this panel, so it is set as text, not packed
+   into a tinted bubble with a border. A five-line reply in a bordered box is
+   most of what made the widget look bolted on; the page sets its own prose
+   flush too. The visitor's line stays a bubble, which is all the distinction
+   the two need. */
+.chat-msg.from-bot {
+  align-self: stretch;
+  max-width: 100%;
+  color: var(--text);
+}
+.chat-msg.from-user {
+  align-self: flex-end;
+  max-width: 84%;
+  padding: 9px 14px;
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 62%, var(--accent-2)));
+  color: var(--on-accent);
+  border-radius: 14px;
+  box-shadow: var(--shadow-1);
+}
+/* A failure is the one thing that should not look like an answer. */
+.chat-msg.is-error {
+  padding-left: 12px;
+  border-left: 2px solid var(--border-2);
+  color: var(--text-2);
+}
+
+/* Source trail: the same mono micro-label the page uses for its own captions. */
+.chat-src {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: -9px 0 0 1px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.chat-src .line { width: 12px; height: 1px; background: var(--border-2); flex: none; }
+.chat-src a {
+  color: var(--text-3);
+  text-decoration: none;
+  transition: color .15s ease;
+}
+.chat-src a:hover { color: var(--accent); }
+
+.chat-typing { display: inline-flex; gap: 4px; padding: 3px 0; }
+.chat-typing i {
+  width: 5.5px; height: 5.5px;
+  border-radius: 50%;
+  background: var(--text-3);
+  animation: chat-bounce 1.15s infinite ease-in-out;
+}
+.chat-typing i:nth-child(2) { animation-delay: .16s; }
+.chat-typing i:nth-child(3) { animation-delay: .32s; }
+@keyframes chat-bounce {
+  0%, 62%, 100% { transform: translateY(0);    opacity: .38; }
+  31%           { transform: translateY(-4px); opacity: 1; }
+}
+
+/* ---------- Suggestions ---------- */
+.chat-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 20px;
+  padding: 0 4px;
+}
+.chat-chip {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-family: var(--font);
+  font-size: 11.8px;
+  letter-spacing: -0.008em;
+  cursor: pointer;
+  transition: border-color .16s ease, color .16s ease, background .16s ease, transform .16s ease;
+}
+.chat-chip:hover {
+  border-color: var(--accent-line);
+  background: var(--accent-soft);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+.chat-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.chat-chips[hidden] { display: none; }
+
+/* ---------- Composer ---------- */
+.chat-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin: 0 13px 13px;
+  padding: 6px 6px 6px 14px;
+  border: 1px solid var(--border-2);
+  border-radius: 16px;
+  background: var(--surface);
+  transition: border-color .18s ease, box-shadow .18s ease;
+}
+.chat-form:focus-within {
+  border-color: var(--accent-line);
+  box-shadow: 0 0 0 2.5px color-mix(in srgb, var(--accent-soft) 70%, transparent);
+}
+.chat-input {
+  flex: 1;
+  align-self: center;
+  min-height: 24px;
+  max-height: 104px;
+  padding: 6px 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 13.4px;
+  line-height: 1.5;
+  letter-spacing: -0.008em;
+  resize: none;
+}
+.chat-input:focus { outline: none; }
+.chat-input::placeholder { color: var(--text-3); }
+
+.chat-send {
+  display: grid; place-items: center;
+  width: 34px; height: 34px; flex: none;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 62%, var(--accent-2)));
+  color: var(--on-accent);
+  cursor: pointer;
+  box-shadow: var(--shadow-1);
+  transition: transform .16s ease, opacity .16s ease, filter .16s ease;
+}
+.chat-send:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.06); }
+.chat-send:disabled { opacity: .4; cursor: not-allowed; box-shadow: none; }
+.chat-send:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.chat-send svg { width: 15px; height: 15px; }
+
+/* ---------- Small screens ---------- */
+@media (max-width: 520px) {
+  .chat-fab { right: 14px; bottom: 14px; }
+  .chat-panel {
+    right: 8px; left: 8px; bottom: 8px;
+    width: auto;
+    height: min(80vh, 548px);
+    max-height: calc(100vh - 16px);
+    border-radius: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chat-fab, .chat-panel, .chat-send, .chat-chip { transition: none; }
+  .chat-fab:hover, .chat-send:hover:not(:disabled), .chat-chip:hover { transform: none; }
+  .chat-msg { animation: none; }
+  .chat-typing i { animation: none; opacity: .55; }
+}
+

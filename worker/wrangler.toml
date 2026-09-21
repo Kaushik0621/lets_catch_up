@@ -1,0 +1,27 @@
+name = "kaushik-site-chat"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+
+[vars]
+# Where the knowledge base is fetched from, and the only origins allowed to call this Worker.
+KB_URL = "https://kaushik0621.github.io/lets_catch_up/data/kb.json"
+ALLOWED_ORIGINS = "https://kaushik0621.github.io,http://localhost:8000,http://127.0.0.1:8000"
+
+# OpenRouter model slug. Check https://openrouter.ai/models if this one 404s.
+MODEL = "anthropic/claude-sonnet-5"
+
+# Attribution headers OpenRouter uses for its leaderboard. Harmless, optional.
+SITE_URL = "https://kaushik0621.github.io/lets_catch_up/"
+SITE_NAME = "Kaushik Das"
+
+# Retrieval gate, calibrated with `node tune.mjs 1.5 0.4`: 0/20 real questions
+# blocked, 2/12 off-topic ones pass here and get caught by the model gate instead.
+MIN_SCORE = "1.5"
+MIN_COVERAGE = "0.4"
+
+# Requests allowed per IP per rolling window.
+RATE_LIMIT = "12"
+RATE_WINDOW_S = "60"
+
+# The API key is NOT here. Set it with:
+#   wrangler secret put OPENROUTER_API_KEY

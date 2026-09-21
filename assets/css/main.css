@@ -484,88 +484,243 @@ footer p { font-size: 12.5px; color: var(--text-3); }
 
 .topbar { display: none; }
 
-/* ---------- Modal ---------- */
-/* ---------- Certificate viewer ----------
-   Certificates are tall portrait scans, so the frame is sized to the image
-   rather than the other way round: the whole page is visible at a glance,
-   and Zoom switches to 1:1 for reading the small print. */
+/* ============================================================
+   Certificate viewer
+   A scan on its own is just a photo of a page. The rail beside it carries
+   what the document certifies — degree, awarding body, date, result — so the
+   view reads as a credential, and the paper is staged like paper: tilted in,
+   lit once, sitting on its own shadow. Everything takes the city's colour.
+   ============================================================ */
 .modal { position: fixed; inset: 0; z-index: 300; display: none; }
 .modal.open { display: flex; align-items: center; justify-content: center; padding: 3vh 16px; }
 .modal-backdrop {
-  position: absolute; inset: 0;
-  background: color-mix(in srgb, var(--bg) 62%, transparent);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); opacity: 0;
+  position: absolute; inset: 0; opacity: 0;
+  background:
+    radial-gradient(70% 80% at 22% 40%, color-mix(in srgb, var(--place) 26%, transparent), transparent 70%),
+    color-mix(in srgb, var(--bg) 72%, #000 28%);
+  backdrop-filter: blur(14px) saturate(120%); -webkit-backdrop-filter: blur(14px) saturate(120%);
 }
 .modal-dialog {
-  position: relative; z-index: 1;
-  display: flex; flex-direction: column;
-  max-width: 100%; max-height: 94vh;
+  position: relative; z-index: 1; opacity: 0;
+  display: grid; grid-template-columns: 330px minmax(0, 1fr);
+  width: min(1120px, 100%); max-height: 94vh;
   background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--r-lg); box-shadow: var(--shadow-3); overflow: hidden; opacity: 0;
-}
-.modal-header {
-  display: flex; align-items: center; justify-content: space-between; gap: 18px;
-  padding: 11px 12px 11px 16px; border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-.modal-header h3 {
-  font-size: 13.5px; font-weight: 600; letter-spacing: -0.02em;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.modal-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-.modal-btn, .modal-close {
-  display: inline-flex; align-items: center; gap: 6px;
-  height: 30px; padding: 0 11px;
-  border: 1px solid var(--border); border-radius: var(--r-sm);
-  background: var(--surface-2); color: var(--text-2);
-  font-size: 12px; font-weight: 500; cursor: pointer; text-decoration: none;
-  transition: color .2s ease, border-color .2s ease, background .2s ease;
-}
-.modal-close { width: 30px; padding: 0; justify-content: center; }
-.modal-btn svg, .modal-close svg { width: 14px; height: 14px; }
-.modal-btn:hover, .modal-close:hover {
-  color: var(--text); border-color: var(--border-2); background: var(--surface);
-}
-.modal-btn[aria-pressed="true"] {
-  color: var(--accent); border-color: var(--accent-line); background: var(--accent-soft);
+  border-radius: var(--r-xl); box-shadow: var(--shadow-3);
+  overflow: hidden;
 }
 
+/* ---------- the rail ---------- */
+.cert-rail {
+  position: relative; overflow: hidden;
+  border-right: 1px solid var(--border);
+  background:
+    linear-gradient(165deg, color-mix(in srgb, var(--place) 13%, var(--surface)) 0%,
+                            var(--surface) 62%);
+}
+/* the city's landmark, blown up and turned right down — texture, not an icon */
+.cr-mark {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  color: var(--place); opacity: .36; pointer-events: none;
+}
+.cr-mark > svg { display: block; width: 100%; height: auto; }
+/* the rail's own background, so the fill keeps hiding overlaps here too */
+.cr-mark .sky { fill: var(--surface); }
+.modal.open .cr-mark .sky > * { animation: skyDraw .7s cubic-bezier(.35,.1,.25,1) .2s both; }
+.cr-in {
+  position: relative; display: flex; flex-direction: column;
+  height: 100%; padding: 26px 26px 28px; overflow: auto; overscroll-behavior: contain;
+}
+.cr-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 26px; }
+/* the same brand tile the card uses — several of these wordmarks are white,
+   and vanish on anything but their own colour */
+.cr-logo { flex-shrink: 0; box-shadow: var(--shadow-1); }
+.cr-seal {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 10px 5px 8px; border-radius: 999px;
+  font-size: 10.5px; font-weight: 600; letter-spacing: .01em;
+  color: var(--place);
+  background: color-mix(in srgb, var(--place) 11%, transparent);
+  border: 1px solid color-mix(in srgb, var(--place) 26%, transparent);
+}
+.cr-seal svg { width: 12px; height: 12px; }
+
+.cr-eyebrow {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--place); margin-bottom: 10px;
+}
+.cr-title {
+  font-size: 26px; line-height: 1.14; font-weight: 650; letter-spacing: -0.035em;
+  color: var(--text); text-wrap: balance;
+}
+.cr-kind { margin-top: 8px; font-size: 14px; font-weight: 550; color: var(--text-2); }
+.cr-org  { margin-top: 3px; font-size: 13px; color: var(--text-3); line-height: 1.45; }
+
+.cr-facts { margin-top: 24px; border-top: 1px solid var(--border); }
+.cr-facts > div {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 14px;
+  padding: 10px 0; border-bottom: 1px solid var(--border);
+}
+.cr-facts dt { font-size: 11.5px; color: var(--text-3); white-space: nowrap; }
+.cr-facts dd {
+  font-family: var(--mono); font-size: 11.5px; color: var(--text);
+  text-align: right; line-height: 1.4;
+}
+.cr-note {
+  margin-top: 18px; padding-left: 12px;
+  border-left: 2px solid color-mix(in srgb, var(--place) 45%, transparent);
+  font-size: 11.5px; line-height: 1.5; color: var(--text-3); text-wrap: pretty;
+}
+.cr-note:empty { display: none; }
+
+/* the rail's contents arrive just behind the paper, top to bottom */
+.modal.open .cr-in > * { animation: crIn .5s cubic-bezier(.22,.8,.28,1) backwards; }
+.modal.open .cr-in > :nth-child(1) { animation-delay: .10s; }
+.modal.open .cr-in > :nth-child(2) { animation-delay: .15s; }
+.modal.open .cr-in > :nth-child(3) { animation-delay: .19s; }
+.modal.open .cr-in > :nth-child(4) { animation-delay: .23s; }
+.modal.open .cr-in > :nth-child(5) { animation-delay: .27s; }
+.modal.open .cr-in > :nth-child(6) { animation-delay: .31s; }
+.modal.open .cr-in > :nth-child(7) { animation-delay: .35s; }
+@keyframes crIn { from { opacity: 0; transform: translateY(10px); } }
+
+/* ---------- the stage ---------- */
+.cert-stage {
+  position: relative; display: flex; flex-direction: column; min-width: 0;
+  background:
+    radial-gradient(120% 90% at 50% 0%, color-mix(in srgb, var(--place) 7%, transparent), transparent 66%),
+    var(--surface-2);
+}
 .modal-body {
   position: relative; flex: 1; min-height: 0;
-  display: grid; place-items: center;
-  padding: 14px; overflow: auto;
-  background: var(--surface-2);
-  overscroll-behavior: contain;
+  display: flex; align-items: center; justify-content: center;
+  padding: 30px 30px 8px; overflow: auto; overscroll-behavior: contain;
+  perspective: 1600px;
+}
+
+/* The paper. It shrink-wraps the scan so the glint and the shadow follow the
+   image's real edges rather than the box it sits in. */
+.cert-paper {
+  /* Flex, so its max-height resolves against the stage's real height — a
+     block figure sizes to the scan's intrinsic 3000-odd pixels and spills. */
+  position: relative; display: flex; min-width: 0; min-height: 0;
+  max-width: 100%; max-height: 100%;
+  border-radius: 3px; overflow: hidden;
+  box-shadow:
+    0 1px 1px rgba(23,31,56,.18),
+    0 34px 60px -26px rgba(23,31,56,.55),
+    0 2px 10px rgba(23,31,56,.10);
+  transform-style: preserve-3d;
+  transition: transform .5s cubic-bezier(.22,.8,.28,1);
 }
 .modal-body img {
   display: block; width: auto; height: auto;
-  max-width: 100%; max-height: 100%;
-  border-radius: var(--r-sm); box-shadow: var(--shadow-2);
-  cursor: zoom-in; opacity: 0; transition: opacity .3s ease;
+  max-width: 100%; max-height: 100%; min-height: 0;
+  object-fit: contain;
+  cursor: zoom-in; opacity: 0; transition: opacity .35s ease;
 }
 .modal-body img.ready { opacity: 1; }
 
-/* 1:1 view — the image overflows and the frame pans by scrolling */
-.modal.zoomed .modal-body { place-items: start center; }
-.modal.zoomed .modal-body img { max-width: none; max-height: none; cursor: zoom-out; }
+/* it lands on the table rather than fading in flat */
+.modal.open .cert-paper { animation: paperIn .85s cubic-bezier(.19,.9,.24,1) backwards; }
+@keyframes paperIn {
+  from { opacity: 0; transform: perspective(1600px) rotateY(-11deg) rotateX(5deg) translateY(26px) scale(.95); }
+  to   { opacity: 1; transform: perspective(1600px) rotateY(0) rotateX(0) translateY(0) scale(1); }
+}
+/* one pass of light across the scan as it settles — it reads as a real sheet */
+.cert-glint {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0;
+  background: linear-gradient(104deg, transparent 32%,
+              rgba(255,255,255,.55) 47%, rgba(255,255,255,.12) 56%, transparent 66%);
+}
+.modal.open .cert-glint { animation: glint 1.25s cubic-bezier(.3,.1,.2,1) .34s 1 backwards; }
+@keyframes glint {
+  from { opacity: .9; transform: translateX(-125%); }
+  to   { opacity: 0;  transform: translateX(125%); }
+}
+/* a hint of weight under the pointer */
+@media (hover: hover) {
+  .modal:not(.zoomed) .cert-paper:hover { transform: translateY(-4px) scale(1.006); }
+}
+
+/* ---------- controls ---------- */
+.cert-bar {
+  position: relative; z-index: 2; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px;
+}
+.modal-btn, .modal-close {
+  display: inline-flex; align-items: center; gap: 7px;
+  height: 34px; padding: 0 14px;
+  border: 1px solid var(--border); border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  color: var(--text-2); font: inherit; font-size: 12.5px; font-weight: 550;
+  cursor: pointer; text-decoration: none;
+  transition: color .2s ease, border-color .2s ease, background .2s ease, transform .2s ease;
+}
+.modal-btn svg, .modal-close svg { width: 15px; height: 15px; }
+.modal-btn:hover, .modal-close:hover {
+  color: var(--place); border-color: color-mix(in srgb, var(--place) 45%, transparent);
+  background: color-mix(in srgb, var(--place) 9%, var(--surface));
+}
+.modal-close {
+  position: absolute; top: 14px; right: 14px; z-index: 4;
+  width: 34px; padding: 0; justify-content: center;
+}
+/* the toggle says what the next press does, not what state you are in */
+.modal-btn .zl-out, .modal.zoomed .modal-btn .zl-in { display: none; }
+.modal.zoomed .modal-btn .zl-out { display: inline; }
 
 .modal-spinner {
-  position: absolute; width: 22px; height: 22px; border-radius: 50%;
-  border: 2px solid var(--border-2); border-top-color: var(--accent);
+  position: absolute; width: 24px; height: 24px; border-radius: 50%;
+  border: 2px solid var(--border-2); border-top-color: var(--place);
   animation: spin .7s linear infinite; opacity: 0; transition: opacity .2s ease;
 }
 .modal.is-loading .modal-spinner { opacity: 1; }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---------- 1:1 reading ----------
+   The rail gets out of the way and the scan goes to natural size; the stage
+   pans by scrolling. */
+.modal.zoomed .modal-dialog { grid-template-columns: 0 minmax(0, 1fr); width: min(1360px, 100%); }
+.modal.zoomed .cert-rail { border-right-width: 0; }
+.modal.zoomed .modal-body { align-items: flex-start; padding: 18px; perspective: none; }
+.modal.zoomed .cert-paper { max-width: none; max-height: none; box-shadow: var(--shadow-2); }
+.modal.zoomed .modal-body img { max-width: none; max-height: none; cursor: zoom-out; }
+
 @media (prefers-reduced-motion: reduce) {
   .modal-spinner { animation-duration: 2s; }
   .modal-body img { transition: none; }
+  .modal.open .cert-paper, .modal.open .cr-in > *, .modal.open .cert-glint { animation: none; }
+  .cert-paper { transition: none; }
 }
 
+/* Stacked: the rail goes on top, so it is capped — the scan is the point, and
+   an uncapped rail would leave it a thumbnail. The close button now floats
+   over the rail's top-right corner, so the header keeps clear of it. */
+@media (max-width: 980px) {
+  .modal-dialog { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+  .cert-rail { border-right: 0; border-bottom: 1px solid var(--border); max-height: 38vh; }
+  .cr-in { padding: 18px 20px 20px; }
+  .cr-top { padding-right: 46px; margin-bottom: 18px; }
+  .cr-mark { width: 170px; height: 170px; right: -34px; bottom: -40px; }
+  .cr-title { font-size: 21px; }
+  .cr-facts { margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 24px; }
+  .cr-note { margin-top: 14px; }
+  .modal-body { padding: 18px 18px 6px; }
+}
 @media (max-width: 620px) {
   .modal.open { padding: 0; }
   .modal-dialog { max-height: 100vh; height: 100vh; width: 100%; border: 0; border-radius: 0; }
+  .cert-rail { max-height: 44vh; }
+  .cr-in { padding: 14px 16px 16px; }
+  .cr-title { font-size: 18.5px; }
+  .cr-kind { margin-top: 6px; font-size: 13px; }
+  .cr-facts { grid-template-columns: 1fr; margin-top: 12px; }
+  .cr-facts > div { padding: 7px 0; }
+  .modal-close { top: 10px; right: 10px; }
   .modal-btn span { display: none; }
-  .modal-btn { padding: 0 9px; }
+  .modal-btn { padding: 0 11px; }
 }
 
 /* ---------- Reveal ---------- */
@@ -660,10 +815,10 @@ footer p { font-size: 12.5px; color: var(--text-3); }
 .atlas-svg {
   /* feather every edge so the wash never shows a rectangle */
   -webkit-mask-image:
-    linear-gradient(to bottom, transparent 0%, #000 8%, #000 62%, transparent 92%),
+    linear-gradient(to bottom, transparent 0%, #000 6%, #000 80%, transparent 98%),
     linear-gradient(to right,  transparent 0%, #000 9%, #000 91%, transparent 100%);
           mask-image:
-    linear-gradient(to bottom, transparent 0%, #000 8%, #000 62%, transparent 92%),
+    linear-gradient(to bottom, transparent 0%, #000 6%, #000 80%, transparent 98%),
     linear-gradient(to right,  transparent 0%, #000 9%, #000 91%, transparent 100%);
   -webkit-mask-composite: source-in;
           mask-composite: intersect;
@@ -788,11 +943,6 @@ footer p { font-size: 12.5px; color: var(--text-3); }
 .atlas.has-lit .atlas-land path { fill-opacity: .085; stroke-opacity: .72; }
 .exp-item.located, .card.located { border-color: color-mix(in srgb, var(--place) 45%, transparent); }
 
-/* the route summary in the section header */
-.route-hint { color: var(--text-2) !important; letter-spacing: -0.01em; }
-.route-hint i { font-style: normal; color: var(--accent); padding: 0 3px; }
-.sec-head .route-hint + .hint { padding-left: 13px; border-left: 1px solid var(--border); }
-
 @media (prefers-reduced-motion: reduce) {
   .js .atlas[data-drawn] .leg,
   .js .atlas[data-drawn] .atlas-pin .halo { animation: none; }
@@ -801,7 +951,6 @@ footer p { font-size: 12.5px; color: var(--text-3); }
 
 @media (max-width: 900px) {
   .atlas { top: 26px; }
-  .sec-head .route-hint { display: none; }
 }
 
 /* ============================================================
@@ -866,74 +1015,194 @@ footer p { font-size: 12.5px; color: var(--text-3); }
 [data-place="london"]   { --place: var(--c-london); }
 
 /* ---------- Map label ----------
+   Deliberately not a card. A panel over the atlas hid the map and read as a
+   tooltip; this reads as an annotation *on* it. Three things stacked and
+   centred: the city's skyline, the ground line it stands on doubling as the
+   rule the name hangs from, and the type. Legibility comes from a feathered
+   scrim with no edge anywhere — see ::before — rather than from a border.
    Fixed to the viewport because the atlas is viewport-pinned too: JS drops it
    exactly where the zoom lands the city, which is the lane beside the card. */
 .atlas-tip {
   position: fixed; z-index: 60; pointer-events: none;
-  display: none; align-items: center; gap: 9px;
-  padding: 8px 14px 8px 11px;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--place) 50%, transparent);
-  background: color-mix(in srgb, var(--surface) 93%, transparent);
-  -webkit-backdrop-filter: blur(12px) saturate(140%);
-          backdrop-filter: blur(12px) saturate(140%);
-  box-shadow: var(--shadow-2), 0 0 0 6px color-mix(in srgb, var(--place) 13%, transparent);
-  white-space: nowrap;
-  transform: translate(-50%, -50%) scale(.9);
+  /* Never wider than the clear lane it is dropped into: that lane narrows to
+     232px between 1240 and 1440, and a fixed width put the label on the
+     cards there. */
+  display: none; width: min(218px, calc(var(--map-lane) - 26px)); text-align: center;
+  transform: translate(-50%, -50%) scale(.94);
   opacity: 0;
   transition: opacity .28s ease, transform .45s cubic-bezier(.22,.8,.28,1);
 }
-@media (min-width: 1240px) { .atlas-tip { display: flex; } }
+/* The scrim. A radial wash of the page colour, masked by the same radial so
+   it has no boundary to see — it just gets thinner until it is gone. The
+   backdrop blur rides the mask too, so the map softens under the type and
+   sharpens again with no rim marking where one stops and the other starts. */
+.atlas-tip::before {
+  content: ""; position: absolute; z-index: -1; inset: -26px -34px -20px;
+  background: radial-gradient(58% 60% at 50% 54%,
+    color-mix(in srgb, var(--bg) 92%, transparent) 0%,
+    color-mix(in srgb, var(--bg) 74%, transparent) 55%,
+    transparent 100%);
+  -webkit-backdrop-filter: blur(10px) saturate(126%);
+          backdrop-filter: blur(10px) saturate(126%);
+  -webkit-mask-image: radial-gradient(56% 58% at 50% 54%, #000 38%, transparent 100%);
+          mask-image: radial-gradient(56% 58% at 50% 54%, #000 38%, transparent 100%);
+}
+@media (min-width: 1240px) { .atlas-tip { display: block; } }
 .atlas-tip.on { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-.atlas-tip .pb-dot { width: 9px; height: 9px; }
+
 @media (prefers-reduced-motion: reduce) { .atlas-tip { transition: none; } }
 
 /* ---------- Place badge ----------
-   Sits on the right-hand side of the hovered card and names the city,
-   with that card's own dates — not a city-wide range, so a finished role
-   never reads as current. */
+   The no-lane counterpart to the map label, and boxless for the same reason:
+   it already sits on a card, so a second surface on top of that one was pure
+   packaging. Names the city with that card's own dates — not a city-wide
+   range, so a finished role never reads as current. */
 .place-badge {
-  position: absolute; top: 15px; right: 16px; z-index: 3;
-  display: flex; align-items: center; gap: 9px;
-  padding: 7px 13px 7px 11px;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--place) 48%, transparent);
-  background: color-mix(in srgb, var(--surface) 94%, transparent);
-  -webkit-backdrop-filter: blur(12px) saturate(140%);
-          backdrop-filter: blur(12px) saturate(140%);
-  box-shadow: var(--shadow-2), 0 0 0 5px color-mix(in srgb, var(--place) 12%, transparent);
-  white-space: nowrap; pointer-events: none;
-  opacity: 0; transform: translateX(10px) scale(.94); transform-origin: 100% 50%;
+  position: absolute; top: 13px; right: 16px; z-index: 3;
+  display: block; width: 188px; text-align: center;
+  pointer-events: none;
+  opacity: 0; transform: translateX(10px); transform-origin: 100% 50%;
   transition: opacity .28s ease, transform .4s cubic-bezier(.22,.8,.28,1);
 }
-/* the chevron already owns the top-right corner of a role row */
-.exp-item .place-badge { right: 52px; }
+/* A collapsed role row is only ~96px tall and the badge is three stacked
+   pieces, so the role variant runs a size down throughout to stay inside it. */
+.exp-item .place-badge { right: 52px; top: 7px; }
+.exp-item .place-badge .pb-sky svg { height: 36px; }
+.exp-item .place-badge .pb-name { margin-top: 5px; }
+.exp-item .place-badge .pb-city { font-size: 13.5px; }
+.exp-item .place-badge .pb-when { margin-top: 2px; font-size: 9.5px; }
 .exp-item.no-detail .place-badge { right: 18px; }
 
-.located > .place-badge { opacity: 1; transform: translateX(0) scale(1); }
+.located > .place-badge { opacity: 1; transform: translateX(0); }
 
-/* An education card is half-width, so a top-right badge lands on its own
-   heading. It goes bottom-right instead, beside the certificate link, and
-   names only the city — the card already prints the dates up top. */
-.card .place-badge { top: auto; bottom: 15px; right: 15px; }
+/* Education cards get none. The old badge could sit over the "At the time"
+   panel because it was an opaque box; without one it would be reading through
+   onto the facts, and the two fire on the same hover so there is no moment
+   when the card's bottom is free. Nothing is lost — the card already prints
+   "IEM, Kolkata (MAKAUT) · India" under its title, the map label covers this
+   from 1240px up, and the certificate viewer carries the skyline at every
+   width. */
+.card .place-badge { display: none; }
 
 .pb-dot {
   width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
   background: var(--place);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--place) 22%, transparent);
 }
+
+/* ---------- City skyline ----------
+   Buildings were authored left to right, so a plain nth-child stagger reads
+   as the city rising west to east — after the ground line has gone down. */
+.pb-sky { display: block; line-height: 0; color: var(--place); }
+/* heights chosen to match the band's 200:48 at each width, so the strip runs
+   edge to edge with nothing letterboxed */
+.pb-sky svg { display: block; width: 100%; height: 48px; }
+.place-badge .pb-sky svg { height: 41px; }
+
+/* Hangs off the skyline's ground line, which is why there is no rule of its
+   own here: the drawn line already is one, and it runs wider than the type. */
+.pb-name {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  margin-top: 8px; white-space: nowrap;
+}
+.pb-city {
+  font-size: 15px; font-weight: 650; letter-spacing: -0.025em; color: var(--text);
+}
+.pb-when {
+  display: block; margin-top: 3px; white-space: nowrap;
+  /* sized so the longest of these — "Scotland · Mar 2026 — Sep 2026" — still
+     sits inside the narrowest lane */
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: .015em;
+  color: color-mix(in srgb, var(--place) 82%, var(--muted));
+}
+/* No panel underneath, so the type carries its own separation from the map. */
+.atlas-tip .pb-city, .atlas-tip .pb-when {
+  text-shadow: 0 1px 3px color-mix(in srgb, var(--bg) 88%, transparent);
+}
+
+.pb-dot {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+  background: var(--place);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--place) 20%, transparent);
+}
+
+/* The skyline is drawn, not filled. The fill is the card's own background, so
+   it never shows — it only stops a building behind showing through the one in
+   front. non-scaling-stroke keeps the line the same weight whether the strip
+   is 176px wide or the certificate rail's 330. */
+.sky {
+  fill: var(--surface); stroke: currentColor; stroke-width: 1.15;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.sky > *, .sky .wheel > * { vector-effect: non-scaling-stroke; }
+.sky .ln { fill: none; }
+/* The occluding fill has to be whatever the strip is floating on, or it shows
+   up as pale blocks: the card for a badge, the page itself out on the map. */
+.atlas-tip .sky { fill: var(--bg); }
+/* the wheel turns on its own axis; the rim and hub are round already, so only
+   the spokes need to move */
+.sky .spokes {
+  transform-box: view-box; transform-origin: 144px 26px;
+  animation: wheelSpin 52s linear infinite;
+}
+@keyframes wheelSpin { to { transform: rotate(360deg); } }
+
+.pb-sky .sky > *, .cr-mark .sky > * { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.atlas-tip.on .pb-sky .sky > *,
+.located > .place-badge .pb-sky .sky > * {
+  animation: skyDraw .5s cubic-bezier(.35,.1,.25,1) 110ms both;
+}
+@keyframes skyDraw { to { stroke-dashoffset: 0; } }
+.pb-sky .sky > :nth-child(2), .cr-mark .sky > :nth-child(2) { animation-delay: 134ms; }
+.pb-sky .sky > :nth-child(3), .cr-mark .sky > :nth-child(3) { animation-delay: 158ms; }
+.pb-sky .sky > :nth-child(4), .cr-mark .sky > :nth-child(4) { animation-delay: 182ms; }
+.pb-sky .sky > :nth-child(5), .cr-mark .sky > :nth-child(5) { animation-delay: 206ms; }
+.pb-sky .sky > :nth-child(6), .cr-mark .sky > :nth-child(6) { animation-delay: 230ms; }
+.pb-sky .sky > :nth-child(7), .cr-mark .sky > :nth-child(7) { animation-delay: 254ms; }
+.pb-sky .sky > :nth-child(8), .cr-mark .sky > :nth-child(8) { animation-delay: 278ms; }
+.pb-sky .sky > :nth-child(9), .cr-mark .sky > :nth-child(9) { animation-delay: 302ms; }
+.pb-sky .sky > :nth-child(10), .cr-mark .sky > :nth-child(10) { animation-delay: 326ms; }
+.pb-sky .sky > :nth-child(11), .cr-mark .sky > :nth-child(11) { animation-delay: 350ms; }
+.pb-sky .sky > :nth-child(12), .cr-mark .sky > :nth-child(12) { animation-delay: 374ms; }
+.pb-sky .sky > :nth-child(13), .cr-mark .sky > :nth-child(13) { animation-delay: 398ms; }
+.pb-sky .sky > :nth-child(14), .cr-mark .sky > :nth-child(14) { animation-delay: 422ms; }
+.pb-sky .sky > :nth-child(15), .cr-mark .sky > :nth-child(15) { animation-delay: 446ms; }
+.pb-sky .sky > :nth-child(16), .cr-mark .sky > :nth-child(16) { animation-delay: 470ms; }
+.pb-sky .sky > :nth-child(17), .cr-mark .sky > :nth-child(17) { animation-delay: 494ms; }
+.pb-sky .sky > :nth-child(18), .cr-mark .sky > :nth-child(18) { animation-delay: 518ms; }
+.pb-sky .sky > :nth-child(19), .cr-mark .sky > :nth-child(19) { animation-delay: 542ms; }
+.pb-sky .sky > :nth-child(20), .cr-mark .sky > :nth-child(20) { animation-delay: 566ms; }
+.pb-sky .sky > :nth-child(21), .cr-mark .sky > :nth-child(21) { animation-delay: 590ms; }
+.pb-sky .sky > :nth-child(22), .cr-mark .sky > :nth-child(22) { animation-delay: 614ms; }
+.pb-sky .sky > :nth-child(23), .cr-mark .sky > :nth-child(23) { animation-delay: 638ms; }
+.pb-sky .sky > :nth-child(24), .cr-mark .sky > :nth-child(24) { animation-delay: 662ms; }
+.pb-sky .sky > :nth-child(25), .cr-mark .sky > :nth-child(25) { animation-delay: 686ms; }
+.pb-sky .sky > :nth-child(26), .cr-mark .sky > :nth-child(26) { animation-delay: 710ms; }
+.pb-sky .sky > :nth-child(27), .cr-mark .sky > :nth-child(27) { animation-delay: 734ms; }
+.pb-sky .sky > :nth-child(28), .cr-mark .sky > :nth-child(28) { animation-delay: 758ms; }
+.pb-sky .sky > :nth-child(29), .cr-mark .sky > :nth-child(29) { animation-delay: 782ms; }
+.pb-sky .sky > :nth-child(30), .cr-mark .sky > :nth-child(30) { animation-delay: 806ms; }
+.pb-sky .sky > :nth-child(31), .cr-mark .sky > :nth-child(31) { animation-delay: 830ms; }
+.pb-sky .sky > :nth-child(32), .cr-mark .sky > :nth-child(32) { animation-delay: 854ms; }
+/* Last child is the ground line skySvg() appends. It goes down first and
+   slower — one line drawing the ground, and the city rising out of it. */
+.pb-sky .sky > .ln:last-child, .cr-mark .sky > .ln:last-child {
+  animation-delay: 0s; animation-duration: .72s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pb-sky .sky > *, .cr-mark .sky > * { animation: none; stroke-dashoffset: 0; }
+  .sky .spokes { animation: none; }
+}
+
 .place-badge.is-now .pb-dot, .atlas-tip.is-now .pb-dot { animation: nowPulse 2s ease-out infinite; }
 @keyframes nowPulse {
-  0%   { box-shadow: 0 0 0 4px color-mix(in srgb, var(--place) 26%, transparent); }
-  70%  { box-shadow: 0 0 0 11px color-mix(in srgb, var(--place) 0%, transparent); }
-  100% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--place) 0%, transparent); }
+  0%   { box-shadow: 0 0 0 3px color-mix(in srgb, var(--place) 26%, transparent); }
+  70%  { box-shadow: 0 0 0 10px color-mix(in srgb, var(--place) 0%, transparent); }
+  100% { box-shadow: 0 0 0 3px color-mix(in srgb, var(--place) 0%, transparent); }
 }
 @media (prefers-reduced-motion: reduce) {
   .place-badge.is-now .pb-dot, .atlas-tip.is-now .pb-dot { animation: none; }
 }
-.pb-text { display: flex; flex-direction: column; line-height: 1.28; }
-.pb-city { font-size: 13px; font-weight: 600; letter-spacing: -0.02em; color: var(--text); }
-.pb-when { font-family: var(--mono); font-size: 10.5px; color: var(--place); }
 
 
 /* The in-card badge is only for widths with no lane; above that the label

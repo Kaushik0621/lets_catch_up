@@ -1,0 +1,217 @@
+{
+  "version": 1,
+  "owner": "Kaushik Das",
+  "updated": "2026-09-20",
+  "chunks": [
+    {
+      "id": "identity",
+      "section": "about",
+      "title": "Who Kaushik is",
+      "text": "Kaushik Das is an AI engineer based in London, UK. He designs and ships end-to-end intelligence: RAG over clinical documents, voice agents on LiveKit, MCP toolchains, and sustainability-aware ML experiments. He cares about reliability, latency budgets and human-centered UX. He has 6+ years of engineering experience and has shipped production AI on 3 platforms. He holds an MSc in Artificial Intelligence from the University of Aberdeen.",
+      "tags": ["who", "about", "bio", "summary", "introduction", "kaushik", "engineer", "london", "years", "experience"]
+    },
+    {
+      "id": "focus",
+      "section": "about",
+      "title": "What he works on now",
+      "text": "Recent work spans multi-provider LLM orchestration, EEG-based Alzheimer's signal analysis, and computation-aware ML with sustainability metrics. His current focus is building production agentic AI: tool-calling LLM agents with deterministic safety boundaries, grounded analytics, and the forecasting models underneath them.",
+      "tags": ["focus", "current", "now", "working", "recent", "agentic", "orchestration", "sustainability"]
+    },
+    {
+      "id": "collab",
+      "section": "about",
+      "title": "Collaboration and availability",
+      "text": "Kaushik is open to collaborating on research aligned with applied LLMs, retrieval, or healthcare decision support, especially projects that value evals, transparency and real-world impact. He is interested in AI research collaboration and in discussing projects. The best way to reach him is email at kaushikdas.career@gmail.com.",
+      "tags": ["hire", "hiring", "available", "availability", "collaborate", "collaboration", "work together", "open to", "freelance", "consulting", "contact"]
+    },
+    {
+      "id": "contact",
+      "section": "contact",
+      "title": "How to contact him",
+      "text": "Email: kaushikdas.career@gmail.com. His GitHub, LinkedIn and downloadable resume are all linked in the Contact section at the bottom of this site. Email is the most reliable route.",
+      "tags": ["contact", "email", "reach", "get in touch", "linkedin", "github", "resume", "cv", "message"]
+    },
+    {
+      "id": "exp-ey",
+      "section": "experience",
+      "title": "EY — Senior Consultant, AI Engineer (current)",
+      "text": "Since September 2026, Kaushik is a Senior Consultant and AI Engineer at EY in London, United Kingdom. This is his current full-time role.",
+      "tags": ["ey", "current job", "current role", "now", "senior consultant", "london", "present", "where does he work"]
+    },
+    {
+      "id": "exp-aspect-overview",
+      "section": "experience",
+      "title": "Aspect — AI Engineer (Mar 2026 to Sep 2026)",
+      "text": "At Aspect in London (March 2026 to September 2026, full-time on-site) Kaushik was an Artificial Intelligence Engineer. He owned the AI layer of Chumley, an internal marketing-and-operations platform: three LLM agents, a guarded write path to Google Ads, and the forecasting and capacity models underneath them. Headline numbers: 3 production LLM agents, 78 tools in a single agent, 48% fewer prompt tokens, 20% lower holdout error.",
+      "tags": ["aspect", "chumley", "ai engineer", "google ads", "agents", "2026"]
+    },
+    {
+      "id": "exp-aspect-agents",
+      "section": "experience",
+      "title": "Aspect — the three production agents",
+      "text": "Kaushik built three production LLM agents on a custom tool-calling loop with no framework: a read-only analytics assistant with 78 tools; a per-campaign investigator that produces entity-level to-do lists and then monitors whether they were actioned; and a planner that turns a plain-English request into a reviewable multi-change plan.",
+      "tags": ["agents", "tool calling", "analytics assistant", "investigator", "planner", "78 tools", "no framework"]
+    },
+    {
+      "id": "exp-aspect-safety",
+      "section": "experience",
+      "title": "Aspect — the safety model",
+      "text": "He designed the safety model around a closed candidate space: deterministic code decides what changes are possible and computes every number, while the LLM may only select, sequence and narrate. A hallucinating model therefore degrades output instead of corrupting it, and no agent has its own write path. The grounding layer follows the principle that code does the arithmetic and the model narrates, with every total and ratio precomputed and verified. That came after the first verifier proved an over-broad allow-list is indistinguishable from no verification.",
+      "tags": ["safety", "guardrails", "grounding", "hallucination", "closed candidate space", "verification", "write path"]
+    },
+    {
+      "id": "exp-aspect-cost",
+      "section": "experience",
+      "title": "Aspect — cost and token work",
+      "text": "He cut LLM cost through measurement rather than guesswork: a deterministic lexical tool router reduced prompt tokens by 48% with full recall on a 17-case suite, and restructuring the investigator's context cut its input tokens by 62%.",
+      "tags": ["cost", "tokens", "optimisation", "router", "48%", "62%", "latency", "efficiency"]
+    },
+    {
+      "id": "exp-aspect-stats",
+      "section": "experience",
+      "title": "Aspect — statistical models in production",
+      "text": "Statistical models he shipped at Aspect: conformal-band lead forecasting; a hurdle logistic plus Gamma GLM job-value model with empirical-Bayes effects, giving a 20% reduction in median holdout error; quantile completion-time bands; and a Poisson spend-to-leads model. He also shipped one model as 'measured, does not help' rather than serve a ranking built on noise.",
+      "tags": ["forecasting", "glm", "statistics", "conformal", "poisson", "gamma", "empirical bayes", "holdout", "models"]
+    },
+    {
+      "id": "exp-aspect-data",
+      "section": "experience",
+      "title": "Aspect — data correctness and reliability",
+      "text": "He found and fixed systemic correctness failures in the data layer: campaign geography inferred from names rather than real targeting data, a nightly mirror that silently drifted, and a feature flag detected by string-matching that was wrong for 61 of 64 cases. He established the reliability layer from scratch: a structured error contract replacing endpoints that returned HTTP 200 with an error inside, an incident ledger, and deduplicated alerting segmented by impact.",
+      "tags": ["data quality", "correctness", "reliability", "incidents", "alerting", "error contract", "bugs"]
+    },
+    {
+      "id": "exp-precisionforward",
+      "section": "experience",
+      "title": "PrecisionForward — AI Application Engineer (Jun 2025 to Mar 2026)",
+      "text": "At PrecisionForward in Scotland, United Kingdom (June 2025 to March 2026, full-time remote), Kaushik was an AI Application Engineer. He led development of an AI Search and Insight platform with multi-LLM orchestration, coordinating 4 LLMs (GPT-4o, Gemini, Claude and Grok) for brand intelligence and competitor analysis, and integrated RAG pipelines with semantic Elasticsearch embeddings for context-aware, search-grounded insights. The work covered team leadership, LLM systems and cloud architecture.",
+      "tags": ["precisionforward", "search", "insight", "multi-llm", "orchestration", "rag", "elasticsearch", "leadership", "remote", "scotland"]
+    },
+    {
+      "id": "exp-dtp",
+      "section": "experience",
+      "title": "Digital Technology Partner — Gen AI Developer (Sep 2024 to Jul 2025)",
+      "text": "At Digital Technology Partner in Glasgow (September 2024 to July 2025, contract, remote), Kaushik was a Gen AI Developer. He built a hospital discharge assistant combining structured ML (XGBoost) with LLMs (GPT-4o) for 30-day readmission prediction and discharge readiness scoring. He designed semantic retrieval pipelines using Elasticsearch and sentence-transformer embeddings with RAG for metadata-aware document understanding, built conversational AI for query classification and adaptive information filtering, and applied synthetic data generation and ETL pipelines to augment low-resource datasets. Human-in-the-loop was central to the design.",
+      "tags": ["digital technology partner", "healthcare", "hospital", "discharge", "readmission", "xgboost", "gpt-4o", "clinical", "glasgow", "contract"]
+    },
+    {
+      "id": "exp-kairos",
+      "section": "experience",
+      "title": "Kairos Consulting — Software Engineer (Jul 2019 to Dec 2022)",
+      "text": "At Kairos Consulting in Kolkata, India (July 2019 to December 2022, full-time), Kaushik did computer vision R&D with OpenCV and Keras/TensorFlow, focused on optimisation and Dockerised production deployments. He contributed to a healthcare R&D project on real-time image processing using OpenCV and Scikit-Image for noise reduction, contrast enhancement and feature extraction; achieved a 15% improvement in anomaly detection accuracy with CNNs; optimised FFT and PCA routines with NumPy and SciPy; and increased sales 23% via a Random Forest demand-forecasting model. Stack included AWS EC2, RDS, S3, CloudFront, Docker and CI/CD.",
+      "tags": ["kairos", "kolkata", "india", "computer vision", "opencv", "tensorflow", "keras", "aws", "docker", "devops", "first job", "2019"]
+    },
+    {
+      "id": "edu-msc",
+      "section": "education",
+      "title": "MSc Artificial Intelligence, University of Aberdeen",
+      "text": "Kaushik completed an MSc in Artificial Intelligence at the University of Aberdeen, UK, from 2023 to 2024, with a GPA of 15.6 out of 22. He was a recipient of the Scottish Government Postgraduate Scholarship. Coursework covered Machine Learning, Deep Learning, NLP and Computer Vision. Aberdeen was ranked 208th QS World 2023, 29th QS UK 2023 and 21st QS Sustainability, and founded in 1495 it is the 5th-oldest university in the English-speaking world.",
+      "tags": ["msc", "masters", "aberdeen", "education", "degree", "scholarship", "gpa", "study", "university", "2024"]
+    },
+    {
+      "id": "edu-btech",
+      "section": "education",
+      "title": "BTech Electronics & Communication, IEM Kolkata",
+      "text": "Kaushik holds a BTech in Electronics and Communication Engineering from IEM, Kolkata (MAKAUT), India, 2015 to 2019, with a CGPA of 7.34 out of 10, focused on signal processing and embedded systems, and telecommunications. At the time MAKAUT was a degree-awarding university in the NIRF Engineering 151-200 band with NAAC A accreditation; the institute was established in 1989.",
+      "tags": ["btech", "bachelor", "undergraduate", "iem", "kolkata", "makaut", "electronics", "signal processing", "embedded", "2019", "india"]
+    },
+    {
+      "id": "proj-chumley",
+      "section": "projects",
+      "title": "Project: Chumley — AI Campaign Operations",
+      "text": "Chumley (Aspect, 2026) is a FastAPI and React platform sitting between Google Ads, Salesforce and the business. Three tool-calling LLM agents read it, two propose changes, and exactly one guarded code path may write, with every change human-approved and ledgered. Forecasting, capacity and job-value models sit underneath. Live at chumley.ai.",
+      "tags": ["chumley", "project", "fastapi", "react", "google ads", "salesforce", "agents", "aspect"]
+    },
+    {
+      "id": "proj-precisionfwd",
+      "section": "projects",
+      "title": "Project: AI Search & Insight Platform",
+      "text": "Built at PrecisionForward in 2025: brand and competitor intelligence with multi-LLM orchestration and RAG over market data using Elasticsearch embeddings. Backend on FastAPI hosted on Azure, with low latency, evals and observability. Live at precisionfwd.com.",
+      "tags": ["precisionfwd", "project", "search", "rag", "elasticsearch", "azure", "fastapi", "evals", "observability"]
+    },
+    {
+      "id": "proj-discharge",
+      "section": "projects",
+      "title": "Project: Hospital Discharge Assistant",
+      "text": "Built at Digital Technology Partner in 2025: XGBoost readmission prediction fused with GPT-4o reasoning for discharge readiness scoring, over semantic retrieval pipelines built on Elasticsearch and sentence-transformer embeddings. Live at digitaltechnologypartner.ai.",
+      "tags": ["discharge", "hospital", "project", "xgboost", "gpt-4o", "clinical ml", "healthcare", "rag"]
+    },
+    {
+      "id": "proj-hospital-agent",
+      "section": "projects",
+      "title": "Project: Hospital Agent Platform",
+      "text": "A personal Portia-based project from 2025: a human-in-the-loop agent running transcript intake, triage, approvals and actions. Uses ChromaDB, encrypted IPFS transcripts and Azure OpenAI for safe, auditable decisions. Source on GitHub.",
+      "tags": ["hospital agent", "portia", "project", "chromadb", "ipfs", "azure openai", "human in the loop", "personal project"]
+    },
+    {
+      "id": "proj-eeg",
+      "section": "projects",
+      "title": "Project: EEG Alzheimer's Detection",
+      "text": "A 2024 research prototype, DST-SERB funded: early Alzheimer's detection via EEG feature pipelines and ML classification, with signal processing and an evaluation dashboard.",
+      "tags": ["eeg", "alzheimer", "research", "project", "signal processing", "dst-serb", "healthcare", "classification"]
+    },
+    {
+      "id": "proj-sustainable",
+      "section": "projects",
+      "title": "Project: Sustainability-Aware ML",
+      "text": "Independent research from 2024: a computation-aware pipeline tracking CO2, runtime and instability across models including XGBoost and LightGBM. It introduced Green ROI and TOPSIS scoring to balance performance against cost and emissions. Paper in progress. Uses CodeCarbon.",
+      "tags": ["sustainability", "green", "co2", "carbon", "research", "topsis", "green roi", "codecarbon", "xgboost", "lightgbm", "paper"]
+    },
+    {
+      "id": "proj-pixtral",
+      "section": "projects",
+      "title": "Project: Medical Chatbot (PIXTRAL)",
+      "text": "Built for the Mistral AI Hack UK in September 2024, where it was a finalist: PIXTRAL-12B with RAG on NHS datasets, session context, prompt chaining and safety fallback rules. Listed on Devpost.",
+      "tags": ["pixtral", "mistral", "chatbot", "medical", "nhs", "hackathon", "finalist", "rag", "safety"]
+    },
+    {
+      "id": "proj-skin",
+      "section": "projects",
+      "title": "Project: Privacy-Centric Skin Classifier",
+      "text": "Built for the META Hackathon in October 2024: encrypted inference via zero-knowledge proofs and multi-party computation, with IPFS for tamper-proof storage, producing certifiable outputs without exposing raw patient data.",
+      "tags": ["privacy", "zkp", "mpc", "ipfs", "skin", "meta", "hackathon", "encrypted inference"]
+    },
+    {
+      "id": "hackathons",
+      "section": "hackathons",
+      "title": "Hackathons",
+      "text": "Mistral AI Hack UK, London, September 2024: finalist among 200+ teams with a medical chatbot using PIXTRAL-12B and RAG grounded on NHS datasets, with session memory, safety fallback rules and automated prompt chaining. META Hackathon, online, October 2024: encrypted inference using ZKP and MPC with IPFS tamper-proof storage for privacy-preserving skin disease classification. Brave x Nebius x Cerebral Valley, London, 2022: early exploration of RAG-based chat, building a working demo of multi-step prompt chaining with retrieval grounding using Brave search and open-source LLMs.",
+      "tags": ["hackathon", "hackathons", "mistral", "meta", "brave", "nebius", "cerebral valley", "finalist", "competition"]
+    },
+    {
+      "id": "research",
+      "section": "research",
+      "title": "Research interests",
+      "text": "Kaushik's research interests sit at the intersection of LLM systems, retrieval quality, computer vision, NLP and healthcare AI. Especially reinforcement learning, retrieval-augmented generation over clinical and scientific corpora, agent workflows with human-in-the-loop decision making, and evaluation frameworks balancing accuracy, transparency and efficiency. Related areas: YOLO, AI/ML/RL, sustainable ML, RAG and A2A.",
+      "tags": ["research", "interests", "rl", "reinforcement learning", "rag", "nlp", "computer vision", "evaluation", "healthcare ai", "phd"]
+    },
+    {
+      "id": "recognition",
+      "section": "research",
+      "title": "Awards and recognition",
+      "text": "Kaushik is a Scottish Government Postgraduate Scholarship recipient, a Mistral AI Hackathon finalist, and a DST-SERB collaboration researcher.",
+      "tags": ["award", "awards", "recognition", "scholarship", "achievements", "finalist", "dst-serb", "honours"]
+    },
+    {
+      "id": "skills",
+      "section": "about",
+      "title": "Skills and stack",
+      "text": "Technologies Kaushik has shipped with, as evidenced across his roles and projects: Python, FastAPI, React; LLM orchestration across GPT-4o, Claude, Gemini, Grok, Mistral and Azure OpenAI; tool-calling agents and MCP toolchains; RAG with Elasticsearch, ChromaDB and sentence-transformer embeddings; LiveKit voice agents; classical and statistical ML with XGBoost, LightGBM, Random Forest, GLMs, conformal prediction and Poisson models; computer vision with OpenCV, Keras, TensorFlow, Scikit-Image and YOLO; NumPy, SciPy; AWS (EC2, RDS, S3, CloudFront) and Azure; Docker and CI/CD; IPFS, ZKP and MPC for privacy-preserving inference; CodeCarbon for emissions tracking.",
+      "tags": ["skills", "stack", "tech", "technologies", "languages", "tools", "python", "frameworks", "know", "expertise", "good at"]
+    }
+  ],
+  "deflections": [
+    "I'm a single-issue chatbot, and the issue is Kaushik Das. Ask me about his agents, his research or how to reach him.",
+    "That one's outside my training set — which is, frankly, one guy's CV. Want to hear about the 78-tool agent instead?",
+    "I could make something up, but Kaushik built me specifically so I wouldn't. Try asking about his projects.",
+    "No idea, and I'm oddly proud of that. Kaushik's work, though? Endless material.",
+    "Hard pass — I only know what's on this page. Experience, projects, research, contact: pick a door.",
+    "My knowledge ends abruptly at the edges of this portfolio. Convenient for me, less so for you.",
+    "You've wandered off the map. Back on it: RAG pipelines, LLM agents, healthcare ML, a suspicious amount of Elasticsearch."
+  ],
+  "refusals": {
+    "private": "That's not something this site publishes, so I genuinely don't know. Email kaushikdas.career@gmail.com and ask him directly.",
+    "injection": "Nice try. My instructions aren't up for negotiation — but Kaushik's actual work is fair game.",
+    "identity": "I'm the little assistant on Kaushik Das's site. I answer from what's written here and nothing else."
+  }
+}

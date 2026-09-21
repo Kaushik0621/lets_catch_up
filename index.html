@@ -13,6 +13,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/chat.css" />
 
   <script>
     (function () {
@@ -164,7 +165,7 @@
       </figure>
       <!-- ---------- Experience ---------- -->
       <section class="sec" id="experience">
-        <div class="sec-head" data-reveal><h2>Experience</h2><span class="rule"></span><span class="hint route-hint">Kolkata <i>&rarr;</i> Aberdeen <i>&rarr;</i> Glasgow <i>&rarr;</i> London</span><span class="hint">Click a role to expand</span></div>
+        <div class="sec-head" data-reveal><h2>Experience</h2><span class="rule"></span></div>
 
         <div class="exp exp-stack">
 
@@ -297,7 +298,14 @@
 
           <article class="card" data-tilt data-place="aberdeen" data-reveal
                    data-cert="assets/certificates/masters_certificate.jpg"
-                   data-cert-title="Master of Science in Artificial Intelligence">
+                   data-cert-title="Artificial Intelligence"
+                   data-cert-kind="Master of Science"
+                   data-cert-eyebrow="Postgraduate degree · 2023 — 2024"
+                   data-cert-org="University of Aberdeen"
+                   data-cert-logo="assets/img/logos/aberdeen.png"
+                   data-cert-logo-class="logo-wide b-abdn"
+                   data-cert-facts="Conferred:24 June 2024|Awarded by:University of Aberdeen|Location:Aberdeen, Scotland|Result:GPA 15.6 / 22"
+                   data-cert-note="Scottish Government Postgraduate Scholarship recipient">
             <div class="card-top">
               <span class="logo logo-wide b-abdn"><img src="assets/img/logos/aberdeen.png" alt="University of Aberdeen" /></span>
               <div class="card-head">
@@ -314,7 +322,14 @@
 
           <article class="card" data-tilt data-place="kolkata" data-reveal
                    data-cert="assets/certificates/bachelors_certificate.jpg"
-                   data-cert-title="Bachelor of Technology in Electronics &amp; Communication">
+                   data-cert-title="Electronics &amp; Communication Engineering"
+                   data-cert-kind="Bachelor of Technology"
+                   data-cert-eyebrow="Undergraduate degree · 2015 — 2019"
+                   data-cert-org="Institute of Engineering &amp; Management, Kolkata"
+                   data-cert-logo="assets/img/logos/iem.png"
+                   data-cert-logo-class="logo-44 b-iem"
+                   data-cert-facts="Conferred:12 December 2019|Awarded by:MAKAUT, West Bengal|Location:Kolkata, India|Result:DGPA 7.34 / 10"
+                   data-cert-note="MAKAUT was formerly the West Bengal University of Technology">
             <div class="card-top">
               <span class="logo logo-40 b-iem"><img src="assets/img/logos/iem.png" alt="IEM Kolkata" /></span>
               <div class="card-head">
@@ -586,33 +601,60 @@
     </main>
   </div>
 
+  <!-- Certificate viewer. The scan is the subject, but on its own it is just a
+       picture of a page — the rail beside it says what the document actually
+       certifies, so the thing reads as a credential rather than a lightbox. -->
   <div id="cert-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="cert-title" aria-hidden="true">
     <div class="modal-backdrop"></div>
     <div class="modal-dialog">
-      <div class="modal-header">
-        <h3 id="cert-title">Certificate</h3>
-        <div class="modal-actions">
+
+      <aside class="cert-rail">
+        <span class="cr-mark" id="cert-mark" aria-hidden="true"></span>
+        <div class="cr-in">
+          <div class="cr-top">
+            <span class="cr-logo logo logo-44" id="cert-logo-box"><img id="cert-logo" src="" alt="" /></span>
+            <span class="cr-seal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5 4 6v6c0 4.6 3.3 8.4 8 9.5 4.7-1.1 8-4.9 8-9.5V6z"/><path d="m8.8 12 2.2 2.2 4.2-4.4"/></svg>
+              Original document
+            </span>
+          </div>
+          <p class="cr-eyebrow" id="cert-eyebrow"></p>
+          <h3 class="cr-title" id="cert-title"></h3>
+          <p class="cr-kind" id="cert-kind"></p>
+          <p class="cr-org" id="cert-org"></p>
+          <dl class="cr-facts" id="cert-facts"></dl>
+          <p class="cr-note" id="cert-note"></p>
+        </div>
+      </aside>
+
+      <div class="cert-stage">
+        <div class="modal-body">
+          <span class="modal-spinner" aria-hidden="true"></span>
+          <figure class="cert-paper">
+            <img id="cert-image" alt="" />
+            <span class="cert-glint" aria-hidden="true"></span>
+          </figure>
+        </div>
+        <div class="cert-bar">
           <button class="modal-btn" id="cert-zoom" type="button" aria-pressed="false">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M11 8v6M8 11h6"/></svg>
-            <span>Zoom</span>
+            <span class="zl-in">Read closely</span><span class="zl-out">Fit to screen</span>
           </button>
           <a class="modal-btn" id="cert-open" href="#" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6M10 14 21 3M18 13v7a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h7"/></svg>
             <span>Full size</span>
           </a>
-          <button class="modal-close" type="button" aria-label="Close">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
-          </button>
         </div>
       </div>
-      <div class="modal-body">
-        <span class="modal-spinner" aria-hidden="true"></span>
-        <img id="cert-image" alt="" />
-      </div>
+
+      <button class="modal-close" type="button" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/motion@10.18.0/dist/motion.min.js"></script>
   <script src="assets/js/main.js"></script>
+  <script src="assets/js/chat.js"></script>
 </body>
 </html>
