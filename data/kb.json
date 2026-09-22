@@ -1,7 +1,7 @@
 {
   "version": 1,
   "owner": "Kaushik Das",
-  "updated": "2026-09-20",
+  "updated": "2026-09-22",
   "chunks": [
     {
       "id": "identity",
@@ -42,14 +42,14 @@
       "id": "exp-aspect-overview",
       "section": "experience",
       "title": "Aspect — AI Engineer (Mar 2026 to Sep 2026)",
-      "text": "At Aspect in London (March 2026 to September 2026, full-time on-site) Kaushik was an Artificial Intelligence Engineer. He owned the AI layer of Chumley, an internal marketing-and-operations platform: three LLM agents, a guarded write path to Google Ads, and the forecasting and capacity models underneath them. Headline numbers: 3 production LLM agents, 78 tools in a single agent, 48% fewer prompt tokens, 20% lower holdout error.",
+      "text": "At Aspect in London (March 2026 to September 2026, full-time on-site) Kaushik was an Artificial Intelligence Engineer. He owned the AI layer of Chumley, an internal marketing-and-operations platform: an analytics chatbot over 78 tools, an AI pilot that plans Google Ads changes through a guarded write path, and the forecasting models underneath them. The changes the pilot plans now drive 30% of all new customer generation. Headline numbers: 30% of new customer generation, 3 production LLM agents, 78 tools in a single agent, 48% fewer prompt tokens, 20% lower holdout error.",
       "tags": ["aspect", "chumley", "ai engineer", "google ads", "agents", "2026"]
     },
     {
       "id": "exp-aspect-agents",
       "section": "experience",
       "title": "Aspect — the three production agents",
-      "text": "Kaushik built three production LLM agents on a custom tool-calling loop with no framework: a read-only analytics assistant with 78 tools; a per-campaign investigator that produces entity-level to-do lists and then monitors whether they were actioned; and a planner that turns a plain-English request into a reviewable multi-change plan.",
+      "text": "Kaushik built the analytics chatbot at the centre of Chumley on a custom tool-calling loop with no framework. Its 78 tools cover the system end to end — campaigns, spend, leads, jobs, Salesforce records and forecasts — so a question about any part of the business has a tool that can answer it rather than a model inferring it from context. He wrote the orchestration layer that works out which of those tools a question needs, and the agentic loop around it: the agent calls a tool, reads what came back and decides whether that answers the question or whether it needs to go again, chaining calls until the answer is resolved instead of stopping at the first plausible result. A separate presentation layer shapes the reply to what was asked, so the same underlying result arrives as a table, a comparison, a trend or a short narrative rather than always as prose. On top of it sits an AI pilot that plans the Google Ads work itself — reading current state, proposing a coherent multi-change plan for human review and handing it to the one guarded write path; the changes it plans now drive 30% of all new customer generation. Alongside them a per-campaign investigator produces entity-level to-do lists and then tracks whether each item was actually actioned.",
       "tags": ["agents", "tool calling", "analytics assistant", "investigator", "planner", "78 tools", "no framework"]
     },
     {
@@ -84,14 +84,14 @@
       "id": "exp-precisionforward",
       "section": "experience",
       "title": "PrecisionForward — AI Application Engineer (Jun 2025 to Mar 2026)",
-      "text": "At PrecisionForward in Scotland, United Kingdom (June 2025 to March 2026, full-time remote), Kaushik was an AI Application Engineer. He led development of an AI Search and Insight platform with multi-LLM orchestration, coordinating 4 LLMs (GPT-4o, Gemini, Claude and Grok) for brand intelligence and competitor analysis, and integrated RAG pipelines with semantic Elasticsearch embeddings for context-aware, search-grounded insights. The work covered team leadership, LLM systems and cloud architecture.",
+      "text": "At PrecisionForward in Scotland, United Kingdom (June 2025 to March 2026, full-time remote), Kaushik was an AI Application Engineer. He led the build of an agentic platform for search engine optimisation that treats large language models as a search surface in their own right: agents run an organisation's real customer questions against 4 LLMs (GPT-4o, Gemini, Claude and Grok) and record, for each answer, whether the brand is named, how it is characterised and which competitor is named instead. The platform turns that into AI visibility optimisation, attributing each absence to a cause the client can act on (no citable source, thin coverage of the question, a competitor owning the phrasing) and specifying the content and structuring work that closes it. Visibility is measured region by region, because the same question asked from different markets returns different brands, so organisations can prioritise by market. Underneath it he built a RAG retrieval layer over brand, competitor and source material with semantic Elasticsearch embeddings, so every finding is traceable to the passage it came from, and orchestrated the four providers behind one interface with per-provider prompt handling and normalised outputs. Separately at PrecisionForward he built a hospital discharge assistant pairing structured ML (XGBoost) with GPT-4o for 30-day readmission prediction and discharge-readiness scoring, human-in-the-loop throughout. Much of that work was data preparation: reconciling inconsistent clinical coding across sources, imputing and flagging missing observations rather than dropping the row, collapsing duplicate patient histories, treating outliers on clinical rather than statistical grounds, and drawing train/test splits per patient so no prior admission leaked across the boundary. Its retrieval used Elasticsearch and sentence-transformer embeddings for metadata-aware document understanding, with synthetic data generation and ETL pipelines to work around low-resource clinical datasets. The role covered team leadership, LLM systems and cloud architecture.",
       "tags": ["precisionforward", "search", "insight", "multi-llm", "orchestration", "rag", "elasticsearch", "leadership", "remote", "scotland"]
     },
     {
       "id": "exp-dtp",
       "section": "experience",
       "title": "Digital Technology Partner — Gen AI Developer (Sep 2024 to Jul 2025)",
-      "text": "At Digital Technology Partner in Glasgow (September 2024 to July 2025, contract, remote), Kaushik was a Gen AI Developer. He built a hospital discharge assistant combining structured ML (XGBoost) with LLMs (GPT-4o) for 30-day readmission prediction and discharge readiness scoring. He designed semantic retrieval pipelines using Elasticsearch and sentence-transformer embeddings with RAG for metadata-aware document understanding, built conversational AI for query classification and adaptive information filtering, and applied synthetic data generation and ETL pipelines to augment low-resource datasets. Human-in-the-loop was central to the design.",
+      "text": "At Digital Technology Partner in Glasgow (September 2024 to July 2025, contract, remote), Kaushik was a Gen AI Developer. He built a financial RAG pipeline over insurance claim and incident records: documents chunked, embedded and held in a vector database and retrieved by semantic search, so a claims handler could ask a question in plain English and get an answer with the source passages attached. He used it for pattern recognition across claim histories, surfacing which incidents cluster by season, site and cause — National Rail's winter weather and track incidents and the North Sea oil rigs' own seasonal profile both read as recurring, predictable exposure rather than unrelated events, letting underwriting anticipate the peak. The same patterns drive fraud prevention: claims sitting outside the established seasonal, geographic and causal profile are flagged for investigation, so assessors review genuine outliers instead of sampling the whole book. He also made cause explainable — given a new incident the pipeline retrieves its closest historical matches and returns the contributing factors those cases shared, with records cited. The pipeline is automated end to end with webhooks triggering ingestion, embedding and indexing as new claims land, behind data guardrails that validate each record on the way in and quarantine what fails rather than letting a malformed batch silently degrade retrieval.",
       "tags": ["digital technology partner", "healthcare", "hospital", "discharge", "readmission", "xgboost", "gpt-4o", "clinical", "glasgow", "contract"]
     },
     {
@@ -119,21 +119,21 @@
       "id": "proj-chumley",
       "section": "projects",
       "title": "Project: Chumley — AI Campaign Operations",
-      "text": "Chumley (Aspect, 2026) is a FastAPI and React platform sitting between Google Ads, Salesforce and the business. Three tool-calling LLM agents read it, two propose changes, and exactly one guarded code path may write, with every change human-approved and ledgered. Forecasting, capacity and job-value models sit underneath. Live at chumley.ai.",
+      "text": "Chumley (Aspect, 2026) is a FastAPI and React platform sitting between Google Ads, Salesforce and the business. It carries an analytics chatbot over 78 tools, an orchestration layer picking the right tool and an agentic loop chaining calls until the question resolves, a presentation layer shaping each reply to what was asked, and an AI pilot planning Google Ads changes on top. Exactly one guarded code path may write, with every change human-approved and ledgered. Forecasting, capacity and job-value models sit underneath. The pilot's plans drive 30% of new customer generation. Live at chumley.ai.",
       "tags": ["chumley", "project", "fastapi", "react", "google ads", "salesforce", "agents", "aspect"]
     },
     {
       "id": "proj-precisionfwd",
       "section": "projects",
       "title": "Project: AI Search & Insight Platform",
-      "text": "Built at PrecisionForward in 2025: brand and competitor intelligence with multi-LLM orchestration and RAG over market data using Elasticsearch embeddings. Backend on FastAPI hosted on Azure, with low latency, evals and observability. Live at precisionfwd.com.",
+      "text": "Built at PrecisionForward in 2025: an agentic platform measuring whether a brand is named when customers ask an LLM. Real customer questions are run against GPT-4o, Gemini, Claude and Grok per market, and each absence is attributed to a cause the client can fix. RAG over brand and competitor sources with Elasticsearch embeddings; FastAPI backend hosted on Azure with low latency, evals and observability. Live at precisionfwd.com.",
       "tags": ["precisionfwd", "project", "search", "rag", "elasticsearch", "azure", "fastapi", "evals", "observability"]
     },
     {
       "id": "proj-discharge",
       "section": "projects",
       "title": "Project: Hospital Discharge Assistant",
-      "text": "Built at Digital Technology Partner in 2025: XGBoost readmission prediction fused with GPT-4o reasoning for discharge readiness scoring, over semantic retrieval pipelines built on Elasticsearch and sentence-transformer embeddings. Live at digitaltechnologypartner.ai.",
+      "text": "Built at PrecisionForward in 2025: XGBoost readmission prediction fused with GPT-4o reasoning for discharge-readiness scoring. The work that decided whether it held up sat upstream of the model — raw admission records reconciled across inconsistent clinical coding, missing observations imputed and flagged rather than dropped with the row, duplicate patient histories collapsed, and splits drawn per patient so no prior admission leaked across the train/test boundary. Semantic retrieval on Elasticsearch and sentence-transformer embeddings on top. Live at precisionfwd.com.",
       "tags": ["discharge", "hospital", "project", "xgboost", "gpt-4o", "clinical ml", "healthcare", "rag"]
     },
     {

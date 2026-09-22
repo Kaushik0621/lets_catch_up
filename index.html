@@ -184,7 +184,7 @@
 
           <div class="exp-item" data-place="london" data-expand data-reveal>
             <div class="exp-side"><div class="exp-when">Mar 2026 —<br />Sep 2026<span class="exp-kind">Full-time · On-site</span></div>
-              <div class="exp-keys" aria-hidden="true"><div class="exp-keys-in"><span class="keys-cap">Highlights</span><div class="k"><b>3</b><span>production LLM agents</span></div><div class="k"><b>78</b><span>tools in one agent</span></div><div class="k"><b>48%</b><span>fewer prompt tokens</span></div><div class="k"><b>20%</b><span>lower holdout error</span></div></div></div></div>
+              <div class="exp-keys" aria-hidden="true"><div class="exp-keys-in"><span class="keys-cap">Highlights</span><div class="k"><b>30%</b><span>of new customer generation</span></div><div class="k"><b>3</b><span>production LLM agents</span></div><div class="k"><b>78</b><span>tools in one agent</span></div><div class="k"><b>48%</b><span>fewer prompt tokens</span></div><div class="k"><b>20%</b><span>lower holdout error</span></div></div></div></div>
             <span class="logo logo-44 b-aspect"><img src="assets/img/logos/aspect.svg" alt="Aspect" /></span>
             <div>
               <div class="exp-top">
@@ -195,25 +195,30 @@
                 <span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
               </div>
               <p class="exp-sum">
-                Owned the AI layer of Chumley, an internal marketing-and-operations platform: three LLM agents, a
-                guarded write path to Google Ads, and the forecasting and capacity models underneath them.
+                Owned the AI layer of Chumley, an internal marketing-and-operations platform: an analytics chatbot over
+                78 tools, an AI pilot that plans Google Ads changes through a guarded write path, and the forecasting
+                models underneath them. The changes that pilot plans now drive 30% of new customer generation.
               </p>
               <div class="tags"><span class="tag">Agentic AI</span><span class="tag">Tool-Calling LLMs</span><span class="tag">Forecasting</span><span class="tag">Data Correctness</span></div>
               <div class="details"><div class="details-inner"><ul>
-                <li>Built three production LLM agents on a custom tool-calling loop (no framework): a read-only analytics assistant with 78 tools, a per-campaign investigator producing entity-level to-do lists and then monitoring whether they were actioned, and a planner turning a plain-English request into a reviewable multi-change plan.</li>
-                <li>Designed the safety model around a <strong>closed candidate space</strong> — deterministic code decides what changes are possible and computes every number; the LLM may only select, sequence and narrate. A hallucinating model degrades output instead of corrupting it, and no agent has its own write path.</li>
-                <li>Cut LLM cost through measurement rather than guesswork: a deterministic lexical tool router reduced prompt tokens 48% with full recall on a 17-case suite, and restructuring the investigator’s context cut its input tokens 62%.</li>
-                <li>Built a grounding layer on the principle that <strong>code does the arithmetic and the model narrates</strong> — every total and ratio precomputed and verified, after the first verifier proved an over-broad allow-list is indistinguishable from no verification.</li>
-                <li>Statistical models in production: conformal-band lead forecasting, a hurdle logistic + Gamma GLM job-value model with empirical-Bayes effects (20% reduction in median holdout error), quantile completion-time bands, and a Poisson spend-to-leads model. Shipped one as “measured, does not help” rather than serve a ranking built on noise.</li>
-                <li>Found and fixed systemic correctness failures in the data layer — campaign geography inferred from names rather than real targeting data, a nightly mirror that silently drifted, and a feature flag detected by string-matching that was wrong for 61 of 64 cases.</li>
-                <li>Established the reliability layer from scratch: a structured error contract replacing endpoints that returned HTTP 200 with an error inside, an incident ledger, and deduplicated alerting segmented by impact.</li>
+                <li>Built the <strong>analytics chatbot</strong> at the centre of the platform, on a custom tool-calling loop with no framework. Its <strong>78 tools</strong> cover the system end to end — campaigns, spend, leads, jobs, Salesforce records, forecasts — so a question about any part of the business has a tool that can answer it rather than a model inferring it from whatever happened to be in context.</li>
+                <li>Wrote the <strong>orchestration layer</strong> that works out which of those tools a question actually needs, and the <strong>agentic loop</strong> around it: the agent calls a tool, reads what came back, and decides whether that answers the question or whether it needs to go again — chaining calls until the answer is genuinely resolved instead of stopping at the first plausible-looking result.</li>
+                <li>Built a separate <strong>presentation layer</strong> so the reply is shaped by what was asked. The same underlying result arrives as a table, a comparison, a trend or a short narrative depending on the question, instead of every answer being returned as the same wall of prose.</li>
+                <li>Put an <strong>AI pilot</strong> on top of it that plans the Google Ads work itself — reading current state, proposing a coherent multi-change plan for human review, and handing it to the one guarded write path. The changes it plans now drive <strong>30% of all new customer generation</strong>.</li>
+                <li>Built a per-campaign investigator alongside them that produces an entity-level to-do list and then tracks whether each item was actually actioned, so a recommendation is followed through rather than filed.</li>
+                <li>Built the <strong>lead forecasting model</strong> the business plans against — how many customer enquiries each campaign will return over the coming period, published as a conformal band rather than a single number, so budget is committed against a range the model can defend instead of a point estimate nobody can audit.</li>
+                <li>Laid the groundwork for <strong>spend prediction</strong>: a Poisson spend-to-leads model that estimates what each additional pound on a campaign actually returns, so spend can be planned against a forecast rather than reallocated from last month’s figures.</li>
+                <li>Modelled what a lead is worth, not just how many arrive — a hurdle logistic plus Gamma GLM with empirical-Bayes effects that separates whether a job converts from what it bills, cutting median holdout error <strong>20%</strong> and letting campaigns be ranked on expected revenue. Alongside it, quantile bands for how long a job takes to complete, for capacity planning.</li>
+                <li>Cut what the agents cost to run by measuring rather than guessing: a deterministic lexical tool router that kept full recall on a 17-case suite while cutting prompt tokens <strong>48%</strong>, and a restructured investigator context that cut its input tokens a further <strong>62%</strong>.</li>
+                <li>Made the agents safe by construction. Deterministic code decides which changes are possible and computes every number; the model may only choose from that list, order it and explain it. No agent holds a write path of its own, so a wrong answer costs a weaker suggestion rather than a corrupted ad account.</li>
+                <li>Traced bad numbers back to their source and fixed them: campaign geography was being guessed from campaign names instead of real targeting data, a nightly mirror was drifting with nothing to catch it, and a feature flag matched by string was wrong for <strong>61 of 64</strong> cases. Put the reliability layer in behind it — a structured error contract replacing endpoints that returned HTTP 200 with the failure buried in the body, an incident ledger, and alerting deduplicated and segmented by impact.</li>
               </ul></div></div>
             </div>
           </div>
 
           <div class="exp-item" data-place="glasgow" data-expand data-reveal>
             <div class="exp-side"><div class="exp-when">Jun 2025 —<br />Mar 2026<span class="exp-kind">Full-time · Remote</span></div>
-              <div class="exp-keys" aria-hidden="true"><div class="exp-keys-in"><span class="keys-cap">Highlights</span><div class="k"><b>4</b><span>LLMs orchestrated</span></div><div class="k"><b>RAG</b><span>Elasticsearch embeddings</span></div><div class="k"><b>Full&#8209;stack</b><span>search &amp; insight platform</span></div></div></div></div>
+              <div class="exp-keys" aria-hidden="true"><div class="exp-keys-in"><span class="keys-cap">Highlights</span><div class="k"><b>4</b><span>answer engines probed</span></div><div class="k"><b>GEO</b><span>LLM search visibility</span></div><div class="k"><b>Multi&#8209;region</b><span>visibility benchmarking</span></div><div class="k"><b>RAG</b><span>Elasticsearch embeddings</span></div><div class="k"><b>30&#8209;day</b><span>readmission prediction</span></div></div></div></div>
             <span class="logo logo-44 b-plain"><img src="assets/img/logos/precisionfwd.png" alt="PrecisionForward" /></span>
             <div>
               <div class="exp-top">
@@ -224,20 +229,28 @@
                 <span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
               </div>
               <p class="exp-sum">
-                Led development of an AI Search &amp; Insight platform with multi‑LLM orchestration and RAG over
-                brand and competitor data via Elasticsearch embeddings.
+                Led an agentic search-visibility platform covering the surface conventional SEO misses: whether a brand
+                gets named when someone asks an LLM, how it is described, and which competitor is recommended instead —
+                measured per market and returned as work an organisation can act on. Alongside it, a hospital discharge
+                assistant pairing XGBoost with GPT‑4o for 30‑day readmission risk.
               </p>
-              <div class="tags"><span class="tag">Team Leadership</span><span class="tag">LLM Systems</span><span class="tag">Cloud Architecture</span></div>
+              <div class="tags"><span class="tag">Agentic Platforms</span><span class="tag">Generative Engine Optimisation</span><span class="tag">LLM Systems</span><span class="tag">Clinical ML</span><span class="tag">Team Leadership</span></div>
               <div class="details"><div class="details-inner"><ul>
-                <li>Built a full-stack AI Search &amp; Insight platform with LLM orchestration (GPT-4o, Gemini, Claude, Grok) for brand intelligence and competitor analysis.</li>
-                <li>Integrated RAG pipelines with semantic embeddings (Elasticsearch) to deliver context-aware, search-grounded insights.</li>
+                <li>Led the build of an <strong>agentic platform for search engine optimisation</strong> that treats large language models as a search surface in their own right. Agents run an organisation’s real customer questions against GPT-4o, Gemini, Claude and Grok on a schedule, and record for each answer whether the brand is named, how it is characterised, and which competitor is named in its place.</li>
+                <li>Turned that measurement into <strong>AI visibility optimisation</strong>: rather than handing back a score, the platform attributes each absence to a cause an organisation can act on — no citable source behind a claim, thin coverage of the question being asked, or a competitor owning the phrasing the model reaches for — and specifies the content and structuring work that closes it.</li>
+                <li>Made visibility <strong>region-aware</strong>, because the same question asked from different markets returns different brands. Organisations could see where they were already being recommended, where a competitor owned the answer, and prioritise effort by market instead of treating LLM search as one undifferentiated channel.</li>
+                <li>Built the retrieval layer underneath it — RAG over brand, competitor and source material with semantic embeddings in Elasticsearch — so every finding is traceable to the passage it came from rather than resting on a model’s recollection.</li>
+                <li>Orchestrated four providers behind one interface with per-provider prompt handling and normalised outputs, keeping results comparable across models so a new engine could be added without rewriting the pipeline.</li>
+                <li>Separately, built a <strong>hospital discharge assistant</strong> pairing structured ML (XGBoost) with GPT-4o for 30-day readmission prediction and discharge-readiness scoring, human-in-the-loop throughout.</li>
+                <li>Did the <strong>data preparation that decided whether that model held up</strong>: reconciling inconsistent clinical coding across sources, imputing and flagging missing observations instead of dropping the row with them, collapsing duplicate patient histories, treating outliers on clinical rather than statistical grounds, and drawing train/test splits per patient so no one’s own prior admission leaked across the boundary and flattered the score.</li>
+                <li>Built its retrieval with Elasticsearch and sentence-transformer embeddings for metadata-aware document understanding, and used synthetic data generation and ETL pipelines to work around low-resource clinical datasets.</li>
               </ul></div></div>
             </div>
           </div>
 
           <div class="exp-item" data-place="glasgow" data-expand data-reveal>
             <div class="exp-side"><div class="exp-when">Sep 2024 —<br />Jul 2025<span class="exp-kind">Contract · Remote</span></div>
-              <div class="exp-keys" aria-hidden="true"><div class="exp-keys-in"><span class="keys-cap">Highlights</span><div class="k"><b>30&#8209;day</b><span>readmission prediction</span></div><div class="k"><b>XGBoost</b><span>+ GPT&#8209;4o</span></div><div class="k"><b>RAG</b><span>sentence&#8209;transformer retrieval</span></div></div></div></div>
+              <div class="exp-keys" aria-hidden="true"><div class="exp-keys-in"><span class="keys-cap">Highlights</span><div class="k"><b>RAG</b><span>vector search over claims</span></div><div class="k"><b>Fraud</b><span>off-pattern claim detection</span></div><div class="k"><b>Webhooks</b><span>automated ingestion</span></div><div class="k"><b>Seasonal</b><span>exposure pattern modelling</span></div></div></div></div>
             <span class="logo logo-44 b-dtp"><img src="assets/img/logos/dtp.png" alt="Digital Technology Partner" /></span>
             <div>
               <div class="exp-top">
@@ -248,15 +261,16 @@
                 <span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
               </div>
               <p class="exp-sum">
-                Hospital discharge assistant combining structured ML (XGBoost) with LLMs for 30‑day readmission
-                prediction and discharge readiness assessment.
+                A financial RAG pipeline reading insurance claim and incident records for seasonal exposure, fraud and
+                cause — automated end to end behind data guardrails.
               </p>
-              <div class="tags"><span class="tag">Human in the Loop</span><span class="tag">ML/LLM Integration</span><span class="tag">Clinical Systems</span></div>
+              <div class="tags"><span class="tag">RAG &amp; Vector Search</span><span class="tag">Insurance Analytics</span><span class="tag">Fraud Detection</span><span class="tag">Pipeline Automation</span></div>
               <div class="details"><div class="details-inner"><ul>
-                <li>Developed a hospital discharge assistant integrating structured ML (XGBoost) with LLMs (GPT-4o) for 30-day readmission prediction and discharge readiness scoring.</li>
-                <li>Designed semantic retrieval pipelines using Elasticsearch and sentence-transformer embeddings with RAG for metadata-aware document understanding.</li>
-                <li>Built conversational AI systems for query classification, context-aware reasoning, and adaptive information filtering.</li>
-                <li>Applied synthetic data generation and ETL pipelines to augment low-resource datasets and enable scalable experimentation.</li>
+                <li>Built a <strong>RAG pipeline over insurance claim and incident records</strong> — documents chunked, embedded and held in a vector database, retrieved by semantic search — so a claims handler could ask a question in plain English and get an answer with the source passages it rests on attached.</li>
+                <li>Used it for <strong>pattern recognition across claim histories</strong>, surfacing which incidents cluster by season, site and cause. National Rail’s winter weather and track incidents and the North Sea rigs’ own seasonal profile both read as recurring, predictable exposure rather than a series of unrelated events, which let underwriting anticipate the peak instead of reacting to it.</li>
+                <li>Applied the same patterns to <strong>fraud prevention</strong>: claims that sit outside the established seasonal, geographic and causal profile are flagged for investigation, so assessors review the genuine outliers instead of sampling the whole book.</li>
+                <li>Made cause explainable. Given a new incident, the pipeline retrieves its closest historical matches and returns the contributing factors those cases shared, with the records cited — turning “why did this happen” from a manual file review into a question with a traceable answer.</li>
+                <li>Automated the pipeline end to end with <strong>webhooks</strong> triggering ingestion, embedding and indexing as new claims land, behind <strong>data guardrails</strong> that validate each record on the way in and quarantine what fails rather than letting a malformed batch silently degrade retrieval.</li>
               </ul></div></div>
             </div>
           </div>
@@ -361,9 +375,11 @@
               <span class="when">2026</span>
             </div>
             <p>
-              FastAPI and React platform between Google Ads, Salesforce and the business. Three tool-calling LLM
-              agents read it, two propose changes, and exactly one guarded code path may write — every change
-              human-approved and ledgered. Forecasting, capacity and job-value models underneath.
+              FastAPI and React platform between Google Ads, Salesforce and the business. An analytics chatbot over
+              78 tools, an orchestration layer picking the right one and an agentic loop chaining calls until the
+              question resolves; a presentation layer shaping the reply to what was asked; and an AI pilot planning
+              Google Ads changes on top. Exactly one guarded code path may write — every change human-approved and
+              ledgered. Its plans drive 30% of new customer generation.
             </p>
             <div class="tags"><span class="tag">Agentic AI</span><span class="tag">FastAPI</span><span class="tag">GLM / Forecasting</span><span class="tag">Google Ads API</span><span class="tag">Salesforce</span></div>
             <div class="card-links">
@@ -380,10 +396,12 @@
               <span class="when">2025</span>
             </div>
             <p>
-              Brand and competitor intelligence with multi-LLM orchestration and RAG over market data using
-              Elasticsearch embeddings. Backend on FastAPI (Azure) with low latency, evals, and observability.
+              Agentic platform measuring whether a brand is named when customers ask an LLM. Real questions run
+              against GPT-4o, Gemini, Claude and Grok per market, each absence attributed to a cause the client can
+              fix. RAG over brand and competitor sources with Elasticsearch embeddings; FastAPI backend on Azure
+              with evals and observability.
             </p>
-            <div class="tags"><span class="tag">LLM Orchestration</span><span class="tag">RAG</span><span class="tag">Elasticsearch</span><span class="tag">FastAPI</span></div>
+            <div class="tags"><span class="tag">Generative Engine Optimisation</span><span class="tag">LLM Orchestration</span><span class="tag">RAG</span><span class="tag">Elasticsearch</span><span class="tag">FastAPI</span></div>
             <div class="card-links">
               <a class="tlink" href="https://www.precisionfwd.com/" target="_blank" rel="noopener">precisionfwd.com
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
@@ -392,18 +410,22 @@
 
           <article class="card" data-tilt data-reveal>
             <div class="card-top">
-              <span class="logo logo-40 b-dtp"><img src="assets/img/logos/dtp.png" alt="Digital Technology Partner" /></span>
+              <span class="logo logo-40 b-plain"><img src="assets/img/logos/precisionfwd.png" alt="PrecisionForward" /></span>
               <div class="card-head"><h3>Hospital Discharge Assistant</h3>
-                <div class="org">Digital Technology Partner</div></div>
+                <div class="org">PrecisionForward</div></div>
               <span class="when">2025</span>
             </div>
             <p>
-              XGBoost readmission prediction fused with GPT-4o reasoning for discharge readiness scoring, over
-              semantic retrieval pipelines built on Elasticsearch and sentence-transformer embeddings.
+              XGBoost readmission prediction fused with GPT-4o reasoning for discharge readiness scoring — but the
+              work that decided whether it held up sat upstream of the model. Raw admission records were reconciled
+              across inconsistent clinical coding, missing observations imputed and flagged rather than dropped with
+              the row, duplicate patient histories collapsed, and splits drawn per patient so no one’s own admission
+              leaked across the train/test boundary. Semantic retrieval on Elasticsearch and sentence-transformer
+              embeddings on top.
             </p>
-            <div class="tags"><span class="tag">Clinical ML</span><span class="tag">XGBoost</span><span class="tag">RAG</span><span class="tag">Healthcare</span></div>
+            <div class="tags"><span class="tag">Clinical ML</span><span class="tag">Data Cleaning</span><span class="tag">XGBoost</span><span class="tag">RAG</span><span class="tag">Healthcare</span></div>
             <div class="card-links">
-              <a class="tlink" href="https://digitaltechnologypartner.ai/" target="_blank" rel="noopener">digitaltechnologypartner.ai
+              <a class="tlink" href="https://www.precisionfwd.com/" target="_blank" rel="noopener">precisionfwd.com
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M7 7h10v10"/></svg></a>
             </div>
           </article>
