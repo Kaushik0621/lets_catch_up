@@ -7,7 +7,11 @@
   <meta name="description" content="Kaushik Das — AI/ML engineer. Selected projects, research, experience, publications, and contact." />
   <meta name="theme-color" content="#f6f7f9" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#0c0e13" media="(prefers-color-scheme: dark)" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%227%22%20fill%3D%22%230b1220%22%2F%3E%3Ctext%20x%3D%2216%22%20y%3D%2222%22%20font-family%3D%22Inter%2CHelvetica%2CArial%2Csans-serif%22%20font-size%3D%2215%22%20font-weight%3D%22600%22%20fill%3D%22%2338bdf8%22%20text-anchor%3D%22middle%22%3EKD%3C%2Ftext%3E%3C%2Fsvg%3E" />
+  <!-- Drawn, not set in type: a favicon renderer has no access to the page's
+       webfont, so the old <text> mark fell back to Helvetica. -->
+  <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg" />
+  <link rel="alternate icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png" />
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -184,7 +188,7 @@
 
           <div class="exp-item" data-place="london" data-expand data-reveal>
             <div class="exp-side"><div class="exp-when">Mar 2026 —<br />Sep 2026<span class="exp-kind">Full-time · On-site</span></div>
-              <div class="exp-keys" aria-hidden="true"><div class="exp-keys-in"><span class="keys-cap">Highlights</span><div class="k"><b>30%</b><span>of new customer generation</span></div><div class="k"><b>3</b><span>production LLM agents</span></div><div class="k"><b>78</b><span>tools in one agent</span></div><div class="k"><b>48%</b><span>fewer prompt tokens</span></div><div class="k"><b>20%</b><span>lower holdout error</span></div></div></div></div>
+              <div class="exp-keys" aria-hidden="true"><div class="exp-keys-in"><span class="keys-cap">Highlights</span><div class="k"><b>30%</b><span>of new customer generation</span></div><div class="k"><b>3</b><span>production LLM agents</span></div><div class="k"><b>78</b><span>tools in one agent</span></div><div class="k"><b>48%</b><span>fewer prompt tokens</span></div></div></div></div>
             <span class="logo logo-44 b-aspect"><img src="assets/img/logos/aspect.svg" alt="Aspect" /></span>
             <div>
               <div class="exp-top">
@@ -199,19 +203,17 @@
                 78 tools, an AI pilot that plans Google Ads changes through a guarded write path, and the forecasting
                 models underneath them. The changes that pilot plans now drive 30% of new customer generation.
               </p>
-              <div class="tags"><span class="tag">Agentic AI</span><span class="tag">Tool-Calling LLMs</span><span class="tag">Forecasting</span><span class="tag">Data Correctness</span></div>
+              <div class="tags"><span class="tag">Agentic AI</span><span class="tag">Tool-Calling LLMs</span><span class="tag">Forecasting</span></div>
               <div class="details"><div class="details-inner"><ul>
-                <li>Built the <strong>analytics chatbot</strong> at the centre of the platform, on a custom tool-calling loop with no framework. Its <strong>78 tools</strong> cover the system end to end — campaigns, spend, leads, jobs, Salesforce records, forecasts — so a question about any part of the business has a tool that can answer it rather than a model inferring it from whatever happened to be in context.</li>
-                <li>Wrote the <strong>orchestration layer</strong> that works out which of those tools a question actually needs, and the <strong>agentic loop</strong> around it: the agent calls a tool, reads what came back, and decides whether that answers the question or whether it needs to go again — chaining calls until the answer is genuinely resolved instead of stopping at the first plausible-looking result.</li>
+                <li>Built the <strong>analytics chatbot</strong> at the centre of the platform, on a custom tool-calling loop with no framework. Its <strong>78 tools</strong> cover the system end to end, from campaigns and spend to leads, jobs, Salesforce records and forecasts, so a question about any part of the business has a tool that can answer it rather than a model inferring it from whatever happened to be in context.</li>
+                <li>Wrote the <strong>orchestration layer</strong> that works out which of those tools a question actually needs, and the <strong>agentic loop</strong> around it: the agent calls a tool, reads what came back, and decides whether that answers the question or whether it needs to go again. It chains calls until the answer is genuinely resolved instead of stopping at the first plausible-looking result.</li>
                 <li>Built a separate <strong>presentation layer</strong> so the reply is shaped by what was asked. The same underlying result arrives as a table, a comparison, a trend or a short narrative depending on the question, instead of every answer being returned as the same wall of prose.</li>
-                <li>Put an <strong>AI pilot</strong> on top of it that plans the Google Ads work itself — reading current state, proposing a coherent multi-change plan for human review, and handing it to the one guarded write path. The changes it plans now drive <strong>30% of all new customer generation</strong>.</li>
+                <li>Put an <strong>AI pilot</strong> on top of it that plans the Google Ads work itself, reading current state, proposing a coherent multi-change plan for human review, and handing it to the one guarded write path. The changes it plans now drive <strong>30% of all new customer generation</strong>.</li>
                 <li>Built a per-campaign investigator alongside them that produces an entity-level to-do list and then tracks whether each item was actually actioned, so a recommendation is followed through rather than filed.</li>
-                <li>Built the <strong>lead forecasting model</strong> the business plans against — how many customer enquiries each campaign will return over the coming period, published as a conformal band rather than a single number, so budget is committed against a range the model can defend instead of a point estimate nobody can audit.</li>
+                <li>Built the <strong>lead forecasting model</strong> the business plans against. It projects how many customer enquiries each campaign will return over the coming period, published as a conformal band rather than a single number, so budget is committed against a range the model can defend instead of a point estimate nobody can audit.</li>
                 <li>Laid the groundwork for <strong>spend prediction</strong>: a Poisson spend-to-leads model that estimates what each additional pound on a campaign actually returns, so spend can be planned against a forecast rather than reallocated from last month’s figures.</li>
-                <li>Modelled what a lead is worth, not just how many arrive — a hurdle logistic plus Gamma GLM with empirical-Bayes effects that separates whether a job converts from what it bills, cutting median holdout error <strong>20%</strong> and letting campaigns be ranked on expected revenue. Alongside it, quantile bands for how long a job takes to complete, for capacity planning.</li>
                 <li>Cut what the agents cost to run by measuring rather than guessing: a deterministic lexical tool router that kept full recall on a 17-case suite while cutting prompt tokens <strong>48%</strong>, and a restructured investigator context that cut its input tokens a further <strong>62%</strong>.</li>
                 <li>Made the agents safe by construction. Deterministic code decides which changes are possible and computes every number; the model may only choose from that list, order it and explain it. No agent holds a write path of its own, so a wrong answer costs a weaker suggestion rather than a corrupted ad account.</li>
-                <li>Traced bad numbers back to their source and fixed them: campaign geography was being guessed from campaign names instead of real targeting data, a nightly mirror was drifting with nothing to catch it, and a feature flag matched by string was wrong for <strong>61 of 64</strong> cases. Put the reliability layer in behind it — a structured error contract replacing endpoints that returned HTTP 200 with the failure buried in the body, an incident ledger, and alerting deduplicated and segmented by impact.</li>
               </ul></div></div>
             </div>
           </div>
@@ -230,16 +232,16 @@
               </div>
               <p class="exp-sum">
                 Led an agentic search-visibility platform covering the surface conventional SEO misses: whether a brand
-                gets named when someone asks an LLM, how it is described, and which competitor is recommended instead —
+                gets named when someone asks an LLM, how it is described, and which competitor is recommended instead,
                 measured per market and returned as work an organisation can act on. Alongside it, a hospital discharge
                 assistant pairing XGBoost with GPT‑4o for 30‑day readmission risk.
               </p>
               <div class="tags"><span class="tag">Agentic Platforms</span><span class="tag">Generative Engine Optimisation</span><span class="tag">LLM Systems</span><span class="tag">Clinical ML</span><span class="tag">Team Leadership</span></div>
               <div class="details"><div class="details-inner"><ul>
                 <li>Led the build of an <strong>agentic platform for search engine optimisation</strong> that treats large language models as a search surface in their own right. Agents run an organisation’s real customer questions against GPT-4o, Gemini, Claude and Grok on a schedule, and record for each answer whether the brand is named, how it is characterised, and which competitor is named in its place.</li>
-                <li>Turned that measurement into <strong>AI visibility optimisation</strong>: rather than handing back a score, the platform attributes each absence to a cause an organisation can act on — no citable source behind a claim, thin coverage of the question being asked, or a competitor owning the phrasing the model reaches for — and specifies the content and structuring work that closes it.</li>
+                <li>Turned that measurement into <strong>AI visibility optimisation</strong>: rather than handing back a score, the platform attributes each absence to a cause an organisation can act on, whether that is no citable source behind a claim, thin coverage of the question being asked, or a competitor owning the phrasing the model reaches for, and specifies the content and structuring work that closes it.</li>
                 <li>Made visibility <strong>region-aware</strong>, because the same question asked from different markets returns different brands. Organisations could see where they were already being recommended, where a competitor owned the answer, and prioritise effort by market instead of treating LLM search as one undifferentiated channel.</li>
-                <li>Built the retrieval layer underneath it — RAG over brand, competitor and source material with semantic embeddings in Elasticsearch — so every finding is traceable to the passage it came from rather than resting on a model’s recollection.</li>
+                <li>Built the retrieval layer underneath it: RAG over brand, competitor and source material with semantic embeddings in Elasticsearch, so every finding is traceable to the passage it came from rather than resting on a model’s recollection.</li>
                 <li>Orchestrated four providers behind one interface with per-provider prompt handling and normalised outputs, keeping results comparable across models so a new engine could be added without rewriting the pipeline.</li>
                 <li>Separately, built a <strong>hospital discharge assistant</strong> pairing structured ML (XGBoost) with GPT-4o for 30-day readmission prediction and discharge-readiness scoring, human-in-the-loop throughout.</li>
                 <li>Did the <strong>data preparation that decided whether that model held up</strong>: reconciling inconsistent clinical coding across sources, imputing and flagging missing observations instead of dropping the row with them, collapsing duplicate patient histories, treating outliers on clinical rather than statistical grounds, and drawing train/test splits per patient so no one’s own prior admission leaked across the boundary and flattered the score.</li>
@@ -262,14 +264,14 @@
               </div>
               <p class="exp-sum">
                 A financial RAG pipeline reading insurance claim and incident records for seasonal exposure, fraud and
-                cause — automated end to end behind data guardrails.
+                cause, automated end to end behind data guardrails.
               </p>
               <div class="tags"><span class="tag">RAG &amp; Vector Search</span><span class="tag">Insurance Analytics</span><span class="tag">Fraud Detection</span><span class="tag">Pipeline Automation</span></div>
               <div class="details"><div class="details-inner"><ul>
-                <li>Built a <strong>RAG pipeline over insurance claim and incident records</strong> — documents chunked, embedded and held in a vector database, retrieved by semantic search — so a claims handler could ask a question in plain English and get an answer with the source passages it rests on attached.</li>
+                <li>Built a <strong>RAG pipeline over insurance claim and incident records</strong>. Documents are chunked, embedded and held in a vector database, retrieved by semantic search, so a claims handler could ask a question in plain English and get an answer with the source passages it rests on attached.</li>
                 <li>Used it for <strong>pattern recognition across claim histories</strong>, surfacing which incidents cluster by season, site and cause. National Rail’s winter weather and track incidents and the North Sea rigs’ own seasonal profile both read as recurring, predictable exposure rather than a series of unrelated events, which let underwriting anticipate the peak instead of reacting to it.</li>
                 <li>Applied the same patterns to <strong>fraud prevention</strong>: claims that sit outside the established seasonal, geographic and causal profile are flagged for investigation, so assessors review the genuine outliers instead of sampling the whole book.</li>
-                <li>Made cause explainable. Given a new incident, the pipeline retrieves its closest historical matches and returns the contributing factors those cases shared, with the records cited — turning “why did this happen” from a manual file review into a question with a traceable answer.</li>
+                <li>Made cause explainable. Given a new incident, the pipeline retrieves its closest historical matches and returns the contributing factors those cases shared, with the records cited. It turns “why did this happen” from a manual file review into a question with a traceable answer.</li>
                 <li>Automated the pipeline end to end with <strong>webhooks</strong> triggering ingestion, embedding and indexing as new claims land, behind <strong>data guardrails</strong> that validate each record on the way in and quarantine what fails rather than letting a malformed batch silently degrade retrieval.</li>
               </ul></div></div>
             </div>

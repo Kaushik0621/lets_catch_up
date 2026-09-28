@@ -67,10 +67,44 @@
   var sections = document.querySelectorAll(".sec[id]");
   var navLinks = document.querySelectorAll(".rail-nav a, .topbar-nav a");
 
+  // The top bar's row is wider than a phone, so it scrolls. Marking a chip
+  // active is not enough — on the later sections the highlight sat off-screen
+  // and the bar read as stuck on whichever chip happened to fit.
+  // Only fade an end that still has something behind it.
+  function fadeEnds(nav) {
+    var scrollable = nav.scrollWidth > nav.clientWidth + 1;
+    nav.classList.toggle("at-start", !scrollable || nav.scrollLeft <= 1);
+    nav.classList.toggle("at-end", !scrollable ||
+      nav.scrollLeft + nav.clientWidth >= nav.scrollWidth - 1);
+  }
+  each(document.querySelectorAll(".topbar-nav"), function (nav) {
+    fadeEnds(nav);
+    nav.addEventListener("scroll", function () { fadeEnds(nav); }, { passive: true });
+    window.addEventListener("resize", function () { fadeEnds(nav); });
+  });
+
+  function keepInView(a) {
+    var nav = a.parentNode;
+    if (!nav || nav.scrollWidth <= nav.clientWidth + 1) return;
+    var nr = nav.getBoundingClientRect(), ar = a.getBoundingClientRect();
+    var left = ar.left - nr.left + nav.scrollLeft, right = left + ar.width;
+    var pad = 26;                                  // clears the edge fade
+    var to = null;
+    if (left - pad < nav.scrollLeft) to = Math.max(0, left - pad);
+    else if (right + pad > nav.scrollLeft + nav.clientWidth) to = right + pad - nav.clientWidth;
+    if (to === null) return;
+    if (nav.scrollTo) nav.scrollTo({ left: to, behavior: reduced ? "auto" : "smooth" });
+    else nav.scrollLeft = to;
+  }
+
   function markActive(id) {
+    var activeTop = null;
     each(navLinks, function (a) {
-      a.classList.toggle("active", a.getAttribute("href") === "#" + id);
+      var on = a.getAttribute("href") === "#" + id;
+      a.classList.toggle("active", on);
+      if (on && a.parentNode && a.parentNode.classList.contains("topbar-nav")) activeTop = a;
     });
+    if (activeTop) keepInView(activeTop);
   }
   if (sections.length && navLinks.length && "IntersectionObserver" in window) {
     var visible = {};
@@ -413,23 +447,6 @@
     });
   }
 
-  /* ---------- 9. Magnetic buttons ---------- */
-  if (animated && window.matchMedia("(hover: hover)").matches) {
-    each(document.querySelectorAll(".btn-primary, .icon-btn"), function (el) {
-      var strength = el.classList.contains("icon-btn") ? 5 : 8;
-      el.addEventListener("pointermove", function (e) {
-        var r = el.getBoundingClientRect();
-        var dx = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
-        var dy = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
-        M.animate(el, { transform: "translate(" + dx * strength + "px," + dy * strength + "px)" },
-                  { easing: snappy });
-      });
-      el.addEventListener("pointerleave", function () {
-        M.animate(el, { transform: "translate(0px,0px)" }, { easing: soft });
-      });
-    });
-  }
-
   /* ---------- 10. Stat counters ---------- */
   if (animated) {
     each(document.querySelectorAll(".stat-value"), function (el) {
@@ -637,6 +654,11 @@
       el.appendChild(badge);
 
       el.addEventListener("pointerenter", function () {
+        // A tap fires pointerenter on iOS, which would start the desktop
+        // focus loop: a permanent rAF writing the desktop zoom transform over
+        // the strip's own, and no pointerleave to stop it until you tap
+        // somewhere else. The strip drives the map at this width.
+        if (MOBILE && MOBILE.matches) return;
         stop.classList.add("lit");
         route.setAttribute("data-place", key);
         route.classList.add("has-lit");
@@ -646,6 +668,7 @@
         startTrack(key, el);
       });
       el.addEventListener("pointerleave", function () {
+        if (MOBILE && MOBILE.matches) return;
         stop.classList.remove("lit");
         route.removeAttribute("data-place");
         route.classList.remove("has-lit");
@@ -654,6 +677,85 @@
         stopTrack();
         resetZoom();
       });
+    });
+
+    /* ---------- 7b. The map on a phone ----------
+       A strip pinned over the cards was the wrong shape for this: it covered
+       the row it was describing, cost a quarter of the screen, and in
+       landscape it took three quarters. Each role carries its own map
+       instead — inline, above the dates, always the right city because it
+       belongs to the card rather than guessing from scroll position.
+
+       The land is <use>d out of the atlas rather than copied: the path data
+       is most of this page's weight and duplicating it per card would be
+       absurd. Every property those paths need is an inheritable SVG
+       presentation property, so the clones take their look from the <svg>. */
+    var MOBILE = window.matchMedia("(max-width: 860px)");
+    var land = route.querySelector(".atlas-land");
+    if (land && !land.id) land.id = "atlas-land-src";
+
+    // a window on the city, wide and short to suit a banner
+    var LM_W = 190, LM_H = 52;
+
+    function locMap(key, el) {
+      var p = PIN[key];
+      if (!p || !land) return;
+      var fig = document.createElement("figure");
+      fig.className = "loc-map";
+      fig.setAttribute("aria-hidden", "true");
+      fig.innerHTML =
+        '<svg viewBox="' + (p[0] - LM_W / 2) + ' ' + (p[1] - LM_H / 2) + ' ' + LM_W + ' ' + LM_H + '" ' +
+          'preserveAspectRatio="xMidYMid slice">' +
+          '<use href="#' + land.id + '"/>' +
+          '<g class="lm-pin" transform="translate(' + p[0] + ' ' + p[1] + ')">' +
+            '<circle class="halo" r="13"/><circle class="dot" r="4.4"/></g>' +
+        '</svg>' +
+        '<span class="lm-name"><i class="pb-dot"></i><b class="pb-city"></b>' +
+        '<i class="pb-when"></i></span>';
+      fig.querySelector(".pb-city").textContent = CITY[key][0];
+      fig.querySelector(".pb-when").textContent = metaOf(key, datesOf(el));
+      el.insertBefore(fig, el.firstChild);
+    }
+
+    each(document.querySelectorAll(".exp-item[data-place]"), function (el) {
+      var key = el.getAttribute("data-place");
+      if (PIN[key]) locMap(key, el);
+    });
+  }
+
+  /* ---------- 7c. Tap diagnostic (only with ?debug=1) ----------
+     iOS behaviour I cannot reproduce in a headless WebKit, so read it off the
+     device instead. Inert unless the flag is present. */
+  if (/[?&]debug=1/.test(location.search)) {
+    var dbg = document.createElement("div");
+    dbg.setAttribute("style",
+      "position:fixed;left:8px;right:8px;bottom:8px;z-index:9999;max-height:38vh;overflow:auto;" +
+      "padding:10px 12px;border-radius:12px;background:rgba(10,12,18,.94);color:#8ef;" +
+      "font:11px/1.45 ui-monospace,Menlo,monospace;white-space:pre-wrap;box-shadow:0 8px 30px rgba(0,0,0,.5)");
+    dbg.textContent = "tap a role row\nUA: " + navigator.userAgent.slice(0, 80) +
+      "\nhover:none=" + matchMedia("(hover: none)").matches +
+      "  w=" + innerWidth + "  dpr=" + devicePixelRatio + "\n";
+    document.body.appendChild(dbg);
+    var n = 0;
+    function log(t) {
+      dbg.textContent += (++n) + "  " + t + "\n";
+      dbg.scrollTop = dbg.scrollHeight;
+    }
+    ["touchstart", "touchend", "pointerdown", "pointerup", "click"].forEach(function (type) {
+      document.addEventListener(type, function (e) {
+        var t = e.target, row = t && t.closest && t.closest("[data-expand]");
+        log(type + " on <" + (t.tagName || "?").toLowerCase() + "." +
+            String((t.className && t.className.baseVal !== undefined ? t.className.baseVal : t.className) || "")
+              .split(" ")[0] + ">" +
+            (row ? " row=YES open=" + row.classList.contains("is-open") : " row=no") +
+            (e.defaultPrevented ? " [prevented]" : ""));
+      }, true);
+    });
+    each(document.querySelectorAll("[data-expand]"), function (r) {
+      new MutationObserver(function () {
+        log("   -> is-open now " + r.classList.contains("is-open") +
+            " h=" + Math.round(r.querySelector(".details").getBoundingClientRect().height));
+      }).observe(r, { attributes: true, attributeFilter: ["class"] });
     });
   }
 

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Kaushik Das">
+  <!--
+    Deep ink crest, muted gold bar, white monogram.
+
+    The palette is deliberately not the site's accent pair: indigo against
+    bright teal read as tech product rather than personal mark, and the mint
+    was the loudest thing on the page at any size. Ink plus a single muted
+    metallic is the restrained version of the reference's accent bar, and it
+    is the combination that still looks considered at 16px.
+
+    Ink sits close to the site's own text colour, so the mark belongs without
+    borrowing the accent. Gold is muted on purpose; a saturated one turns
+    brassy once it is a two pixel line.
+
+    Letters are drawn geometry with butt caps and mitred joins, so they stay
+    flat sided and font independent. A favicon renderer never has the page's
+    webfont, which is what broke the original type-set mark.
+  -->
+  <path d="M8 8h48v27c0 10.5-9 18.5-24 23C17 53.5 8 45.5 8 35z" fill="#141a2b"/>
+  <path d="M8 8h48v5H8z" fill="#bfa063"/>
+  <g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="butt" stroke-linejoin="miter">
+    <path d="M16.5 19v22"/>
+    <path d="M28.5 19 19.5 30l9.5 11"/>
+    <path d="M34.5 19h2.5a11 11 0 0 1 0 22h-2.5z"/>
+  </g>
+</svg>

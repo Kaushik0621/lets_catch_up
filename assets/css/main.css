@@ -257,8 +257,15 @@ img { display: block; max-width: 100%; }
 }
 
 /* ---------- Content ---------- */
-.content { padding: 76px 0 0; min-width: 0; }
-.sec { margin-bottom: 84px; scroll-margin-top: 24px; }
+/* Section rhythm is a gap, not a stack of margins. With margins it depended
+   on collapsing through .journey, which wraps two of the sections: at phone
+   width that produced 119px above the block and 2px below it, so the Projects
+   heading sat flush against the last Education card. A gap cannot collapse. */
+.content {
+  display: flex; flex-direction: column; gap: var(--sec-gap);
+  padding: 76px 0 0; min-width: 0;
+}
+.sec { margin-bottom: 0; scroll-margin-top: 24px; }
 
 .sec-head { display: flex; align-items: center; gap: 13px; margin-bottom: 22px; }
 .sec-head h2 {
@@ -298,6 +305,7 @@ img { display: block; max-width: 100%; }
 
 .card {
   position: relative; display: flex; flex-direction: column;
+  touch-action: manipulation;
   padding: 19px;
   border: 1px solid var(--border); border-radius: var(--r-lg);
   background: var(--surface); box-shadow: var(--shadow-1);
@@ -310,8 +318,13 @@ img { display: block; max-width: 100%; }
               color-mix(in srgb, var(--place) 14%, transparent), transparent 62%);
   transition: opacity .3s ease;
 }
-.card:hover { border-color: var(--accent-line); box-shadow: var(--shadow-2); transform: translateY(-2px); }
-.card:hover::before { opacity: 1; }
+@media (hover: hover) {
+  /* iOS spends the first tap on an element with :hover styling applying the hover
+     and only dispatches click on the second, so a card needed tapping twice to
+     open. Gate every hover affordance behind an actual pointer. */
+  .card:hover { border-color: var(--accent-line); box-shadow: var(--shadow-2); transform: translateY(-2px); }
+  .card:hover::before { opacity: 1; }
+}
 .card > * { position: relative; z-index: 1; }
 
 .card-top { display: flex; align-items: flex-start; gap: 12px; }
@@ -342,13 +355,16 @@ img { display: block; max-width: 100%; }
 .exp { display: flex; flex-direction: column; gap: 10px; }
 .exp-item {
   position: relative;
+  touch-action: manipulation;   /* no double-tap-zoom delay swallowing a tap */
   display: grid; grid-template-columns: 124px 44px minmax(0, 1fr); gap: 20px;
   padding: 18px 22px; margin: 0 -22px;
   border: 1px solid transparent; border-radius: var(--r-lg);
   cursor: pointer;
   transition: border-color .25s ease, background .25s ease, box-shadow .25s ease;
 }
-.exp-item:hover { background: var(--surface); border-color: var(--border); box-shadow: var(--shadow-1); }
+@media (hover: hover) {
+  .exp-item:hover { background: var(--surface); border-color: var(--border); box-shadow: var(--shadow-1); }
+}
 .exp-item.no-detail { cursor: default; }
 
 /* ---------- Education rankings ----------
@@ -363,7 +379,9 @@ img { display: block; max-width: 100%; }
   transform: translateY(101%); opacity: 0; pointer-events: none;
   transition: transform .45s cubic-bezier(.22,.8,.28,1), opacity .3s ease;
 }
-.card:hover .edu-facts, .card.located .edu-facts { transform: none; opacity: 1; }
+@media (hover: hover) {
+  .card:hover .edu-facts, .card.located .edu-facts { transform: none; opacity: 1; }
+}
 
 .ef-cap {
   display: block; margin-bottom: 9px;
@@ -703,7 +721,11 @@ footer p { font-size: 12.5px; color: var(--text-3); }
   .cert-rail { border-right: 0; border-bottom: 1px solid var(--border); max-height: 38vh; }
   .cr-in { padding: 18px 20px 20px; }
   .cr-top { padding-right: 46px; margin-bottom: 18px; }
-  .cr-mark { width: 170px; height: 170px; right: -34px; bottom: -40px; }
+  /* Stale sizing from when this was a square badge: against the current
+     full-width mark it fought `left: 0` and `bottom: 0` and landed across the
+     "Awarded by" and "Location" rows. Stacked, the rail is a dense band with
+     no clear edge to sit on, so the skyline just goes. */
+  .cr-mark { display: none; }
   .cr-title { font-size: 21px; }
   .cr-facts { margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; column-gap: 24px; }
   .cr-note { margin-top: 14px; }
@@ -740,10 +762,12 @@ footer p { font-size: 12.5px; color: var(--text-3); }
   .rail-cta { max-width: 220px; }
 
   .content { padding: 40px 0 0; }
-  .sec { margin-bottom: 60px; scroll-margin-top: 70px; }
+  .sec { scroll-margin-top: 70px; }
 
   .exp-item { grid-template-columns: 44px minmax(0, 1fr); gap: 14px; margin: 0 -14px; padding: 14px; }
-  .exp-side { grid-column: 1 / -1; order: 2; }
+  /* order:2 dropped the dates below the summary and the tag row, so a role
+     read title-then-body-then-when. They lead now, like a CV entry. */
+  .exp-side { grid-column: 1 / -1; order: -1; }
   .exp-when { padding-top: 0; }
   .exp-keys { display: none; }   /* stacked layout has no side column to fill */
 
@@ -755,7 +779,21 @@ footer p { font-size: 12.5px; color: var(--text-3); }
   }
   .topbar-inner { display: flex; align-items: center; gap: 12px; padding: 9px 20px; }
   .topbar-name { font-size: 14px; font-weight: 600; letter-spacing: -0.03em; flex-shrink: 0; }
-  .topbar-nav { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; margin-left: auto; }
+  .topbar-nav {
+    display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none;
+    margin-left: auto; padding-right: 4px;
+    /* It does not fit, so it scrolls — say so with a fade rather than stopping
+       "Hackathons" mid-word against a hard edge. JS drops the fade on whichever
+       end has nothing left to reveal, so the first and last chips are never
+       dimmed for no reason. */
+    --fade-l: 26px; --fade-r: 26px;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-l),
+                        #000 calc(100% - var(--fade-r)), transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-l),
+                        #000 calc(100% - var(--fade-r)), transparent 100%);
+  }
+  .topbar-nav.at-start { --fade-l: 0px; }
+  .topbar-nav.at-end   { --fade-r: 0px; }
   .topbar-nav::-webkit-scrollbar { display: none; }
   .topbar-nav a { padding: 5px 9px; border-radius: var(--r-sm); font-size: 12.5px; color: var(--text-3); white-space: nowrap; }
   .topbar-nav a.active { color: var(--accent); background: var(--accent-soft); }
@@ -783,17 +821,24 @@ footer p { font-size: 12.5px; color: var(--text-3); }
 .journey {
   position: relative;
   isolation: isolate;
+  /* flow-root so the two sections inside cannot leak margins back out to
+     .content, which is what broke the rhythm around this block. */
+  display: flow-root;
   /* No clipping here — it would shave the left and right borders off every
      row, which bleeds 22px past the column. The atlas keeps itself in bounds
      instead: it spans the column exactly, and the SVG clips its own zoom. */
 }
 .journey > section { position: relative; z-index: 1; }
+/* the one gap .content's own gap cannot reach: Experience to Education */
+.journey > .sec + .sec { margin-top: var(--sec-gap); }
 
 /* Reserve clear map space beside the cards. Below 1240px there isn't room
    to give any away, so the lane collapses and the label goes back in-card. */
-:root { --map-lane: 0px; }
+:root { --map-lane: 0px; --sec-gap: 84px; }
 @media (min-width: 1240px) { :root { --map-lane: 232px; } }
 @media (min-width: 1560px) { :root { --map-lane: 272px; } }
+@media (max-width: 620px)  { :root { --sec-gap: 60px; } }
+
 .journey .sec-head,
 .journey .exp,
 .journey .grid { margin-right: var(--map-lane); }
@@ -845,17 +890,21 @@ footer p { font-size: 12.5px; color: var(--text-3); }
           backdrop-filter: blur(14px) saturate(130%);
   box-shadow: var(--shadow-1);
 }
-.journey .exp-item:hover {
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  border-color: var(--accent-line);
-  box-shadow: var(--shadow-2);
+@media (hover: hover) {
+  .journey .exp-item:hover {
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
+    border-color: var(--accent-line);
+    box-shadow: var(--shadow-2);
+  }
 }
 .journey .card {
   background: color-mix(in srgb, var(--surface) 78%, transparent);
   -webkit-backdrop-filter: blur(14px) saturate(130%);
           backdrop-filter: blur(14px) saturate(130%);
 }
-.journey .card:hover { background: color-mix(in srgb, var(--surface) 92%, transparent); }
+@media (hover: hover) {
+  .journey .card:hover { background: color-mix(in srgb, var(--surface) 92%, transparent); }
+}
 
 /* Focus mode: while one role is hovered the others recede, so the
    zoomed-in city is actually visible instead of hidden behind cards. */
@@ -949,25 +998,29 @@ footer p { font-size: 12.5px; color: var(--text-3); }
   .atlas-pin .halo { opacity: 0; }
 }
 
-@media (max-width: 900px) {
-  .atlas { top: 26px; }
-}
+/* .atlas's phone treatment lives with the breakpoint that decides it. */
 
 /* ============================================================
    Motion & hover polish
    ============================================================ */
 .logo { transition: transform .3s cubic-bezier(.22,.8,.28,1), box-shadow .3s ease; }
-.card:hover .logo, .exp-item:hover .logo { transform: scale(1.05); box-shadow: var(--shadow-2); }
+@media (hover: hover) {
+  .card:hover .logo, .exp-item:hover .logo { transform: scale(1.05); box-shadow: var(--shadow-2); }
+}
 
 .tag { transition: transform .18s ease, border-color .18s ease, color .18s ease, background .18s ease; }
-.card:hover .tag, .exp-item:hover .tag { border-color: var(--border-2); }
+@media (hover: hover) {
+  .card:hover .tag, .exp-item:hover .tag { border-color: var(--border-2); }
+}
 .tag:hover {
   transform: translateY(-2px);
   color: var(--accent); border-color: var(--accent-line); background: var(--accent-soft);
 }
 
 .chev { transition: color .2s ease, border-color .2s ease, background .2s ease; }
-.exp-item:hover .chev { color: var(--accent); border-color: var(--accent-line); background: var(--accent-soft); }
+@media (hover: hover) {
+  .exp-item:hover .chev { color: var(--accent); border-color: var(--accent-line); background: var(--accent-soft); }
+}
 
 /* shimmer sweep across the primary button on hover */
 .btn-primary { position: relative; overflow: hidden; }
@@ -1002,8 +1055,10 @@ footer p { font-size: 12.5px; color: var(--text-3); }
 .contact-link, .tlink { transition: transform .18s ease, color .2s ease, border-color .2s ease, background .2s ease; }
 .contact-link:hover { transform: translateY(-2px); }
 
-@media (max-width: 900px) { .journey { top: 58px; } }
-@media (max-width: 640px) { #map { height: 220px; } }
+/* `.journey { top: 58px }` was here. It is position:relative, so it shifted
+   the whole Experience+Education block down the page while its layout box
+   stayed put: 58px of dead space above it, the same amount eaten below, and
+   the Projects heading flush against the last Education card on a phone. */
 
 
 /* ---------- Location callout ----------
@@ -1084,10 +1139,79 @@ footer p { font-size: 12.5px; color: var(--text-3); }
    width. */
 .card .place-badge { display: none; }
 
-.pb-dot {
-  width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
-  background: var(--place);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--place) 22%, transparent);
+/* Below 860px there is no lane and nothing to hover, so the map cannot be a
+   wash behind the cards: at phone width its coastlines crop into short
+   disconnected strokes between them. Pinning it as a strip was worse — it
+   covered the row it described and took a quarter of the screen, three
+   quarters in landscape. Each role carries its own map instead, inline. The
+   figure stays in the DOM, hidden: every card's map <use>s the land out of it
+   rather than duplicating this page's heaviest path data. */
+@media (max-width: 860px) {
+  .atlas { display: none; }
+  /* nothing shows through any more, so stop paying for the blur */
+  .journey .exp-item, .journey .card {
+    background: var(--surface);
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+  }
+  .journey .exp-item { background: transparent; }
+  .journey > .sec { scroll-margin-top: 62px; }
+  /* each row names its own city, so dimming the others would only hide the
+     text being read */
+  .journey.focus .exp-item:not(.located), .journey.focus .card:not(.located) {
+    background: transparent; opacity: 1; transform: none;
+  }
+}
+
+/* Landscape on a phone is ~400px tall: above 860px wide the layout would
+   otherwise fall back to the desktop wash, which assumes a tall window and
+   paints an 800px map over the cards. */
+@media (max-width: 1239px) and (max-height: 520px) {
+  .atlas { display: none; }
+  .journey .exp-item, .journey .card {
+    background: var(--surface);
+    -webkit-backdrop-filter: none; backdrop-filter: none;
+  }
+  .journey .exp-item { background: transparent; }
+  .journey > .sec { scroll-margin-top: 62px; }
+}
+
+
+/* ---------- Per-role map ----------
+   A window on the city above each role. Nothing here is interactive: it is a
+   picture of where the work happened, sized so a phone gives it a banner
+   rather than a panel. The land paths are <use> clones, which external
+   selectors cannot reach, so their look is set on the <svg> and inherited. */
+.loc-map { display: none; }
+@media (max-width: 860px) {
+  .loc-map {
+    display: block; position: relative;
+    /* The atlas's own `.atlas-land path` rule reaches into the <use> shadow
+       tree and paints in --accent, beating anything inherited from the <svg>.
+       Rebinding the variable here is what actually recolours the land, and it
+       is scoped to this subtree. */
+    --accent: var(--place);
+    grid-column: 1 / -1; order: -2;
+    height: 88px; margin: 0 0 13px;
+    border: 1px solid color-mix(in srgb, var(--place) 20%, var(--border));
+    border-radius: var(--r-md);
+    background: color-mix(in srgb, var(--place) 6%, var(--surface));
+    overflow: hidden;
+  }
+  .loc-map svg {
+    display: block; width: 100%; height: 100%;
+    fill: var(--place); fill-opacity: .10;
+    stroke: var(--place); stroke-opacity: .5; stroke-width: .5;
+    stroke-linejoin: round; stroke-linecap: round;
+  }
+  .loc-map .lm-pin .dot  { fill: var(--place); fill-opacity: 1; stroke: none; }
+  .loc-map .lm-pin .halo { fill: var(--place); fill-opacity: .2; stroke: none; }
+  .loc-map .lm-name {
+    position: absolute; left: 11px; bottom: 9px;
+    display: flex; align-items: center; gap: 7px;
+    text-shadow: 0 1px 3px color-mix(in srgb, var(--surface) 92%, transparent);
+  }
+  .loc-map .pb-city { font-size: 13px; }
+  .loc-map .pb-when { margin-top: 0; margin-left: 2px; }
 }
 
 /* ---------- City skyline ----------
@@ -1113,7 +1237,7 @@ footer p { font-size: 12.5px; color: var(--text-3); }
   /* sized so the longest of these — "Scotland · Mar 2026 — Sep 2026" — still
      sits inside the narrowest lane */
   font-family: var(--mono); font-size: 9.5px; letter-spacing: .015em;
-  color: color-mix(in srgb, var(--place) 82%, var(--muted));
+  color: color-mix(in srgb, var(--place) 82%, var(--text-3));
 }
 /* No panel underneath, so the type carries its own separation from the map. */
 .atlas-tip .pb-city, .atlas-tip .pb-when {

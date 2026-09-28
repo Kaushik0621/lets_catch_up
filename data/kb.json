@@ -42,14 +42,14 @@
       "id": "exp-aspect-overview",
       "section": "experience",
       "title": "Aspect — AI Engineer (Mar 2026 to Sep 2026)",
-      "text": "At Aspect in London (March 2026 to September 2026, full-time on-site) Kaushik was an Artificial Intelligence Engineer. He owned the AI layer of Chumley, an internal marketing-and-operations platform: an analytics chatbot over 78 tools, an AI pilot that plans Google Ads changes through a guarded write path, and the forecasting models underneath them. The changes the pilot plans now drive 30% of all new customer generation. Headline numbers: 30% of new customer generation, 3 production LLM agents, 78 tools in a single agent, 48% fewer prompt tokens, 20% lower holdout error.",
+      "text": "At Aspect in London (March 2026 to September 2026, full-time on-site) Kaushik was an Artificial Intelligence Engineer. He owned the AI layer of Chumley, an internal marketing-and-operations platform: an analytics chatbot over 78 tools, an AI pilot that plans Google Ads changes through a guarded write path, and the forecasting models underneath them. The changes the pilot plans now drive 30% of all new customer generation. Headline numbers: 30% of new customer generation, 3 production LLM agents, 78 tools in a single agent, 48% fewer prompt tokens.",
       "tags": ["aspect", "chumley", "ai engineer", "google ads", "agents", "2026"]
     },
     {
       "id": "exp-aspect-agents",
       "section": "experience",
       "title": "Aspect — the three production agents",
-      "text": "Kaushik built the analytics chatbot at the centre of Chumley on a custom tool-calling loop with no framework. Its 78 tools cover the system end to end — campaigns, spend, leads, jobs, Salesforce records and forecasts — so a question about any part of the business has a tool that can answer it rather than a model inferring it from context. He wrote the orchestration layer that works out which of those tools a question needs, and the agentic loop around it: the agent calls a tool, reads what came back and decides whether that answers the question or whether it needs to go again, chaining calls until the answer is resolved instead of stopping at the first plausible result. A separate presentation layer shapes the reply to what was asked, so the same underlying result arrives as a table, a comparison, a trend or a short narrative rather than always as prose. On top of it sits an AI pilot that plans the Google Ads work itself — reading current state, proposing a coherent multi-change plan for human review and handing it to the one guarded write path; the changes it plans now drive 30% of all new customer generation. Alongside them a per-campaign investigator produces entity-level to-do lists and then tracks whether each item was actually actioned.",
+      "text": "Kaushik built the analytics chatbot at the centre of Chumley on a custom tool-calling loop with no framework. Its 78 tools cover the system end to end, from campaigns and spend to leads, jobs, Salesforce records and forecasts, so a question about any part of the business has a tool that can answer it rather than a model inferring it from context. He wrote the orchestration layer that works out which of those tools a question needs, and the agentic loop around it: the agent calls a tool, reads what came back and decides whether that answers the question or whether it needs to go again, chaining calls until the answer is resolved instead of stopping at the first plausible result. A separate presentation layer shapes the reply to what was asked, so the same underlying result arrives as a table, a comparison, a trend or a short narrative rather than always as prose. On top of it sits an AI pilot that plans the Google Ads work itself, reading current state, proposing a coherent multi-change plan for human review and handing it to the one guarded write path; the changes it plans now drive 30% of all new customer generation. Alongside them a per-campaign investigator produces entity-level to-do lists and then tracks whether each item was actually actioned.",
       "tags": ["agents", "tool calling", "analytics assistant", "investigator", "planner", "78 tools", "no framework"]
     },
     {
@@ -65,20 +65,6 @@
       "title": "Aspect — cost and token work",
       "text": "He cut LLM cost through measurement rather than guesswork: a deterministic lexical tool router reduced prompt tokens by 48% with full recall on a 17-case suite, and restructuring the investigator's context cut its input tokens by 62%.",
       "tags": ["cost", "tokens", "optimisation", "router", "48%", "62%", "latency", "efficiency"]
-    },
-    {
-      "id": "exp-aspect-stats",
-      "section": "experience",
-      "title": "Aspect — statistical models in production",
-      "text": "Statistical models he shipped at Aspect: conformal-band lead forecasting; a hurdle logistic plus Gamma GLM job-value model with empirical-Bayes effects, giving a 20% reduction in median holdout error; quantile completion-time bands; and a Poisson spend-to-leads model. He also shipped one model as 'measured, does not help' rather than serve a ranking built on noise.",
-      "tags": ["forecasting", "glm", "statistics", "conformal", "poisson", "gamma", "empirical bayes", "holdout", "models"]
-    },
-    {
-      "id": "exp-aspect-data",
-      "section": "experience",
-      "title": "Aspect — data correctness and reliability",
-      "text": "He found and fixed systemic correctness failures in the data layer: campaign geography inferred from names rather than real targeting data, a nightly mirror that silently drifted, and a feature flag detected by string-matching that was wrong for 61 of 64 cases. He established the reliability layer from scratch: a structured error contract replacing endpoints that returned HTTP 200 with an error inside, an incident ledger, and deduplicated alerting segmented by impact.",
-      "tags": ["data quality", "correctness", "reliability", "incidents", "alerting", "error contract", "bugs"]
     },
     {
       "id": "exp-precisionforward",
