@@ -6,95 +6,188 @@
 *, *::before, *::after { box-sizing: border-box; }
 * { margin: 0; padding: 0; }
 
-/* ---------- Tokens ---------- */
+/* ---------- Colour roles ----------
+   Paper & Copper, Obsidian & Ember, and Porcelain & Tide preserve the
+   original warm, red/teal and blue/coral families. Lower-chroma surfaces
+   and coordinated city colours give each palette a clear hierarchy.
+   Rationale and measured contrast: docs/colour-system.md. */
 :root {
-  --bg:        #f4f6fb;
-  --bg-tint-a: #e8edfb;
-  --bg-tint-b: #f3ecfb;
-  --surface:   #ffffff;
-  --surface-2: #f2f5fa;
-  --surface-3: #e8edf6;
-  --border:    #dfe5f0;
-  --border-2:  #c3cddf;
-  --text:      #121725;
-  --text-2:    #454f66;
-  --text-3:    #6f7a91;
-
-  --accent:      #4338ca;
-  --accent-2:    #0e7490;
-  --accent-hover:#3730a3;
-  --accent-soft: #e9e8fd;
-  --accent-line: #bcb8f5;
-  --on-accent:   #ffffff;
-  --ok:          #0e9f6e;
-
-  /* One hue per city. The pin, its label and the whole card take the colour of
-     wherever that role happened, so the map says which place lit up. */
-  --c-kolkata:  #c2410c;
-  --c-aberdeen: #0e7490;
-  --c-glasgow:  #7e22ce;
-  --c-london:   #047857;
+  --bg: #f6f3ed;
+  --bg-tint-a: #faf8f3;
+  --bg-tint-b: #efe6dc;
+  --surface: #fdfcf9;
+  --surface-2: #ede8df;
+  --surface-3: #dfd8cd;
+  --border: #d9d3c8;
+  --border-2: #b7aa98;
+  --text: #292723;
+  --text-2: #514e46;
+  --text-3: #635b50;
+  --accent: #624337;
+  --accent-2: #b65f3e;
+  --accent-hover: #7b4f3c;
+  --accent-soft: #ebe0d5;
+  --accent-line: #b79880;
+  --on-accent: #fdfcf9;
+  --action: #624337;
+  --action-end: #704b3a;
+  --action-hover: #7b4f3c;
+  --on-action: #fdfcf9;
+  --link: #79503a;
+  --focus: #96552f;
+  --ok: #4d7057;
+  --landmark: #826128;
+  --c-kolkata: #8d4e35;
+  --c-aberdeen: #3e685d;
+  --c-glasgow: #695b78;
+  --c-london: #985449;
   --place: var(--accent);
-
-  --shadow-1: 0 1px 2px rgba(23,31,56,.06);
-  --shadow-2: 0 8px 24px -8px rgba(23,31,56,.16), 0 2px 6px rgba(23,31,56,.05);
-  --shadow-3: 0 28px 64px -18px rgba(23,31,56,.30);
+  --glow-map: 5%;
+  --glow-portrait: 7%;
+  --glow-cta: 7%;
+  --shadow-1: 0 1px 2px rgba(46,39,30,.04);
+  --shadow-2: 0 10px 28px -12px rgba(46,39,30,.13), 0 2px 6px rgba(46,39,30,.03);
+  --shadow-3: 0 28px 64px -18px rgba(46,39,30,.2);
 
   --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Editorial serif, reserved for the handful of true headline moments
+     (the name, a closing line, a certificate's title) rather than every
+     h1-h4 — small card titles stay in Inter so dense content stays crisp. */
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
 
   --rail: 310px;
-  --shell: 1360px;
+  /* Was a flat 1360px, so past that + the gutters the whole two-column
+     layout just centred as a fixed-width island with growing dead space
+     on both sides — the "form floating in the middle" look on anything
+     wider than a laptop. Scales with the viewport instead: 85% of it,
+     floored at the old 1360 so nothing gets tighter than before, capped
+     at 1880 so lines of body text never run far enough to hurt reading. */
+  --shell: clamp(1360px, 85vw, 1880px);
   --gutter: 28px;
   --r-sm: 6px; --r-md: 9px; --r-lg: 13px; --r-xl: 18px;
   color-scheme: light;
 }
 
+/* Automatic dark mode and the explicit toggle share the same palette. */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg:        #0a0c12;
-    --bg-tint-a: #101a33;
-    --bg-tint-b: #1a1030;
-    --surface:   #12151d;
-    --surface-2: #181c26;
-    --surface-3: #212633;
-    --border:    #232836;
-    --border-2:  #343b4c;
-    --text:      #edeff4;
-    --text-2:    #a5adbd;
-    --text-3:    #707a8d;
-
-    --accent:      #8b8cf9;
-    --accent-2:    #2dd4bf;
-    --accent-hover:#a5a6fb;
-    --accent-soft: #191a33;
-    --accent-line: #3b3c73;
-    --on-accent:   #0d0e16;
-    --ok:          #34d399;
-    --c-kolkata:  #fb923c;
-    --c-aberdeen: #22d3ee;
-    --c-glasgow:  #c084fc;
-    --c-london:   #34d399;
-
-    --shadow-1: 0 1px 2px rgba(0,0,0,.55);
-    --shadow-2: 0 8px 24px -8px rgba(0,0,0,.7);
-    --shadow-3: 0 28px 64px -18px rgba(0,0,0,.85);
+  :root:not([data-theme="light"]):not([data-theme="bloom"]) {
+    --bg: #0d1112;
+    --bg-tint-a: #111c1c;
+    --bg-tint-b: #211719;
+    --surface: #151c1e;
+    --surface-2: #20292c;
+    --surface-3: #2b373a;
+    --border: #344246;
+    --border-2: #53666b;
+    --text: #edf1ee;
+    --text-2: #bdc9c6;
+    --text-3: #a0b1ac;
+    --accent: #ef8075;
+    --accent-2: #68afa2;
+    --accent-hover: #ff9b8e;
+    --accent-soft: #342527;
+    --accent-line: #986158;
+    --on-accent: #191b1b;
+    --action: #a6433d;
+    --action-end: #923a37;
+    --action-hover: #b24a40;
+    --on-action: #fff9f3;
+    --link: #f2a092;
+    --focus: #ec9c87;
+    --ok: #8cbea3;
+    --landmark: #d3b882;
+    --c-kolkata: #d8a47e;
+    --c-aberdeen: #88bbae;
+    --c-glasgow: #b2acce;
+    --c-london: #e09f95;
+    --glow-map: 9%;
+    --glow-portrait: 10%;
+    --glow-cta: 10%;
+    --shadow-1: 0 1px 2px rgba(0,0,0,.24);
+    --shadow-2: 0 12px 32px -10px rgba(0,0,0,.4);
+    --shadow-3: 0 30px 72px -18px rgba(0,0,0,.55);
     color-scheme: dark;
   }
 }
 
 :root[data-theme="dark"] {
-  --bg:#0a0c12; --bg-tint-a:#101a33; --bg-tint-b:#1a1030;
-  --surface:#12151d; --surface-2:#181c26; --surface-3:#212633;
-  --border:#232836; --border-2:#343b4c;
-  --text:#edeff4; --text-2:#a5adbd; --text-3:#707a8d;
-  --accent:#8b8cf9; --accent-2:#2dd4bf; --accent-hover:#a5a6fb;
-  --accent-soft:#191a33; --accent-line:#3b3c73; --on-accent:#0d0e16; --ok:#34d399;
-  --c-kolkata:#fb923c; --c-aberdeen:#22d3ee; --c-glasgow:#c084fc; --c-london:#34d399;
-  --shadow-1: 0 1px 2px rgba(0,0,0,.55);
-  --shadow-2: 0 8px 24px -8px rgba(0,0,0,.7);
-  --shadow-3: 0 28px 64px -18px rgba(0,0,0,.85);
+  --bg: #0d1112;
+  --bg-tint-a: #111c1c;
+  --bg-tint-b: #211719;
+  --surface: #151c1e;
+  --surface-2: #20292c;
+  --surface-3: #2b373a;
+  --border: #344246;
+  --border-2: #53666b;
+  --text: #edf1ee;
+  --text-2: #bdc9c6;
+  --text-3: #a0b1ac;
+  --accent: #ef8075;
+  --accent-2: #68afa2;
+  --accent-hover: #ff9b8e;
+  --accent-soft: #342527;
+  --accent-line: #986158;
+  --on-accent: #191b1b;
+  --action: #a6433d;
+  --action-end: #923a37;
+  --action-hover: #b24a40;
+  --on-action: #fff9f3;
+  --link: #f2a092;
+  --focus: #ec9c87;
+  --ok: #8cbea3;
+  --landmark: #d3b882;
+  --c-kolkata: #d8a47e;
+  --c-aberdeen: #88bbae;
+  --c-glasgow: #b2acce;
+  --c-london: #e09f95;
+  --glow-map: 9%;
+  --glow-portrait: 10%;
+  --glow-cta: 10%;
+  --shadow-1: 0 1px 2px rgba(0,0,0,.24);
+  --shadow-2: 0 12px 32px -10px rgba(0,0,0,.4);
+  --shadow-3: 0 30px 72px -18px rgba(0,0,0,.55);
   color-scheme: dark;
+}
+
+/* Porcelain & Tide: a cool paper ground, deep blue and a copper counterpoint. */
+:root[data-theme="bloom"] {
+  --bg: #eef2f3;
+  --bg-tint-a: #f7f8f5;
+  --bg-tint-b: #dee9ee;
+  --surface: #fcfdfc;
+  --surface-2: #e2e9ec;
+  --surface-3: #d4dfe4;
+  --border: #c9d6dc;
+  --border-2: #a4b9c4;
+  --text: #21323d;
+  --text-2: #425c69;
+  --text-3: #4c626e;
+  --accent: #255d78;
+  --accent-2: #bf7957;
+  --accent-hover: #1b4c66;
+  --accent-soft: #dce8ed;
+  --accent-line: #86a7b7;
+  --on-accent: #fcfdfc;
+  --action: #255d78;
+  --action-end: #204d65;
+  --action-hover: #1b4c66;
+  --on-action: #fcfdfc;
+  --link: #245a74;
+  --focus: #255d78;
+  --ok: #3f6e5b;
+  --landmark: #80612d;
+  --c-kolkata: #935a3d;
+  --c-aberdeen: #396b67;
+  --c-glasgow: #68607c;
+  --c-london: #925549;
+  --glow-map: 3%;
+  --glow-portrait: 5%;
+  --glow-cta: 7%;
+  --shadow-1: 0 1px 2px rgba(30,53,66,.04);
+  --shadow-2: 0 10px 28px -12px rgba(30,53,66,.12), 0 2px 6px rgba(30,53,66,.025);
+  --shadow-3: 0 28px 64px -18px rgba(30,53,66,.2);
+  color-scheme: light;
 }
 
 /* ---------- Base ---------- */
@@ -126,8 +219,8 @@ a { color: inherit; text-decoration: none; }
 ul { list-style: none; }
 img { display: block; max-width: 100%; }
 
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
-::selection { background: var(--accent); color: var(--on-accent); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+::selection { background: var(--action); color: var(--on-action); }
 
 /* ============================================================
    Logo tiles — each brand sits on its own colour, never a
@@ -153,8 +246,8 @@ img { display: block; max-width: 100%; }
 .logo.b-iem    { background: #ffffff; border-color: var(--border); padding: 4px; }
 .logo.b-plain  { background: var(--surface-2); }
 .logo.b-mono   {
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  border-color: transparent; color: #fff;
+  background: linear-gradient(135deg, var(--action), var(--action-end));
+  border-color: transparent; color: var(--on-action);
   font-size: 13px; font-weight: 650; letter-spacing: -0.02em;
 }
 
@@ -178,10 +271,14 @@ img { display: block; max-width: 100%; }
 .rail-avatar {
   width: 54px; height: 54px; flex-shrink: 0;
   border-radius: 14px; object-fit: cover;
-  border: 1px solid var(--border); box-shadow: var(--shadow-1);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-1), 0 0 18px -8px color-mix(in srgb, var(--accent-2) var(--glow-portrait), transparent);
+  cursor: pointer;
+  /* --tilt-x/--tilt-y: same pointer, same main.js handler as the cards. */
+  transform: perspective(500px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
 }
-.rail-name { font-size: 20px; letter-spacing: -0.033em; }
-.rail-role { font-size: 13px; color: var(--accent); margin-top: 1px; font-weight: 500; }
+.rail-name { font-family: var(--font-display); font-size: 22px; font-weight: 600; letter-spacing: -0.012em; }
+.rail-role { font-size: 13px; color: var(--text-2); margin-top: 1px; font-weight: 500; }
 
 .rail-bio { margin-top: 18px; font-size: 13.5px; line-height: 1.62; color: var(--text-2); }
 
@@ -211,8 +308,8 @@ img { display: block; max-width: 100%; }
   background: var(--surface-2); color: var(--text-3);
 }
 .rail-nav a:hover { color: var(--text); background: var(--surface-2); }
-.rail-nav a.active { color: var(--accent); background: var(--accent-soft); font-weight: 550; }
-.rail-nav a.active .count { background: var(--accent); color: var(--on-accent); }
+.rail-nav a.active { color: var(--link); background: var(--accent-soft); font-weight: 550; }
+.rail-nav a.active .count { background: var(--action); color: var(--on-action); }
 .rail-nav a.active::before {
   content: ""; position: absolute; left: 0; top: 50%;
   width: 3px; height: 17px; margin-top: -8.5px;
@@ -233,11 +330,11 @@ img { display: block; max-width: 100%; }
 }
 .btn-primary {
   width: 100%;
-  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 62%, var(--accent-2)));
-  color: var(--on-accent);
-  box-shadow: var(--shadow-2);
+  background: linear-gradient(135deg, var(--action), var(--action-end));
+  color: var(--on-action);
+  box-shadow: var(--shadow-2), 0 0 18px -10px color-mix(in srgb, var(--accent) var(--glow-cta), transparent);
 }
-.btn-primary:hover { transform: translateY(-1px); }
+.btn-primary:hover { background: linear-gradient(135deg, var(--action-hover), var(--action-end)); transform: translateY(-1px); }
 .btn svg { width: 14px; height: 14px; }
 
 .icon-btn {
@@ -248,12 +345,41 @@ img { display: block; max-width: 100%; }
 }
 .icon-btn:hover { color: var(--accent); border-color: var(--accent-line); background: var(--accent-soft); }
 .icon-btn svg { width: 15px; height: 15px; }
-.icon-btn .icon-moon { display: none; }
+.icon-btn .icon-moon, .icon-btn .icon-bloom { display: none; }
 :root[data-theme="dark"] .icon-btn .icon-sun { display: none; }
 :root[data-theme="dark"] .icon-btn .icon-moon { display: block; }
+:root[data-theme="bloom"] .icon-btn .icon-sun { display: none; }
+:root[data-theme="bloom"] .icon-btn .icon-bloom { display: block; }
+
+/* Bloom keeps its crisp blue wordmark and quiet background illustrations. */
+:root[data-theme="bloom"] .atlas-inner::before { background: none; }
+:root[data-theme="bloom"] .atlas-land { filter: none; }
+:root[data-theme="bloom"] .atlas-route .leg { filter: none; }
+:root[data-theme="bloom"] .atlas-pin .dot { filter: none; }
+:root[data-theme="bloom"] .rail-avatar { box-shadow: var(--shadow-1); }
+:root[data-theme="bloom"] .rail-name,
+:root[data-theme="bloom"] .contact-panel h3 { color: var(--accent); }
+
+:root[data-theme="bloom"] .rail-avatar {
+  border: 2.5px solid var(--accent);
+  box-shadow: var(--shadow-1);
+}
+:root[data-theme="bloom"] .sec-head h2::before {
+  width: 5px; background: var(--accent); animation: none;
+}
+/* A dot under the active stop, not a filled pill — closer to the
+   reference's own nav, and it reads as a current-page marker rather
+   than a hover state frozen on. Left for the rail's vertical list only:
+   the topbar's compact horizontal strip is a different context, and a
+   pill is the clearer active-state signal at that size. */
+:root[data-theme="bloom"] .rail-nav a.active { background: none; }
+:root[data-theme="bloom"] .rail-nav a.active::before {
+  top: auto; bottom: 2px; left: 11px;
+  width: 4px; height: 4px; margin-top: 0; border-radius: 50%;
+}
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .icon-btn .icon-sun { display: none; }
-  :root:not([data-theme="light"]) .icon-btn .icon-moon { display: block; }
+  :root:not([data-theme="light"]):not([data-theme="bloom"]) .icon-btn .icon-sun { display: none; }
+  :root:not([data-theme="light"]):not([data-theme="bloom"]) .icon-btn .icon-moon { display: block; }
 }
 
 /* ---------- Content ---------- */
@@ -310,7 +436,11 @@ img { display: block; max-width: 100%; }
   border: 1px solid var(--border); border-radius: var(--r-lg);
   background: var(--surface); box-shadow: var(--shadow-1);
   overflow: hidden;
-  transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+  /* --tilt-x/--tilt-y come from main.js's pointermove handler on
+     [data-tilt] and default to flat — perspective lives inline in the
+     transform itself so no wrapper element is needed for it to apply. */
+  transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition: border-color .25s ease, box-shadow .25s ease, transform .15s ease;
 }
 .card::before {
   content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0;
@@ -322,7 +452,10 @@ img { display: block; max-width: 100%; }
   /* iOS spends the first tap on an element with :hover styling applying the hover
      and only dispatches click on the second, so a card needed tapping twice to
      open. Gate every hover affordance behind an actual pointer. */
-  .card:hover { border-color: var(--accent-line); box-shadow: var(--shadow-2); transform: translateY(-2px); }
+  .card:hover {
+    border-color: var(--accent-line); box-shadow: var(--shadow-2);
+    transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateY(-2px);
+  }
   .card:hover::before { opacity: 1; }
 }
 .card > * { position: relative; z-index: 1; }
@@ -330,7 +463,7 @@ img { display: block; max-width: 100%; }
 .card-top { display: flex; align-items: flex-start; gap: 12px; }
 .card-head { flex: 1; min-width: 0; }
 .card h3 { font-size: 15px; letter-spacing: -0.024em; }
-.card .org { font-size: 12.5px; color: var(--accent); margin-top: 2px; font-weight: 500; }
+.card .org { font-size: 12.5px; color: var(--text-2); margin-top: 2px; font-weight: 500; }
 .card .when {
   flex-shrink: 0; font-family: var(--mono); font-size: 11px;
   color: var(--text-3); padding: 2px 7px; border-radius: 999px;
@@ -339,7 +472,7 @@ img { display: block; max-width: 100%; }
 .card p { margin-top: 10px; font-size: 13.6px; line-height: 1.62; }
 
 .card-links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: auto; padding-top: 14px; }
-.tlink { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 550; color: var(--accent); }
+.tlink { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 550; color: var(--link); }
 .tlink:hover { color: var(--accent-hover); text-decoration: underline; text-underline-offset: 3px; }
 .tlink svg { width: 11px; height: 11px; }
 
@@ -430,9 +563,7 @@ img { display: block; max-width: 100%; }
 .exp-keys .k b {
   display: block; font-size: 17px; font-weight: 650; letter-spacing: -0.03em;
   line-height: 1.15;
-  background: linear-gradient(135deg, var(--place),
-              color-mix(in srgb, var(--place) 55%, var(--accent)));
-  -webkit-background-clip: text; background-clip: text; color: transparent;
+  color: var(--place);
 }
 .exp-keys .k span {
   display: block; margin-top: 2px;
@@ -443,8 +574,8 @@ img { display: block; max-width: 100%; }
 }
 
 .exp-when { font-family: var(--mono); font-size: 11.5px; line-height: 1.55; color: var(--text-3); padding-top: 3px; }
-.exp-item.current .exp-when { color: var(--accent); font-weight: 500; }
-.exp-kind { display: block; margin-top: 3px; font-size: 10.5px; opacity: .8; }
+.exp-item.current .exp-when { color: var(--link); font-weight: 500; }
+.exp-kind { display: block; margin-top: 3px; font-size: 10.5px; color: var(--text-3); }
 
 .exp-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .exp-title { font-size: 15px; font-weight: 600; letter-spacing: -0.024em; }
@@ -482,7 +613,7 @@ img { display: block; max-width: 100%; }
               color-mix(in srgb, var(--accent) 14%, transparent), transparent 66%);
 }
 .contact-panel > * { position: relative; z-index: 1; }
-.contact-panel h3 { font-size: 20px; letter-spacing: -0.03em; }
+.contact-panel h3 { font-family: var(--font-display); font-size: 24px; font-weight: 600; letter-spacing: -0.01em; }
 .contact-panel p { margin-top: 9px; max-width: 460px; font-size: 14.5px; }
 .contact-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
 .contact-link {
@@ -501,6 +632,41 @@ footer {
 footer p { font-size: 12.5px; color: var(--text-3); }
 
 .topbar { display: none; }
+
+/* ============================================================
+   Profile photo pop
+   Reuses .modal/.modal-backdrop's fixed-overlay mechanics from the
+   certificate viewer just below — same backdrop blur, same open/close
+   plumbing — but its own simple dialog, since a photo on its own needs
+   none of that viewer's rail of facts. The entrance reuses paperIn
+   (defined with the certificate viewer) rather than a second copy of
+   the same keyframes.
+   ============================================================ */
+.avatar-dialog {
+  position: relative; z-index: 1; opacity: 0;
+  display: flex; align-items: center; justify-content: center;
+  width: min(420px, 92vw);
+}
+.avatar-pop {
+  position: relative; width: 100%; aspect-ratio: 1;
+  border-radius: var(--r-xl); overflow: hidden;
+  border: 1px solid var(--border); box-shadow: var(--shadow-3);
+  background: var(--surface);
+  /* --tilt-x/--tilt-y tracked live across the whole dialog while this is
+     open (main.js) — "sensitive to mouse movement" carried past the
+     entrance rather than stopping once the pop finishes. A running CSS
+     animation always wins over this transform for as long as it's
+     playing, so the two never fight: paperIn finishes, then tracking
+     picks up cleanly from a flat, settled photo. */
+  transform: perspective(1000px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition: transform .2s ease;
+}
+.avatar-pop img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.modal.open .avatar-pop { animation: paperIn .85s cubic-bezier(.19,.9,.24,1) backwards; }
+@media (prefers-reduced-motion: reduce) {
+  .modal.open .avatar-pop { animation: none; }
+  .avatar-pop { transition: none; }
+}
 
 /* ============================================================
    Certificate viewer
@@ -567,7 +733,8 @@ footer p { font-size: 12.5px; color: var(--text-3); }
   text-transform: uppercase; color: var(--place); margin-bottom: 10px;
 }
 .cr-title {
-  font-size: 26px; line-height: 1.14; font-weight: 650; letter-spacing: -0.035em;
+  font-family: var(--font-display);
+  font-size: 28px; line-height: 1.14; font-weight: 600; letter-spacing: -0.012em;
   color: var(--text); text-wrap: balance;
 }
 .cr-kind { margin-top: 8px; font-size: 14px; font-weight: 550; color: var(--text-2); }
@@ -796,7 +963,7 @@ footer p { font-size: 12.5px; color: var(--text-3); }
   .topbar-nav.at-end   { --fade-r: 0px; }
   .topbar-nav::-webkit-scrollbar { display: none; }
   .topbar-nav a { padding: 5px 9px; border-radius: var(--r-sm); font-size: 12.5px; color: var(--text-3); white-space: nowrap; }
-  .topbar-nav a.active { color: var(--accent); background: var(--accent-soft); }
+  .topbar-nav a.active { color: var(--link); background: var(--accent-soft); }
 }
 
 @media (max-width: 560px) {
@@ -819,14 +986,14 @@ footer p { font-size: 12.5px; color: var(--text-3); }
    ============================================================ */
 /* The wash spans Experience and Education, then fades out. */
 .journey {
+  /* Contain the sticky background when the following section scrolls in. */
+  clip-path: inset(0 -28px);
   position: relative;
   isolation: isolate;
   /* flow-root so the two sections inside cannot leak margins back out to
      .content, which is what broke the rhythm around this block. */
   display: flow-root;
-  /* No clipping here — it would shave the left and right borders off every
-     row, which bleeds 22px past the column. The atlas keeps itself in bounds
-     instead: it spans the column exactly, and the SVG clips its own zoom. */
+  /* The clip extends past the column to preserve the rows' 22px bleed. */
 }
 .journey > section { position: relative; z-index: 1; }
 /* the one gap .content's own gap cannot reach: Experience to Education */
@@ -855,7 +1022,28 @@ footer p { font-size: 12.5px; color: var(--text-3); }
   pointer-events: none;
   /* feather all four edges so the wash has no visible rectangle */
 }
-.atlas-inner { position: absolute; top: 0; left: 0; width: 100%; }
+.atlas-inner {
+  position: absolute; top: 0; left: 0; width: 100%;
+  min-height: max(100vh, calc(min(780px, 70vw) + 140px));
+  /* Fade the background before the journey's clip, including the glow,
+     coastlines and routes. The cards remain outside this masked layer. */
+  -webkit-mask-image:
+    linear-gradient(to bottom, transparent 0,
+      #000 min(64px, var(--journey-fade-start, 100vh)),
+      #000 var(--journey-fade-start, 100vh),
+      transparent var(--journey-fade-end, 140vh)),
+    linear-gradient(to right, transparent 0, #000 7%,
+      #000 calc(100% - 96px), transparent 100%);
+  mask-image:
+    linear-gradient(to bottom, transparent 0,
+      #000 min(64px, var(--journey-fade-start, 100vh)),
+      #000 var(--journey-fade-start, 100vh),
+      transparent var(--journey-fade-end, 140vh)),
+    linear-gradient(to right, transparent 0, #000 7%,
+      #000 calc(100% - 96px), transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
 
 .atlas-svg {
   /* feather every edge so the wash never shows a rectangle */
@@ -871,7 +1059,45 @@ footer p { font-size: 12.5px; color: var(--text-3); }
   /* clip the 2.6x hover zoom to the map's own box, so it can never widen
      the page (this is what the wrapper used to be clipped for) */
   overflow: hidden;
+  transition: opacity .6s ease;
 }
+@media (prefers-reduced-motion: reduce) { .atlas-svg { transition: none; } }
+
+/* ---------- 3D journey globe ----------
+   journey3d.js paints into this, overlaying the 2D map above it rather
+   than replacing it in the DOM — see the HTML comment by the canvas for
+   why. Both stay fully sized and positioned identically; only opacity
+   decides which one is actually seen, which is also what keeps this
+   safe if the 3D side never activates (the .atlas3d-active class never
+   gets added, this stays at opacity 0 forever, the 2D map underneath is
+   simply what was always there). No border, no background, no card
+   frame — it sits directly in the same borderless wash the 2D map
+   already uses, which is the only way either one "blends with the
+   page" rather than reading as a boxed-in object sitting on top of it. */
+.atlas3d-canvas {
+  position: absolute;
+  top: calc((100svh - 76px) * .32 - min(980px, 78vw) / 2);
+  width: min(780px, 70vw);
+  right: calc((var(--map-lane) - min(780px, 70vw)) / 2);
+  aspect-ratio: 1;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .6s ease;
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 42%, rgba(0,0,0,.9) 58%, transparent 76%);
+  mask-image: radial-gradient(ellipse at center, #000 42%, rgba(0,0,0,.9) 58%, transparent 76%);
+}
+@media (max-width: 1239px) {
+  .atlas3d-canvas { width: min(640px, 90vw); right: -18%; }
+}
+.atlas3d-canvas canvas { display: block; width: 100%; height: 100%; }
+/* .atlas sets pointer-events: none on itself (deliberately — it's a
+   wash the page scrolls under, not a thing to click on) and that value
+   inherits all the way down; the drag-to-rotate interaction needs this
+   one element to opt back in once it's actually the thing on screen. */
+.atlas.atlas3d-active .atlas3d-canvas { opacity: 1; pointer-events: auto; }
+.atlas.atlas3d-active .atlas-svg { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .atlas3d-canvas { transition: none; } }
 
 /* the whole map zooms toward the hovered city */
 .atlas-zoom {
@@ -906,19 +1132,19 @@ footer p { font-size: 12.5px; color: var(--text-3); }
   .journey .card:hover { background: color-mix(in srgb, var(--surface) 92%, transparent); }
 }
 
-/* Focus mode: while one role is hovered the others recede, so the
-   zoomed-in city is actually visible instead of hidden behind cards. */
+/* Focus uses surfaces and outlines to recede neighbouring rows while
+   preserving their text contrast. */
 .journey .exp-item, .journey .card {
   transition: background .35s ease, border-color .3s ease,
               box-shadow .3s ease, opacity .35s ease, transform .25s cubic-bezier(.22,.8,.28,1);
 }
 .journey.focus .exp-item:not(.located),
 .journey.focus .card:not(.located) {
-  background: color-mix(in srgb, var(--surface) 18%, transparent);
+  background: color-mix(in srgb, var(--surface) 58%, transparent);
   border-color: transparent;
   box-shadow: none;
   /* !important: the reveal animation leaves an inline opacity on these nodes */
-  opacity: .4 !important;
+  opacity: 1 !important;
 }
 .journey.focus .exp-item.located,
 .journey.focus .card.located {
@@ -928,7 +1154,7 @@ footer p { font-size: 12.5px; color: var(--text-3); }
 }
 @media (prefers-reduced-motion: reduce) {
   .journey.focus .exp-item:not(.located),
-  .journey.focus .card:not(.located) { opacity: .6 !important; }
+  .journey.focus .card:not(.located) { opacity: 1 !important; }
 }
 
 /* Coastlines only. Filled landmasses read as grey blobs behind text;
@@ -956,6 +1182,7 @@ footer p { font-size: 12.5px; color: var(--text-3); }
   stroke-dasharray: 2 7;
   vector-effect: non-scaling-stroke;
   opacity: .42;
+  filter: drop-shadow(0 0 1.5px color-mix(in srgb, var(--accent-2) 32%, transparent));
   transition: opacity .3s ease;
 }
 .js .atlas[data-drawn] .leg { animation: legFlow 3.2s linear infinite; }
@@ -967,7 +1194,8 @@ footer p { font-size: 12.5px; color: var(--text-3); }
   stroke-width: 2;
   opacity: .85;
   vector-effect: non-scaling-stroke;
-  transition: r .3s cubic-bezier(.22,.8,.28,1), opacity .3s ease;
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--accent-2) 42%, transparent));
+  transition: r .3s cubic-bezier(.22,.8,.28,1), opacity .3s ease, filter .3s ease;
 }
 .atlas-pin .halo { fill: var(--accent); opacity: 0; }
 .js .atlas[data-drawn] .atlas-pin .halo { animation: haloPulse 3.2s cubic-bezier(.22,.61,.36,1) infinite; }
@@ -985,12 +1213,36 @@ footer p { font-size: 12.5px; color: var(--text-3); }
 .atlas-pin.lit .dot { r: 7; opacity: 1; }
 /* While a role is hovered the pin takes that role's state, so a finished job
    never lights up green next to a label that says it ended. */
-.atlas-pin.lit .dot  { fill: var(--place); }
+.atlas-pin.lit .dot  { fill: var(--place); filter: drop-shadow(0 0 6px var(--place)); }
 .atlas-pin.lit .halo { fill: var(--place); }
 .atlas.has-lit .leg { opacity: .95; stroke: var(--place); }
 .atlas.has-lit .atlas-land path { stroke: var(--place); fill: var(--place); }
 .atlas.has-lit .atlas-land path { fill-opacity: .085; stroke-opacity: .72; }
 .exp-item.located, .card.located { border-color: color-mix(in srgb, var(--place) 45%, transparent); }
+
+/* A restrained secondary-colour wash; each theme controls its strength. */
+.atlas-inner::before {
+  content: ""; position: absolute; inset: -8% -4%; z-index: -1; pointer-events: none;
+  background: radial-gradient(55% 50% at 50% 36%,
+              color-mix(in srgb, var(--accent-2) var(--glow-map), transparent), transparent 72%);
+}
+.atlas-land { filter: drop-shadow(0 0 1.5px color-mix(in srgb, var(--accent-2) 28%, transparent)); }
+
+/* Dark mode: the light-theme opacities were tuned for a saturated accent
+   on a bright bg, and read as too faint against black. Lift both so the
+   outline stays legible — and lift the hovered-city state to match, so
+   hovering still reads as a clear jump rather than disappearing into
+   this new floor. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="bloom"]) .atlas-land path { fill-opacity: .09; stroke-opacity: .68; }
+  :root:not([data-theme="light"]):not([data-theme="bloom"]) .atlas-route .leg { opacity: .68; }
+  :root:not([data-theme="light"]):not([data-theme="bloom"]) .atlas.has-lit .atlas-land path { fill-opacity: .16; stroke-opacity: .92; }
+  :root:not([data-theme="light"]):not([data-theme="bloom"]) .atlas.has-lit .leg { opacity: 1; }
+}
+:root[data-theme="dark"] .atlas-land path { fill-opacity: .09; stroke-opacity: .68; }
+:root[data-theme="dark"] .atlas-route .leg { opacity: .68; }
+:root[data-theme="dark"] .atlas.has-lit .atlas-land path { fill-opacity: .16; stroke-opacity: .92; }
+:root[data-theme="dark"] .atlas.has-lit .leg { opacity: 1; }
 
 @media (prefers-reduced-motion: reduce) {
   .js .atlas[data-drawn] .leg,
@@ -1026,7 +1278,7 @@ footer p { font-size: 12.5px; color: var(--text-3); }
 .btn-primary { position: relative; overflow: hidden; }
 .btn-primary::after {
   content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%;
-  background: linear-gradient(100deg, transparent, rgba(255,255,255,.35), transparent);
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.08), transparent);
   transform: skewX(-18deg); opacity: 0;
 }
 .btn-primary:hover::after { opacity: 1; animation: sweep .85s ease; }
@@ -1046,8 +1298,11 @@ footer p { font-size: 12.5px; color: var(--text-3); }
 .icon-btn { transition: color .2s ease, border-color .2s ease, background .2s ease, transform .2s cubic-bezier(.22,.8,.28,1); }
 .icon-btn:hover { transform: translateY(-2px); }
 
-.rail-avatar { transition: transform .35s cubic-bezier(.22,.8,.28,1), box-shadow .35s ease; }
-.rail-avatar:hover { transform: scale(1.04); box-shadow: var(--shadow-2); }
+.rail-avatar { transition: transform .15s ease, box-shadow .35s ease; }
+.rail-avatar:hover {
+  transform: perspective(500px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) scale(1.04);
+  box-shadow: var(--shadow-2);
+}
 
 .stat { transition: transform .25s cubic-bezier(.22,.8,.28,1), box-shadow .25s ease, border-color .25s ease; }
 .stat:hover { transform: translateY(-3px); box-shadow: var(--shadow-2); border-color: var(--accent-line); }
@@ -1087,6 +1342,11 @@ footer p { font-size: 12.5px; color: var(--text-3); }
   opacity: 0;
   transition: opacity .28s ease, transform .45s cubic-bezier(.22,.8,.28,1);
 }
+.atlas-tip .pb-sky > svg { max-height: var(--city-scene-max-height, none); }
+.atlas-tip.is-compact .pb-sky::before { display: none; }
+.atlas-tip.is-compact .pb-name { margin-top: 4px; }
+.atlas-tip.is-compact .pb-city { font-size: 13px; }
+.atlas-tip.is-compact .pb-when { margin-top: 2px; font-size: 8px; }
 /* The scrim. A radial wash of the page colour, masked by the same radial so
    it has no boundary to see — it just gets thinner until it is gone. The
    backdrop blur rides the mask too, so the map softens under the type and
@@ -1122,7 +1382,7 @@ footer p { font-size: 12.5px; color: var(--text-3); }
 /* A collapsed role row is only ~96px tall and the badge is three stacked
    pieces, so the role variant runs a size down throughout to stay inside it. */
 .exp-item .place-badge { right: 52px; top: 7px; }
-.exp-item .place-badge .pb-sky svg { height: 36px; }
+.exp-item .place-badge .pb-sky > svg { height: 36px; }
 .exp-item .place-badge .pb-name { margin-top: 5px; }
 .exp-item .place-badge .pb-city { font-size: 13.5px; }
 .exp-item .place-badge .pb-when { margin-top: 2px; font-size: 9.5px; }
@@ -1146,7 +1406,7 @@ footer p { font-size: 12.5px; color: var(--text-3); }
    quarters in landscape. Each role carries its own map instead, inline. The
    figure stays in the DOM, hidden: every card's map <use>s the land out of it
    rather than duplicating this page's heaviest path data. */
-@media (max-width: 860px) {
+@media (max-width: 1023px) {
   .atlas { display: none; }
   /* nothing shows through any more, so stop paying for the blur */
   .journey .exp-item, .journey .card {
@@ -1182,7 +1442,7 @@ footer p { font-size: 12.5px; color: var(--text-3); }
    rather than a panel. The land paths are <use> clones, which external
    selectors cannot reach, so their look is set on the <svg> and inherited. */
 .loc-map { display: none; }
-@media (max-width: 860px) {
+@media (max-width: 1023px) {
   .loc-map {
     display: block; position: relative;
     /* The atlas's own `.atlas-land path` rule reaches into the <use> shadow
@@ -1191,13 +1451,20 @@ footer p { font-size: 12.5px; color: var(--text-3); }
        is scoped to this subtree. */
     --accent: var(--place);
     grid-column: 1 / -1; order: -2;
-    height: 88px; margin: 0 0 13px;
+    /* Was a flat 88px against a width that's already fluid (100%), so the
+       banner's proportions shifted with every phone size — squat on a
+       wide one, cropped tighter on a narrow one. Tying height to the
+       art's own aspect ratio (the loc-map SVG's viewBox is 190:52) keeps
+       it genuinely proportional at any width, capped so it never grows
+       past a banner on a tablet-wide phone. */
+    aspect-ratio: 190 / 52; max-height: 120px;
+    margin: 0 0 13px;
     border: 1px solid color-mix(in srgb, var(--place) 20%, var(--border));
     border-radius: var(--r-md);
     background: color-mix(in srgb, var(--place) 6%, var(--surface));
     overflow: hidden;
   }
-  .loc-map svg {
+  .loc-map > svg {
     display: block; width: 100%; height: 100%;
     fill: var(--place); fill-opacity: .10;
     stroke: var(--place); stroke-opacity: .5; stroke-width: .5;
@@ -1211,6 +1478,7 @@ footer p { font-size: 12.5px; color: var(--text-3); }
     text-shadow: 0 1px 3px color-mix(in srgb, var(--surface) 92%, transparent);
   }
   .loc-map .pb-city { font-size: 13px; }
+  .exp-item[data-location-label] .loc-map .lm-name { flex-wrap: wrap; row-gap: 2px; }
   .loc-map .pb-when { margin-top: 0; margin-left: 2px; }
 }
 
@@ -1220,8 +1488,173 @@ footer p { font-size: 12.5px; color: var(--text-3); }
 .pb-sky { display: block; line-height: 0; color: var(--place); }
 /* heights chosen to match the band's 200:48 at each width, so the strip runs
    edge to edge with nothing letterboxed */
-.pb-sky svg { display: block; width: 100%; height: 48px; }
-.place-badge .pb-sky svg { height: 41px; }
+.pb-sky > svg { display: block; width: 100%; height: 48px; }
+.place-badge .pb-sky > svg { height: 41px; }
+
+/* One coordinate space and horizon for architecture, river and moving parts. */
+.pb-sky > svg.city-composition {
+  display: block; width: 100%; height: auto; overflow: visible;
+  transform: none;
+}
+.city-scene .cs-skyline { opacity: .58; stroke-width: .85; }
+.exp-item.is-reading::before { opacity: .55; transform: scaleY(1); }
+.exp-item.is-reading:not(.located):not(.is-open), .card.is-reading:not(.located) {
+  border-color: color-mix(in srgb, var(--place) 28%, var(--border));
+}
+@media (prefers-reduced-motion: reduce) {
+  .pb-sky > svg.city-composition { transform: none; transition: none; }
+}
+
+/* Each city has a small moving portrait in the same line-art language. */
+.pb-sky svg.city-scene {
+  display: block;
+  width: 100%; height: auto;
+  overflow: visible;
+  stroke: currentColor; stroke-width: 1.15;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.city-scene .cs-orbit { stroke-dasharray: 2 7; opacity: .2; }
+.city-scene .cs-guide { opacity: .35; }
+.city-scene .cs-solid { fill: var(--bg); }
+.place-badge .city-scene .cs-solid { fill: var(--surface); }
+.city-scene .cs-water { opacity: .35; stroke-dasharray: 24 8 5 8; animation: cityWaterFlow 14s linear infinite paused; }
+.city-scene .cs-birds { opacity: .55; animation: cityBirdDrift 9s ease-in-out infinite alternate paused; }
+.atlas-tip.on .cs-structure,
+.located > .place-badge .cs-structure { animation: citySceneArrive 1s cubic-bezier(.22,.8,.28,1) both; }
+.atlas-tip.on .cs-trace,
+.located > .place-badge .cs-trace {
+  stroke-dasharray: 1;
+  animation: citySceneTrace 1.5s .15s ease both;
+}
+.city-scene .kc-street { opacity: .3; }
+.city-scene-kolkata .cs-skyline { opacity: .28; stroke-width: .75; }
+.city-scene .kc-steel { stroke-width: .8; }
+.city-scene .kc-memorial { stroke-width: .9; }
+.city-scene .kc-bank { opacity: .5; }
+.city-scene .kc-tram { transform: translate(58px, 0); animation: kolkataTram 16s linear infinite both paused; }
+.city-scene .kc-ferry { transform: translate(90px, 135px); animation: kolkataFerry 22s linear infinite both paused; }
+.city-scene .kc-wake { opacity: .35; }
+.city-scene .kc-lights { fill: currentColor; stroke: none; animation: kolkataLights 4.5s ease-in-out infinite alternate paused; }
+.city-scene .ab-windows { animation: aberdeenWindows 6s ease-in-out infinite alternate paused; }
+.city-scene .ab-flag { fill: currentColor; opacity: .25; transform-origin: 80px 58px; animation: aberdeenFlag 3s ease-in-out infinite alternate paused; }
+.city-scene .ab-mist { opacity: .3; stroke-dasharray: 28 10 8 10; animation: aberdeenMist 12s ease-in-out infinite alternate paused; }
+.city-scene .gs-crane { transform-origin: 58px 47px; animation: glasgowCrane 10s ease-in-out infinite alternate paused; }
+.city-scene .gs-hook { transform-origin: 108px 70px; animation: glasgowHook 3.5s ease-in-out infinite alternate paused; }
+.city-scene .gs-bus { transform: translate(38px, 0); animation: glasgowBus 11s 1s linear infinite both paused; }
+.city-scene .gs-sweep { stroke-width: 2; stroke-dasharray: .06 .94; animation: glasgowSweep 5s linear infinite paused; }
+.city-scene .ld-eye { transform-origin: 171px 83px; animation: londonEye 40s linear infinite paused; }
+.city-scene .ld-inner { opacity: .35; }
+.city-scene .ld-capsules { fill: var(--bg); }
+.place-badge .city-scene .ld-capsules { fill: var(--surface); }
+.city-scene .ld-clock-minute { transform-origin: 57px 82px; animation: londonClock 60s linear infinite paused; }
+.atlas-tip.on .city-scene *,
+.located > .place-badge .city-scene * { animation-play-state: running; }
+@keyframes citySceneArrive {
+  from { opacity: 0; transform: translateY(9px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes citySceneTrace { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes cityWaterFlow { to { stroke-dashoffset: -90; } }
+@keyframes cityBirdDrift { from { transform: translate(-4px, 2px); } to { transform: translate(9px, -3px); } }
+@keyframes kolkataTram {
+  0% { transform: translate(58px, 0); opacity: 1; }
+  68% { transform: translate(231px, 0); opacity: 1; }
+  76% { transform: translate(231px, 0); opacity: 0; }
+  77% { transform: translate(29px, 0); opacity: 0; }
+  85% { transform: translate(29px, 0); opacity: 1; }
+  100% { transform: translate(58px, 0); opacity: 1; }
+}
+@keyframes kolkataFerry {
+  0% { transform: translate(90px, 135px); opacity: 1; }
+  65% { transform: translate(228px, 137px); opacity: 1; }
+  73% { transform: translate(228px, 137px); opacity: 0; }
+  74% { transform: translate(30px, 135px); opacity: 0; }
+  83% { transform: translate(30px, 135px); opacity: 1; }
+  100% { transform: translate(90px, 135px); opacity: 1; }
+}
+@keyframes kolkataLights { from { opacity: .3; } to { opacity: .95; } }
+@keyframes aberdeenWindows { from { opacity: .45; } to { opacity: 1; } }
+@keyframes aberdeenFlag { from { transform: skewY(-4deg) scaleX(.86); } to { transform: skewY(5deg) scaleX(1); } }
+@keyframes aberdeenMist {
+  from { transform: translateX(-9px); stroke-dashoffset: 0; opacity: .18; }
+  to { transform: translateX(9px); stroke-dashoffset: -56; opacity: .42; }
+}
+@keyframes glasgowCrane { from { transform: rotate(-2deg); } to { transform: rotate(2deg); } }
+@keyframes glasgowHook { from { transform: rotate(-8deg); } to { transform: rotate(8deg); } }
+@keyframes glasgowBus {
+  0%, 5% { transform: translate(38px, 0); }
+  90%, 100% { transform: translate(221px, 0); }
+  0%, 100% { opacity: 0; }
+  8%, 88% { opacity: 1; }
+}
+@keyframes glasgowSweep { to { stroke-dashoffset: -1; } }
+@keyframes londonEye { to { transform: rotate(360deg); } }
+@keyframes londonClock { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .city-scene *, .atlas-tip.on .city-scene *,
+  .located > .place-badge .city-scene * { animation: none; }
+}
+
+/* The current London chapter gets a moving architectural portrait. */
+[data-landmark="tower-bridge"] .pb-sky {
+  color: var(--landmark);
+}
+[data-landmark="tower-bridge"] .pb-sky svg.tower-bridge {
+  height: auto;
+  width: 100%;
+  overflow: visible;
+  stroke: currentColor;
+  stroke-width: 1.15;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.tower-bridge .tb-orbit { stroke-dasharray: 2 7; opacity: .28; }
+.tower-bridge .tb-guide { opacity: .4; }
+.tower-bridge .tb-tower { fill: var(--bg); }
+.place-badge .tower-bridge .tb-tower { fill: var(--surface); }
+.tower-bridge .tb-hangers, .tower-bridge .tb-windows { stroke-width: .75; }
+.tower-bridge .tb-river { opacity: .35; stroke-dasharray: 26 9 5 9; }
+.tower-bridge .tb-boat { transform: translate(20px, 145px); }
+.tower-bridge .tb-bascule-left { transform-origin: 90px 132px; }
+.tower-bridge .tb-bascule-right { transform-origin: 170px 132px; }
+.atlas-tip.on .tb-structure,
+.located > .place-badge .tb-structure { animation: bridgeArrive 1s cubic-bezier(.22,.8,.28,1) both; }
+.atlas-tip.on .tb-cable, .atlas-tip.on .tb-walkway,
+.located > .place-badge .tb-cable, .located > .place-badge .tb-walkway {
+  stroke-dasharray: 1;
+  animation: bridgeTrace 1.6s .2s ease both;
+}
+.atlas-tip.on .tb-bascule-left,
+.located > .place-badge .tb-bascule-left { animation: bridgeLiftLeft 10s 1s ease-in-out infinite; }
+.atlas-tip.on .tb-bascule-right,
+.located > .place-badge .tb-bascule-right { animation: bridgeLiftRight 10s 1s ease-in-out infinite; }
+.atlas-tip.on .tb-boat,
+.located > .place-badge .tb-boat { animation: thamesBoat 10s 1s linear infinite both; }
+.atlas-tip.on .tb-river,
+.located > .place-badge .tb-river { animation: thamesFlow 12s linear infinite; }
+@keyframes bridgeArrive {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes bridgeTrace { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes bridgeLiftLeft {
+  0%, 12%, 88%, 100% { transform: rotate(0); }
+  32%, 65% { transform: rotate(-46deg); }
+}
+@keyframes bridgeLiftRight {
+  0%, 12%, 88%, 100% { transform: rotate(0); }
+  32%, 65% { transform: rotate(46deg); }
+}
+@keyframes thamesBoat {
+  0% { transform: translate(15px, 145px); opacity: 0; }
+  12%, 85% { opacity: .8; }
+  100% { transform: translate(245px, 145px); opacity: 0; }
+}
+@keyframes thamesFlow { to { stroke-dashoffset: -98; } }
+@media (prefers-reduced-motion: reduce) {
+  .atlas-tip.on .tower-bridge *,
+  .located > .place-badge .tower-bridge * { animation: none; }
+}
 
 /* Hangs off the skyline's ground line, which is why there is no rule of its
    own here: the drawn line already is one, and it runs wider than the type. */
@@ -1332,7 +1765,7 @@ footer p { font-size: 12.5px; color: var(--text-3); }
 /* The in-card badge is only for widths with no lane; above that the label
    sits out on the map instead. Phone width gets neither. */
 @media (min-width: 1240px) { .place-badge { display: none; } }
-@media (max-width: 860px)  { .place-badge { display: none; } }
+@media (max-width: 1023px)  { .place-badge { display: none; } }
 @media (prefers-reduced-motion: reduce) { .place-badge { transition: none; } }
 
 /* ============================================================

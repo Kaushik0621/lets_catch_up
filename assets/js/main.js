@@ -28,13 +28,78 @@
     try { localStorage.setItem("theme", next); } catch (e) {}
     themeListeners.forEach(function (fn) { try { fn(next); } catch (e) {} });
   }
+  // Keep the saved keys while giving the revised palettes useful names.
+  var THEME_CYCLE = ["light", "dark", "bloom"];
+  var THEME_NAMES = { light: "Paper & Copper", dark: "Obsidian & Ember", bloom: "Porcelain & Tide" };
+  function updateThemeDetails() {
+    var theme = currentTheme();
+    var next = THEME_CYCLE[(THEME_CYCLE.indexOf(theme) + 1) % THEME_CYCLE.length];
+    var label = "Theme: " + THEME_NAMES[theme] + ". Switch to " + THEME_NAMES[next];
+    each(document.querySelectorAll(".theme-toggle"), function (btn) {
+      btn.setAttribute("aria-label", label);
+      btn.setAttribute("title", label);
+    });
+    var themeMeta = document.querySelector('meta[name="theme-color"]');
+    if (themeMeta) themeMeta.setAttribute("content", getComputedStyle(root).getPropertyValue("--bg").trim());
+  }
+  updateThemeDetails();
+  new MutationObserver(updateThemeDetails).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+  var systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
+  if (systemTheme.addEventListener) systemTheme.addEventListener("change", updateThemeDetails);
   each(document.querySelectorAll(".theme-toggle"), function (btn) {
     btn.addEventListener("click", function () {
-      var next = currentTheme() === "dark" ? "light" : "dark";
+      var i = THEME_CYCLE.indexOf(currentTheme());
+      var next = THEME_CYCLE[(i + 1) % THEME_CYCLE.length];
       if (document.startViewTransition && !reduced) document.startViewTransition(function () { applyTheme(next); });
       else applyTheme(next);
     });
   });
+
+  /* A wrapping menu replaces the horizontally scrolling navigation. */
+  var topbar = document.querySelector(".topbar");
+  var menuButton = document.querySelector(".menu-toggle");
+  var compactNavigation = window.matchMedia("(max-width: 1100px)");
+  var heroName = document.getElementById("name");
+  if (topbar && heroName) {
+    var identityFrame = 0;
+    function updateIdentity() {
+      identityFrame = 0;
+      topbar.classList.toggle("has-identity",
+        heroName.getBoundingClientRect().bottom <= topbar.getBoundingClientRect().bottom);
+    }
+    function queueIdentity() {
+      if (!identityFrame) identityFrame = requestAnimationFrame(updateIdentity);
+    }
+    window.addEventListener("scroll", queueIdentity, { passive: true });
+    window.addEventListener("resize", queueIdentity);
+    window.addEventListener("pageshow", queueIdentity);
+    if ("ResizeObserver" in window) new ResizeObserver(queueIdentity).observe(heroName);
+    if (document.fonts) document.fonts.ready.then(queueIdentity);
+    updateIdentity();
+  }
+  function closeMenu(returnFocus) {
+    if (!topbar || !menuButton) return;
+    topbar.classList.remove("is-open");
+    menuButton.setAttribute("aria-expanded", "false");
+    if (returnFocus) menuButton.focus();
+  }
+  if (topbar && menuButton) {
+    menuButton.addEventListener("click", function () {
+      var open = !topbar.classList.contains("is-open");
+      topbar.classList.toggle("is-open", open);
+      menuButton.setAttribute("aria-expanded", String(open));
+    });
+    each(topbar.querySelectorAll(".topbar-nav a"), function (link) {
+      link.addEventListener("click", function () { closeMenu(false); });
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && topbar.classList.contains("is-open")) closeMenu(true);
+    });
+    document.addEventListener("click", function (e) {
+      if (!topbar.contains(e.target)) closeMenu(false);
+    });
+    if (compactNavigation.addEventListener) compactNavigation.addEventListener("change", function () { closeMenu(false); });
+  }
 
   /* ---------- 2. Entrance ---------- */
   var intro = document.querySelectorAll("[data-enter]");
@@ -56,7 +121,13 @@
         seen = true;
         M.animate(
           el,
-          { opacity: [0, 1], transform: ["translateY(12px)", "translateY(0px)"], filter: ["blur(4px)", "blur(0px)"] },
+          {
+            opacity: [0, 1],
+            // Keep reading surfaces within their columns; the globe carries
+            // the depth while typography arrives with a small vertical lift.
+            transform: ["translateY(16px)", "translateY(0px)"],
+            filter: ["blur(4px)", "blur(0px)"],
+          },
           { easing: soft }
         );
       }, { margin: "0px 0px -10% 0px" });
@@ -65,46 +136,15 @@
 
   /* ---------- 4. Scroll-spy nav ---------- */
   var sections = document.querySelectorAll(".sec[id]");
-  var navLinks = document.querySelectorAll(".rail-nav a, .topbar-nav a");
-
-  // The top bar's row is wider than a phone, so it scrolls. Marking a chip
-  // active is not enough — on the later sections the highlight sat off-screen
-  // and the bar read as stuck on whichever chip happened to fit.
-  // Only fade an end that still has something behind it.
-  function fadeEnds(nav) {
-    var scrollable = nav.scrollWidth > nav.clientWidth + 1;
-    nav.classList.toggle("at-start", !scrollable || nav.scrollLeft <= 1);
-    nav.classList.toggle("at-end", !scrollable ||
-      nav.scrollLeft + nav.clientWidth >= nav.scrollWidth - 1);
-  }
-  each(document.querySelectorAll(".topbar-nav"), function (nav) {
-    fadeEnds(nav);
-    nav.addEventListener("scroll", function () { fadeEnds(nav); }, { passive: true });
-    window.addEventListener("resize", function () { fadeEnds(nav); });
-  });
-
-  function keepInView(a) {
-    var nav = a.parentNode;
-    if (!nav || nav.scrollWidth <= nav.clientWidth + 1) return;
-    var nr = nav.getBoundingClientRect(), ar = a.getBoundingClientRect();
-    var left = ar.left - nr.left + nav.scrollLeft, right = left + ar.width;
-    var pad = 26;                                  // clears the edge fade
-    var to = null;
-    if (left - pad < nav.scrollLeft) to = Math.max(0, left - pad);
-    else if (right + pad > nav.scrollLeft + nav.clientWidth) to = right + pad - nav.clientWidth;
-    if (to === null) return;
-    if (nav.scrollTo) nav.scrollTo({ left: to, behavior: reduced ? "auto" : "smooth" });
-    else nav.scrollLeft = to;
-  }
+  var navLinks = document.querySelectorAll(".topbar-nav a");
 
   function markActive(id) {
-    var activeTop = null;
     each(navLinks, function (a) {
       var on = a.getAttribute("href") === "#" + id;
       a.classList.toggle("active", on);
-      if (on && a.parentNode && a.parentNode.classList.contains("topbar-nav")) activeTop = a;
+      if (on) a.setAttribute("aria-current", "location");
+      else a.removeAttribute("aria-current");
     });
-    if (activeTop) keepInView(activeTop);
   }
   if (sections.length && navLinks.length && "IntersectionObserver" in window) {
     var visible = {};
@@ -120,13 +160,26 @@
     each(sections, function (s) { obs.observe(s); });
   }
 
-  /* ---------- 5. Cursor spotlight on cards ---------- */
+  /* ---------- 5. Cursor spotlight + 3D tilt on cards ----------
+     Same pointer, same elements the spotlight already tracked — the tilt
+     just reads the same position as a lean toward the cursor instead of
+     a glow under it. Degrees stay small (a card is a document, not a
+     dial) and reset to flat on leave; without that reset a card would
+     sit frozen at whatever angle the pointer last left it at. */
   if (!reduced && window.matchMedia("(hover: hover)").matches) {
     each(document.querySelectorAll("[data-tilt]"), function (card) {
       card.addEventListener("pointermove", function (e) {
         var r = card.getBoundingClientRect();
-        card.style.setProperty("--mx", (e.clientX - r.left) + "px");
-        card.style.setProperty("--my", (e.clientY - r.top) + "px");
+        var mx = e.clientX - r.left, my = e.clientY - r.top;
+        card.style.setProperty("--mx", mx + "px");
+        card.style.setProperty("--my", my + "px");
+        var px = mx / r.width - 0.5, py = my / r.height - 0.5;
+        card.style.setProperty("--tilt-x", (py * -5).toFixed(2) + "deg");
+        card.style.setProperty("--tilt-y", (px * 6.5).toFixed(2) + "deg");
+      });
+      card.addEventListener("pointerleave", function () {
+        card.style.setProperty("--tilt-x", "0deg");
+        card.style.setProperty("--tilt-y", "0deg");
       });
     });
   }
@@ -156,6 +209,10 @@
         panel.style.height = open ? "auto" : "0px";
         if (chev) chev.style.transform = "rotate(" + (open ? 180 : 0) + "deg)";
       }
+      // Lets the map/globe wiring (added later, in its own closure) pin a
+      // role's city in place while the row is open, instead of losing it
+      // the moment the pointer drifts off the row.
+      row.dispatchEvent(new CustomEvent("exp:toggle", { detail: { open: open } }));
     }
 
     function handle(e) {
@@ -282,6 +339,12 @@
       '<path d="M173.6 20.4h.8v-3h-.8zM172.8 18.4h2.4v.8h-2.4z"/>' +
       '<path d="M189 44V32h4.6v12zM196 44V36h3.4v8z"/>'
   };
+
+  function roleSkySvg(key, el) {
+    var landmark = el && el.getAttribute("data-landmark") === "tower-bridge";
+    var scenes = window.JourneyCityScenes || {};
+    return scenes[landmark ? "ey-london" : key] || skySvg(key);
+  }
 
   function skySvg(key) {
     if (!SKY[key]) return "";
@@ -447,6 +510,84 @@
     });
   }
 
+  /* ---------- 7b. Profile photo pop ----------
+     Reuses the certificate viewer's .modal/.modal-backdrop mechanics
+     just above (same fixed overlay, same blur) and its paperIn entrance
+     (main.css), but its own open/close — a photo needs none of that
+     viewer's rail-of-facts or image-loading state. */
+  var avModal = document.getElementById("avatar-modal");
+  if (avModal) {
+    var avDialog = avModal.querySelector(".avatar-dialog");
+    var avBackdrop = avModal.querySelector(".modal-backdrop");
+    var avPop = avModal.querySelector(".avatar-pop");
+    var avCloseBtn = avModal.querySelector(".modal-close");
+    var avTrigger = document.querySelector(".rail-avatar");
+    var avLastFocus = null;
+
+    function avOpen() {
+      avLastFocus = document.activeElement;
+      avModal.classList.add("open");
+      avModal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      if (animated) {
+        M.animate(avBackdrop, { opacity: [0, 1] }, { duration: .24 });
+        M.animate(avDialog, { opacity: [0, 1] }, { duration: .24 });
+      } else {
+        avBackdrop.style.opacity = "1";
+        avDialog.style.opacity = "1";
+      }
+      avCloseBtn.focus();
+    }
+    function avClose() {
+      function done() {
+        avModal.classList.remove("open");
+        avModal.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+        avPop.style.removeProperty("--tilt-x");
+        avPop.style.removeProperty("--tilt-y");
+        if (avLastFocus) avLastFocus.focus();
+      }
+      if (animated) {
+        M.animate(avBackdrop, { opacity: 0 }, { duration: .16 });
+        M.animate(avDialog, { opacity: 0 }, { duration: .16 }).finished.then(done);
+      } else { done(); }
+    }
+
+    if (avTrigger) {
+      avTrigger.addEventListener("click", avOpen);
+      avTrigger.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); avOpen(); }
+      });
+    }
+    avCloseBtn.addEventListener("click", avClose);
+    avBackdrop.addEventListener("click", avClose);
+    document.addEventListener("keydown", function (e) {
+      if (!avModal.classList.contains("open")) return;
+      if (e.key === "Escape") avClose();
+      // the close button is the only focusable element in here — Tab
+      // just keeps handing focus straight back to it
+      if (e.key === "Tab") { e.preventDefault(); avCloseBtn.focus(); }
+    });
+
+    // "Sensitive to mouse movement": the photo leans toward the cursor
+    // anywhere across the dialog, not only while directly over the
+    // image — same --tilt-x/--tilt-y language the cards already use,
+    // just reacting to a wider area since there's nothing else in here
+    // to point at. Clamped, because the dialog is far bigger than the
+    // photo itself and an unclamped ratio would over-rotate wildly
+    // whenever the cursor drifts out toward the backdrop.
+    if (!reduced && window.matchMedia("(hover: hover)").matches) {
+      avModal.addEventListener("pointermove", function (e) {
+        if (!avModal.classList.contains("open")) return;
+        var r = avPop.getBoundingClientRect();
+        var px = Math.max(-1, Math.min(1, (e.clientX - r.left) / r.width - 0.5));
+        var py = Math.max(-1, Math.min(1, (e.clientY - r.top) / r.height - 0.5));
+        avPop.style.setProperty("--tilt-x", (py * -9).toFixed(2) + "deg");
+        avPop.style.setProperty("--tilt-y", (px * 11).toFixed(2) + "deg");
+      });
+    }
+  }
+
   /* ---------- 10. Stat counters ---------- */
   if (animated) {
     each(document.querySelectorAll(".stat-value"), function (el) {
@@ -487,6 +628,23 @@
     // Hovering a role or degree zooms the map to that city.
     var zoom = route.querySelector(".atlas-zoom");
     var journey = document.querySelector(".journey");
+    var atlasInner = route.querySelector(".atlas-inner");
+    var blendFrame = 0;
+    function blendJourney() {
+      blendFrame = 0;
+      if (!journey || !atlasInner) return;
+      var end = Math.max(0, journey.getBoundingClientRect().bottom - atlasInner.getBoundingClientRect().top - 12);
+      var fade = Math.min(280, window.innerHeight * 0.35);
+      route.style.setProperty("--journey-fade-start", Math.max(0, end - fade) + "px");
+      route.style.setProperty("--journey-fade-end", end + "px");
+    }
+    function queueBlend() {
+      if (!blendFrame) blendFrame = requestAnimationFrame(blendJourney);
+    }
+    window.addEventListener("scroll", queueBlend, { passive: true });
+    window.addEventListener("resize", queueBlend);
+    if ("ResizeObserver" in window) new ResizeObserver(queueBlend).observe(journey);
+    blendJourney();
 
     var PIN = { kolkata: [1069.7, 500.9], aberdeen: [252.2, 188.4],
                 glasgow: [232.7, 200.0], london: [270.0, 239.4] };
@@ -501,9 +659,7 @@
     function metaOf(key, when) {
       return when ? CITY[key][1] + " \u00b7 " + when : CITY[key][1];
     }
-    var K = 2.6, CX = 610, CY = 420;   // scale, and the fallback landing point
-    var PIN_R = 7 * K;                 // the lit dot, r7 in the viewBox
-    var TIP_GAP = 22;                  // clear air between that dot and the skyline
+    var K = 2.6;
 
     var svg = route.querySelector(".atlas-svg");
     var VB_W = 1220, VB_H = 1202;
@@ -527,95 +683,204 @@
     var tipSky = tip.querySelector(".pb-sky");
 
     function lane() {
-      var v = getComputedStyle(document.documentElement).getPropertyValue("--map-lane");
-      return parseFloat(v) || 0;
+      var column = journey && journey.querySelector(".exp");
+      return column ? parseFloat(getComputedStyle(column).marginRight) || 0 : 0;
     }
 
-    // Land the city in the clear lane beside the hovered card, level with it,
-    // so the pin and its label sit to the card's right instead of behind it.
-    function focusOn(key, el) {
-      if (!zoom || !PIN[key]) return;
-      var p = PIN[key];
-      var w = lane(), r = svg && svg.getBoundingClientRect();
+    function updateCityScene(key, el) {
+      var landmark = el.getAttribute("data-landmark") || "";
+      var sceneKey = landmark || key;
+      if (tip.getAttribute("data-city") === sceneKey) return;
+      var previous = tipSky.querySelector(".is-current");
+      Array.prototype.forEach.call(tipSky.children, function (layer) {
+        if (layer !== previous) layer.remove();
+      });
+      var next = document.createElement("span");
+      next.className = "city-layer";
+      // Freeze each layer's own hue during the overlap; CSS variables still
+      // allow both layers to respond when the site's palette changes.
+      var colour = landmark ? "var(--landmark)" : "var(--c-" + key + ")";
+      next.style.color = colour;
+      next.style.setProperty("--place", colour);
+      next.innerHTML = roleSkySvg(key, el);
+      tipSky.appendChild(next);
+      tip.setAttribute("data-city", sceneKey);
+      if (!previous || reduced) {
+        next.classList.add("is-current");
+        if (previous) previous.remove();
+      } else {
+        requestAnimationFrame(function () {
+          previous.classList.remove("is-current");
+          next.classList.add("is-current");
+        });
+        setTimeout(function () { previous.remove(); }, 480);
+      }
+    }
 
-      // Fill the label before placing anything: how far the pin sits above it
-      // depends on how tall it turns out, and that changes with the city name
-      // wrapping or a missing date line.
+    function positionScene() {
+      var w = lane();
+      if (!w || !journey) { tip.classList.remove("on"); return; }
+      var rect = journey.getBoundingClientRect();
+      var viewport = window.visualViewport;
+      var viewTop = viewport ? viewport.offsetTop : 0;
+      var viewLeft = viewport ? viewport.offsetLeft : 0;
+      var viewBottom = Math.min(document.documentElement.clientHeight, viewport ? viewTop + viewport.height : window.innerHeight);
+      var viewRight = Math.min(document.documentElement.clientWidth, viewport ? viewLeft + viewport.width : window.innerWidth);
+      var masthead = document.querySelector(".topbar");
+      if (masthead) viewTop = Math.max(viewTop, masthead.getBoundingClientRect().bottom);
+      var top = viewTop + 18;
+      var bottom = viewBottom - 96; // The chat launcher has a permanent clear area.
+      var available = Math.max(80, bottom - top);
+      var artHeight = Math.min(tip.offsetWidth * 180 / 260, available * 0.46);
+      tip.style.setProperty("--city-scene-height", artHeight + "px");
+      tip.style.setProperty("--city-scene-max-height", artHeight + "px");
+      tip.classList.toggle("is-compact", available < 220);
+      var height = tip.offsetHeight;
+      var center = Math.max(top + height / 2, Math.min(bottom - height / 2, top + available * 0.5));
+      var half = tip.offsetWidth / 2;
+      var x = Math.max(viewLeft + half + 18, Math.min(rect.right - w / 2, viewRight - half - 18));
+      tip.style.left = x + "px";
+      tip.style.top = center + "px";
+      // Fade at the section boundaries without moving or cropping the city.
+      function ease(value) { value = Math.max(0, Math.min(1, value)); return value * value * (3 - 2 * value); }
+      var nextSection = journey.nextElementSibling;
+      var end = nextSection ? nextSection.getBoundingClientRect().top - 24 : rect.bottom;
+      var presence = Math.min(ease((center - height / 2 - rect.top) / 140), ease((end - center - height / 2) / 80));
+      tip.style.setProperty("--scene-presence", presence);
+
+      // The SVG fallback uses the same stationary landing point as WebGL.
+      if (!route.classList.contains("atlas3d-active") && zoom && svg) {
+        var mapRect = svg.getBoundingClientRect();
+        var scale = mapRect.width / VB_W;
+        var p = PIN[tip.getAttribute("data-place")];
+        if (scale && p) {
+          var globeY = route.getBoundingClientRect().top + (viewBottom - viewTop) * 0.32;
+          zoom.style.transform = "translate(" + ((x - mapRect.left) / scale - p[0] * K) + "px," + ((globeY - mapRect.top) / scale - p[1] * K) + "px) scale(" + K + ")";
+        }
+      }
+    }
+
+    function focusOn(key, el, mode) {
+      mode = mode || "hover";
+      if (!el || !PIN[key]) return;
+      var rect = journey && journey.getBoundingClientRect();
+      if (!rect || rect.bottom <= 0 || rect.top >= window.innerHeight) {
+        tip.classList.remove("on");
+        return;
+      }
       tip.setAttribute("data-place", key);
-      if (tip.getAttribute("data-city") !== key) {
-        tipSky.innerHTML = skySvg(key);
-        tip.setAttribute("data-city", key);
-      }
-      tipCity.textContent = CITY[key][0];
-      tipWhen.textContent = metaOf(key, datesOf(el));
+      var landmark = el.getAttribute("data-landmark") || "";
+      tip.setAttribute("data-landmark", landmark);
+      updateCityScene(key, el);
+      tipCity.textContent = el.getAttribute("data-location-label") || CITY[key][0];
+      tipWhen.textContent = landmark === "tower-bridge" ? datesOf(el) : metaOf(key, datesOf(el));
       tip.classList.toggle("is-now", el.classList.contains("current"));
-
-      var lx = CX, ly = CY, sx = 0, sy = 0, labelY = 0, placed = false;
-
-      if (w > 0 && r && r.width && el) {
-        // Anchor to whichever edge is further right — the list's or the card's.
-        // Education is a two-column grid, so a left-column card's right edge is
-        // its neighbour and the list wins; a role row, meanwhile, hangs ~22px
-        // past its list, and anchoring to the list alone put the label on it.
-        var box = el.closest(".exp, .grid") || el;
-        sx = Math.max(box.getBoundingClientRect().right,
-                      el.getBoundingClientRect().right) + w / 2;
-        // Line the label up with the heading you are reading. Measuring the
-        // title beats any offset from the card top, which drifts as soon as a
-        // card is open or a heading wraps.
-        var head = el.querySelector(".exp-title") || el.querySelector("h3") || el;
-        var hr = head.getBoundingClientRect();
-        labelY = hr.top + hr.height / 2;
-        var th = tip.offsetHeight;
-        sy = labelY - (th / 2 + PIN_R + TIP_GAP);   // the pin clears the label
-        var k = r.width / VB_W;
-        // Keep the marker inside the band where the map is actually opaque —
-        // its mask fades the top and bottom out, and a pin dropped in there is
-        // half invisible. Pin and label move together so they never separate.
-        var top = r.top + r.height * 0.13;
-        var bot = r.top + r.height * 0.70;
-        var want = sy;
-        sy = Math.min(Math.max(sy, top), bot);
-        labelY += sy - want;
-        labelY = Math.min(Math.max(labelY, th / 2 + 10), window.innerHeight - th / 2 - 10);
-        lx = (sx - r.left) / k;
-        ly = (sy - r.top) / k;
-        placed = true;
-      }
-      zoom.style.transform =
-        "translate(" + (lx - p[0] * K) + "px," + (ly - p[1] * K) + "px) scale(" + K + ")";
-
-      if (!placed) { tip.classList.remove("on"); return; }
-      // sits just under its pin, centred in the lane and kept on screen
       tip.classList.add("on");
-      var tw = tip.offsetWidth / 2 + 8;
-      tip.style.left = Math.min(Math.max(sx, tw), window.innerWidth - tw) + "px";
-      tip.style.top = labelY + "px";
+      positionScene();
+      document.dispatchEvent(new CustomEvent("journey:focus", { detail: { key: key, source: el, mode: mode } }));
     }
     function resetZoom() {
-      if (zoom) zoom.style.transform = "";
-      tip.classList.remove("on");
-      tip.removeAttribute("data-city");   // so the skyline rises again next time
+      document.dispatchEvent(new CustomEvent("journey:blur"));
+      if (scrollScene && scrollScene.inside) showScrollScene();
+      else tip.classList.remove("on");
     }
+    window.addEventListener("resize", positionScene);
+    if (window.visualViewport) window.visualViewport.addEventListener("resize", positionScene);
 
-    // The label is fixed to the viewport but anchored to a card, so anything
-    // that moves the card under a resting pointer — scrolling, or expanding
-    // the row you are hovering — would otherwise leave it stranded. Track it
-    // for as long as something is hovered, and stop the moment it is not.
+    // Hover picks a destination; the scene's frame never follows the row.
     var activeEl = null, activeKey = null, raf = 0;
+    var scrollScene = null;
+    var pointerPosition = null;
+    function clearActiveHighlight() {
+      if (activeEl) activeEl.classList.remove("located");
+      var stop = activeKey && route.querySelector('.atlas-pin[data-stop="' + activeKey + '"]');
+      if (stop) stop.classList.remove("lit");
+      route.classList.remove("has-lit");
+      route.removeAttribute("data-place");
+      if (journey) journey.classList.remove("focus");
+    }
+    function previewPlace(key, el, stop) {
+      if ((MOBILE && MOBILE.matches) || activeEl === el) return;
+      clearActiveHighlight();
+      stop.classList.add("lit");
+      route.setAttribute("data-place", key);
+      route.classList.add("has-lit");
+      el.classList.add("located");
+      if (journey) journey.classList.add("focus");
+      focusOn(key, el);
+      startTrack(key, el);
+    }
+    function leavePreview() {
+      if (!activeEl || activeEl === pinnedEl) return;
+      clearActiveHighlight();
+      if (pinnedEl) pinTo(pinnedKey, pinnedEl, pinnedStop);
+      else {
+        stopTrack();
+        resetZoom();
+      }
+    }
+    function syncPointerPlace() {
+      if (!pointerPosition || (MOBILE && MOBILE.matches)) return;
+      // Scrolling can put a different row under a stationary mouse without
+      // a pointermove. Resolve the actual hit, including header/overlay cover.
+      var hit = document.elementFromPoint(pointerPosition.x, pointerPosition.y);
+      var el = hit && hit.closest(".exp-item[data-place], .card[data-place]");
+      var key = el && el.getAttribute("data-place");
+      var stop = key && route.querySelector('.atlas-pin[data-stop="' + key + '"]');
+      if (el && stop && CITY[key]) previewPlace(key, el, stop);
+      else leavePreview();
+    }
+    function rememberPointer(e) {
+      if (e.pointerType === "touch") return false;
+      pointerPosition = { x: e.clientX, y: e.clientY };
+      return true;
+    }
+    document.addEventListener("pointermove", function (e) {
+      if (rememberPointer(e)) syncPointerPlace();
+    }, { passive: true, capture: true });
+    function releasePointer() {
+      pointerPosition = null;
+      leavePreview();
+    }
+    document.addEventListener("pointerleave", releasePointer);
+    window.addEventListener("blur", releasePointer);
+    function showScrollScene() {
+      if (activeEl) {
+        var activeRect = activeEl.getBoundingClientRect();
+        if (activeRect.bottom > 0 && activeRect.top < window.innerHeight) return;
+        document.dispatchEvent(new CustomEvent("journey:blur"));
+      }
+      if (!scrollScene || !scrollScene.inside) {
+        tip.classList.remove("on", "is-scrolling");
+        return;
+      }
+      var source = scrollScene.active;
+      tip.classList.add("is-scrolling");
+      focusOn(source.getAttribute("data-place"), source, "scroll");
+    }
+    document.addEventListener("journey:scroll", function (e) {
+      scrollScene = e.detail;
+      syncPointerPlace();
+      showScrollScene();
+    });
+    if (window.JourneyScroll) window.JourneyScroll.refresh();
     function track() {
       raf = 0;
       if (!activeEl) return;
-      focusOn(activeKey, activeEl);
+      var r = activeEl.getBoundingClientRect();
+      if (r.bottom <= 0 || r.top >= window.innerHeight) showScrollScene();
+      else focusOn(activeKey, activeEl);
       raf = requestAnimationFrame(track);
     }
     function startTrack(key, el) {
+      tip.classList.remove("is-scrolling");
       activeKey = key; activeEl = el;
       if (!raf) raf = requestAnimationFrame(track);
     }
     function stopTrack() {
       activeEl = activeKey = null;
       if (raf) { cancelAnimationFrame(raf); raf = 0; }
+      requestAnimationFrame(showScrollScene);
     }
 
     // Each card's own dates, so a finished role never borrows the city's
@@ -633,6 +898,36 @@
         .trim();
     }
 
+    // Opening a role (click, not just hover) pins its city: the globe keeps
+    // facing it, and the lane label stays up, until that row is closed again
+    // or a different one is opened. Hovering elsewhere still previews on top
+    // of that, but letting go returns to the pin rather than to nothing.
+    var pinnedKey = null, pinnedEl = null, pinnedStop = null;
+    function pinTo(key, el, stop) {
+      clearActiveHighlight();
+      if (pinnedStop && pinnedStop !== stop) pinnedStop.classList.remove("lit");
+      if (pinnedEl && pinnedEl !== el) pinnedEl.classList.remove("located");
+      pinnedKey = key; pinnedEl = el; pinnedStop = stop;
+      stop.classList.add("lit");
+      route.setAttribute("data-place", key);
+      route.classList.add("has-lit");
+      el.classList.add("located");
+      if (journey) journey.classList.add("focus");
+      focusOn(key, el);
+      startTrack(key, el);
+    }
+    function unpin() {
+      if (!pinnedEl) return;
+      pinnedStop.classList.remove("lit");
+      pinnedEl.classList.remove("located");
+      pinnedKey = pinnedEl = pinnedStop = null;
+      route.removeAttribute("data-place");
+      route.classList.remove("has-lit");
+      if (journey) journey.classList.remove("focus");
+      stopTrack();
+      resetZoom();
+    }
+
     each(document.querySelectorAll("[data-place]"), function (el) {
       var key = el.getAttribute("data-place");
       var stop = route.querySelector('.atlas-pin[data-stop="' + key + '"]');
@@ -642,41 +937,36 @@
       // at the thing being hovered.
       var badge = document.createElement("span");
       badge.className = "place-badge" + (el.classList.contains("current") ? " is-now" : "");
+      badge.setAttribute("data-landmark", el.getAttribute("data-landmark") || "");
       badge.setAttribute("aria-hidden", "true");
       // only on role rows — an education card shows its dates already
       var when = el.classList.contains("exp-item") ? datesOf(el) : "";
       badge.innerHTML =
-        '<span class="pb-sky">' + skySvg(key) + '</span>' +
+        '<span class="pb-sky">' + roleSkySvg(key, el) + '</span>' +
         '<span class="pb-name"><i class="pb-dot"></i><b class="pb-city"></b></span>' +
         '<i class="pb-when"></i>';
-      badge.querySelector(".pb-city").textContent = CITY[key][0];
+      badge.querySelector(".pb-city").textContent = el.getAttribute("data-location-label") || CITY[key][0];
       badge.querySelector(".pb-when").textContent = metaOf(key, when);
       el.appendChild(badge);
 
-      el.addEventListener("pointerenter", function () {
+      function previewFromPointer(e) {
         // A tap fires pointerenter on iOS, which would start the desktop
         // focus loop: a permanent rAF writing the desktop zoom transform over
         // the strip's own, and no pointerleave to stop it until you tap
         // somewhere else. The strip drives the map at this width.
-        if (MOBILE && MOBILE.matches) return;
-        stop.classList.add("lit");
-        route.setAttribute("data-place", key);
-        route.classList.add("has-lit");
-        el.classList.add("located");
-        if (journey) journey.classList.add("focus");
-        focusOn(key, el);
-        startTrack(key, el);
+        if (rememberPointer(e)) previewPlace(key, el, stop);
+      }
+      el.addEventListener("pointerenter", previewFromPointer);
+      el.addEventListener("pointerleave", function (e) {
+        if (activeEl === el && rememberPointer(e)) syncPointerPlace();
       });
-      el.addEventListener("pointerleave", function () {
-        if (MOBILE && MOBILE.matches) return;
-        stop.classList.remove("lit");
-        route.removeAttribute("data-place");
-        route.classList.remove("has-lit");
-        el.classList.remove("located");
-        if (journey) journey.classList.remove("focus");
-        stopTrack();
-        resetZoom();
-      });
+
+      if (el.hasAttribute("data-expand")) {
+        el.addEventListener("exp:toggle", function (e) {
+          if (e.detail.open) pinTo(key, el, stop);
+          else if (pinnedEl === el) unpin();
+        });
+      }
     });
 
     /* ---------- 7b. The map on a phone ----------
@@ -690,7 +980,7 @@
        is most of this page's weight and duplicating it per card would be
        absurd. Every property those paths need is an inheritable SVG
        presentation property, so the clones take their look from the <svg>. */
-    var MOBILE = window.matchMedia("(max-width: 860px)");
+    var MOBILE = window.matchMedia("(max-width: 1023px)");
     var land = route.querySelector(".atlas-land");
     if (land && !land.id) land.id = "atlas-land-src";
 
@@ -708,11 +998,12 @@
           'preserveAspectRatio="xMidYMid slice">' +
           '<use href="#' + land.id + '"/>' +
           '<g class="lm-pin" transform="translate(' + p[0] + ' ' + p[1] + ')">' +
-            '<circle class="halo" r="13"/><circle class="dot" r="4.4"/></g>' +
+            '<circle class="halo" r="7"/><circle class="dot" r="2.1"/></g>' +
         '</svg>' +
+        '<span class="lm-sky pb-sky">' + roleSkySvg(key, el) + '</span>' +
         '<span class="lm-name"><i class="pb-dot"></i><b class="pb-city"></b>' +
         '<i class="pb-when"></i></span>';
-      fig.querySelector(".pb-city").textContent = CITY[key][0];
+      fig.querySelector(".pb-city").textContent = el.getAttribute("data-location-label") || CITY[key][0];
       fig.querySelector(".pb-when").textContent = metaOf(key, datesOf(el));
       el.insertBefore(fig, el.firstChild);
     }

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Colour studies — Kaushik Das</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 32px; background: #111719; color: #e8edeb; font: 14px/1.5 system-ui, sans-serif; }
+    button, a { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, a:focus-visible { outline: 2px solid #e8c3a3; outline-offset: 4px; }
+    .lab { display: grid; grid-template-columns: 258px minmax(0, 1fr); gap: 32px; max-width: 1920px; margin: 0 auto; }
+    .eyebrow { margin: 0 0 10px; font: 10px ui-monospace, monospace; letter-spacing: .18em; text-transform: uppercase; color: #a4b8b4; }
+    h1 { font: 40px/1.04 Georgia, serif; letter-spacing: -.04em; margin: 0 0 15px; }
+    .intro { margin: 0 0 28px; color: #b4c1bd; font-size: 13px; }
+    .palettes { display: grid; gap: 9px; }
+    .palette { text-align: left; display: flex; align-items: center; gap: 12px; width: 100%; padding: 13px 12px; background: #1a2225; border: 1px solid #364548; border-radius: 9px; color: #e8edeb; }
+    .palette[aria-pressed="true"] { background: #283436; border-color: #a0b8b1; }
+    .palette b { display: block; font-size: 12px; font-weight: 600; }
+    .palette small { display: block; margin-top: 3px; color: #b4c1bd; font-size: 11px; }
+    .chip { width: 30px; height: 38px; flex: none; border-radius: 5px; background: linear-gradient(150deg, var(--paper) 55%, var(--ink) 56% 82%, var(--detail) 83%); border: 1px solid #8b9894; }
+    .label { display: block; margin: 25px 0 9px; color: #a4b8b4; font: 10px ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
+    .segments { display: flex; padding: 3px; gap: 3px; border: 1px solid #364548; border-radius: 7px; }
+    .segments button { flex: 1; padding: 7px 5px; border: 0; border-radius: 4px; color: #b4c1bd; background: transparent; font-size: 11px; }
+    .segments button[aria-pressed="true"] { background: #354448; color: #f4f6f4; }
+    .swatches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px 8px; }
+    .swatch i { display: block; height: 24px; border-radius: 4px; border: 1px solid #667671; }
+    .swatch span { display: block; margin-top: 4px; font-size: 10px; color: #b4c1bd; }
+    .swatch code { font-size: 9px; color: #e8edeb; }
+    .use { display: block; margin-top: 28px; padding: 11px; border: 1px solid #9ab5aa; border-radius: 7px; text-align: center; text-decoration: none; color: #111719; background: #bfd0c7; font-weight: 600; font-size: 12px; }
+    .hint { color: #a4b8b4; font-size: 11px; margin-top: 14px; }
+    .canvas { min-width: 0; }
+    .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 35px; margin-bottom: 12px; }
+    .toolbar p { margin: 0; font-size: 12px; color: #b4c1bd; }
+    .toolbar .segments { width: 160px; }
+    .viewport { position: relative; max-width: 100%; margin: 0 auto; overflow: hidden; border-radius: 10px; border: 1px solid #52605c; background: #1a2225; }
+    iframe { display: block; border: 0; transform-origin: top left; background: #f6f3ed; }
+    .caption { margin-top: 13px; color: #a4b8b4; font-size: 11px; }
+    @media (max-width: 860px) {
+      body { padding: 18px; }
+      .lab { grid-template-columns: 1fr; gap: 22px; }
+      h1 { font-size: 34px; }
+      .intro { margin-bottom: 18px; }
+      .palettes { grid-template-columns: repeat(3, 1fr); }
+      .palette { display: block; padding: 10px; }
+      .chip { display: block; margin-bottom: 9px; width: 100%; height: 22px; }
+      .palette small { display: none; }
+      .swatches { grid-template-columns: repeat(6, 1fr); }
+      .toolbar { flex-wrap: wrap; }
+      .use { margin-top: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="lab">
+    <aside>
+      <p class="eyebrow">Kaushik Das / Colour studies</p>
+      <h1>A different<br>atmosphere.</h1>
+      <p class="intro">Three revised palettes on the real portfolio. Compare them while scrolling, hovering cities and opening roles.</p>
+      <div class="palettes" aria-label="Palette">
+        <button class="palette" data-theme="light" aria-pressed="true"><i class="chip" style="--paper:#f6f3ed;--ink:#624337;--detail:#b65f3e" aria-hidden="true"></i><span><b>Paper &amp; Copper</b><small>Warm paper · umber · terracotta</small></span></button>
+        <button class="palette" data-theme="dark" aria-pressed="false"><i class="chip" style="--paper:#0d1112;--ink:#ef8075;--detail:#68afa2" aria-hidden="true"></i><span><b>Obsidian &amp; Ember</b><small>Charcoal · coral · patinated teal</small></span></button>
+        <button class="palette" data-theme="bloom" aria-pressed="false"><i class="chip" style="--paper:#eef2f3;--ink:#255d78;--detail:#bf7957" aria-hidden="true"></i><span><b>Porcelain &amp; Tide</b><small>Cool paper · deep blue · copper</small></span></button>
+      </div>
+      <span class="label">Compare the colour treatment</span>
+      <div class="segments" aria-label="Revision">
+        <button data-version="before" aria-pressed="false">Previous</button>
+        <button data-version="after" aria-pressed="true">Revised</button>
+      </div>
+      <span class="label">Explore a section</span>
+      <div class="segments" aria-label="Section">
+        <button data-section="about" aria-pressed="false">About</button>
+        <button data-section="experience" aria-pressed="true">Journey</button>
+        <button data-section="projects" aria-pressed="false">Projects</button>
+      </div>
+      <span class="label">Active palette</span>
+      <div class="swatches" id="swatches" aria-live="polite"></div>
+      <a class="use" id="use-palette" href="../index.html#experience">Use revised palette ↗</a>
+      <p class="hint">Previewing does not change your saved preference. “Use revised palette” opens the portfolio with your selection.</p>
+    </aside>
+    <section class="canvas" aria-label="Live portfolio preview">
+      <div class="toolbar"><p id="preview-name">Paper &amp; Copper · Revised</p><div class="segments" aria-label="Preview size"><button data-size="desktop" aria-pressed="true">Desktop</button><button data-size="mobile" aria-pressed="false">Mobile</button></div></div>
+      <div class="viewport" id="viewport"><iframe id="portfolio" src="../index.html" title="Interactive portfolio colour preview" width="1600" height="1000"></iframe></div>
+      <p class="caption">Scroll inside the preview. The globe, skylines, buttons and chat all use the selected palette.</p>
+    </section>
+  </main>
+  <script>
+    (function () {
+      "use strict";
+      var frame = document.getElementById("portfolio");
+      var viewport = document.getElementById("viewport");
+      var names = {light: "Paper & Copper", dark: "Obsidian & Ember", bloom: "Porcelain & Tide"};
+      var theme = "light", version = "after", size = "desktop", section = "experience";
+      var previous = {"light":{"bg":"#f8f4e7","bg-tint-a":"#fbf7ef","bg-tint-b":"#f4e8de","surface":"#fffcf5","surface-2":"#eee8de","surface-3":"#e2d9cc","border":"#d7cdbf","border-2":"#bdb0a0","text":"#2b231f","text-2":"#544c44","text-3":"#695e53","accent":"#4e342e","accent-2":"#cc5500","accent-hover":"#653f32","accent-soft":"#ece2d9","accent-line":"#b99b86","on-accent":"#fffcf5","action":"#4e342e","action-end":"#644134","action-hover":"#624235","on-action":"#fffcf5","link":"#6b3d2e","focus":"#8d4b2b","ok":"#416a4a","landmark":"#805c1b","c-kolkata":"#8f3c2a","c-aberdeen":"#236358","c-glasgow":"#6d4c77","c-london":"#8f461a","glow-map":"12%","glow-portrait":"18%","glow-cta":"12%","shadow-1":"0 1px 2px rgba(43,35,31,.06)","shadow-2":"0 8px 24px -8px rgba(43,35,31,.12), 0 2px 6px rgba(43,35,31,.04)","shadow-3":"0 28px 64px -18px rgba(43,35,31,.22)"},"dark":{"bg":"#030303","bg-tint-a":"#211416","bg-tint-b":"#0c201e","surface":"#111516","surface-2":"#1b2021","surface-3":"#262d2e","border":"#303839","border-2":"#4c5759","text":"#f1eee8","text-2":"#c4c8c5","text-3":"#a0aba7","accent":"#f32e35","accent-2":"#0f766e","accent-hover":"#ff777b","accent-soft":"#2a181c","accent-line":"#985154","on-accent":"#030303","action":"#b5222b","action-end":"#98262f","action-hover":"#c42934","on-action":"#fff7f2","link":"#efa1a4","focus":"#f1a7a9","ok":"#87c49e","landmark":"#d7b873","c-kolkata":"#dbb070","c-aberdeen":"#85b9d0","c-glasgow":"#baa0ce","c-london":"#e6a18e","glow-map":"22%","glow-portrait":"24%","glow-cta":"16%","shadow-1":"0 1px 2px rgba(0,0,0,.32)","shadow-2":"0 10px 28px -8px rgba(0,0,0,.45)","shadow-3":"0 30px 70px -18px rgba(0,0,0,.62)"},"bloom":{"bg":"#eae6de","bg-tint-a":"#f3eee5","bg-tint-b":"#dfe8eb","surface":"#faf7f0","surface-2":"#e4e7e5","surface-3":"#d7dedf","border":"#c8d0d0","border-2":"#a6b4ba","text":"#22323c","text-2":"#425562","text-3":"#4f5f68","accent":"#226192","accent-2":"#ef8557","accent-hover":"#174d73","accent-soft":"#dce7ec","accent-line":"#8daaba","on-accent":"#fffcf5","action":"#226192","action-end":"#1e526e","action-hover":"#1a527c","on-action":"#fffcf5","link":"#245878","focus":"#226192","ok":"#376b51","landmark":"#765619","c-kolkata":"#924724","c-aberdeen":"#1f6267","c-glasgow":"#6c4f77","c-london":"#944534","glow-map":"0%","glow-portrait":"0%","glow-cta":"12%","shadow-1":"0 1px 2px rgba(34,50,60,.05)","shadow-2":"0 8px 24px -8px rgba(34,50,60,.11), 0 2px 6px rgba(34,50,60,.03)","shadow-3":"0 28px 64px -18px rgba(34,50,60,.21)"}};
+      function mark(selector, key, value) {
+        document.querySelectorAll(selector).forEach(function (button) {
+          button.setAttribute("aria-pressed", String(button.getAttribute(key) === value));
+        });
+      }
+      function apply() {
+        var doc = frame.contentDocument;
+        if (!doc || !doc.querySelector(".layout")) return;
+        var root = doc.documentElement;
+        Object.keys(previous.light || {}).forEach(function (key) { root.style.removeProperty("--" + key); });
+        if (version === "before") Object.keys(previous[theme]).forEach(function (key) { root.style.setProperty("--" + key, previous[theme][key]); });
+        root.setAttribute("data-theme", theme);
+        mark("[data-theme]", "data-theme", theme);
+        mark("[data-version]", "data-version", version);
+        document.getElementById("preview-name").textContent = names[theme] + " · " + (version === "after" ? "Revised" : "Previous");
+        var styles = frame.contentWindow.getComputedStyle(root);
+        var swatches = document.getElementById("swatches");
+        swatches.replaceChildren();
+        [["bg", "Page"], ["surface", "Surface"], ["text", "Ink"], ["accent", "Primary"], ["accent-2", "Secondary"], ["landmark", "EY landmark"]].forEach(function (pair) {
+          var color = styles.getPropertyValue("--" + pair[0]).trim();
+          var swatch = document.createElement("div"); swatch.className = "swatch";
+          var sample = document.createElement("i"); sample.style.background = color;
+          var label = document.createElement("span"); label.textContent = pair[1];
+          var code = document.createElement("code"); code.textContent = color;
+          swatch.append(sample, label, code); swatches.append(swatch);
+        });
+      }
+      function fit() {
+        var w = size === "desktop" ? 1600 : 390;
+        var h = size === "desktop" ? 1000 : 844;
+        var scale = Math.min(1, viewport.parentElement.clientWidth / w);
+        frame.width = w; frame.height = h;
+        frame.style.width = w + "px"; frame.style.height = h + "px";
+        frame.style.transform = "scale(" + scale + ")";
+        viewport.style.width = w * scale + "px"; viewport.style.height = h * scale + "px";
+      }
+      function navigate() {
+        var doc = frame.contentDocument;
+        var target = doc && doc.getElementById(section);
+        if (!target) return;
+        doc.documentElement.style.scrollBehavior = "auto";
+        frame.contentWindow.scrollTo(0, frame.contentWindow.scrollY + target.getBoundingClientRect().top - 50);
+      }
+      document.querySelectorAll("[data-theme]").forEach(function (button) { button.addEventListener("click", function () { theme = button.dataset.theme; apply(); }); });
+      document.querySelectorAll("[data-version]").forEach(function (button) { button.addEventListener("click", function () { version = button.dataset.version; apply(); }); });
+      document.querySelectorAll("[data-section]").forEach(function (button) { button.addEventListener("click", function () { section = button.dataset.section; mark("[data-section]", "data-section", section); navigate(); }); });
+      document.querySelectorAll("[data-size]").forEach(function (button) { button.addEventListener("click", function () { size = button.dataset.size; mark("[data-size]", "data-size", size); fit(); }); });
+      document.getElementById("use-palette").addEventListener("click", function () {
+        try { localStorage.setItem("theme", theme); } catch (e) {}
+        this.href = "../index.html#" + section;
+      });
+      frame.addEventListener("load", function () { apply(); navigate(); });
+      window.addEventListener("resize", fit);
+      fit();
+    })();
+  </script>
+</body>
+</html>
